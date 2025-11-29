@@ -1,26 +1,36 @@
 {
-  "name": "my-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "name": "my-digital-garden-content",
+  "version": "1.0.0",
+  "description": "My personal digital garden - a collection of notes, thoughts, and ideas",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "echo 'No dev server needed for static content'",
+    "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ \\; || echo 'No markdown files found'",
+    "clean": "rm -rf public",
+    "predeploy": "npm run build",
+    "deploy": "vercel --prod",
+    "preview": "vercel"
   },
-  {
-    "name": "my-digital-garden",
-    "version": "1.0.0",
-    "scripts": {
-      "build": "mkdir -p public && cp -r *.md public/ || true",
-      "dev": "echo 'No dev server needed for static content'"
-    },
-    "devDependencies": {
-      "vercel": "^28.0.0"
-    }
+  "keywords": [
+    "digital-garden",
+    "notes",
+    "knowledge-base",
+    "static-site"
+  ],
+  "author": {
+    "name": "kirillkravt",
+    "email": "your-email@example.com"
   },
-  "dependencies": {
-    "next": "14.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirillkravt/my-digital-garden-content"
+  },
+  "devDependencies": {
+    "vercel": "^28.4.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
