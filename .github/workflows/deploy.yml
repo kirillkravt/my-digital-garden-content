@@ -22,13 +22,33 @@ jobs:
         node-version: '18'
         cache: 'npm'
         
+    - name: Create package.json if missing
+      run: |
+        if [ ! -f package.json ]; then
+          echo 'Creating package.json...'
+          cat > package.json << EOF
+          {
+            "name": "my-digital-garden-content",
+            "version": "1.0.0",
+            "scripts": {
+              "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ \\; || echo 'No markdown files found'",
+              "clean": "rm -rf public"
+            },
+            "devDependencies": {
+              "vercel": "^28.4.1"
+            }
+          }
+          EOF
+        fi
+        
     - name: Install dependencies
       run: |
-        npm ci
-        # Создаем package.json если его нет
-        if [ ! -f package.json ]; then
-          echo '{"name":"my-digital-garden","version":"1.0.0","scripts":{"build":"mkdir -p public && find . -name \"*.md\" -exec cp --parents {} public/ \\; || true"}}' > package.json
+        # Создаем package-lock.json если его нет
+        if [ ! -f package-lock.json ]; then
+          echo "Creating package-lock.json..."
+          npm install --package-lock-only
         fi
+        npm ci
         
     - name: Build project
       run: npm run build
@@ -40,8 +60,8 @@ jobs:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod --confirm'
+        vercel-args: '--confirm'
         
     - name: Show deployment URL
       run: |
-        echo "Production Deployment URL: ${{ steps.vercel-deploy.outputs.preview-url }}"
+        echo "Deployment URL: ${{ steps.vercel-deploy.outputs.preview-url }}"
