@@ -3,58 +3,33 @@ name: Sync Content to Strapi
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Позволяет запускать вручную
+  workflow_dispatch:
 
 jobs:
   sync-content:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Получаем всю историю для определения изменений
-    
+      
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: |
-        npm init -y
-        npm install axios front-matter gray-matter
         
-    - name: Detect changed files
-      id: changes
-      uses: dorny/paths-filter@v2
-      with:
-        filters: |
-          posts:
-            - 'posts/**'
-          projects:
-            - 'projects/**'
-          media:
-            - 'media/**'
-    
-    - name: Sync posts to Strapi
-      if: steps.changes.outputs.posts == 'true'
-      env:
-        STRAPI_URL: ${{ secrets.STRAPI_URL }}
-        STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
-      run: node .github/scripts/sync-posts.js
-      
-    - name: Sync projects to Strapi
-      if: steps.changes.outputs.projects == 'true'
-      env:
-        STRAPI_URL: ${{ secrets.STRAPI_URL }}
-        STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
-      run: node .github/scripts/sync-projects.js
-      
-    - name: Show sync summary
+    - name: Debug - List files
       run: |
-        echo "Changes detected:"
-        echo "Posts: ${{ steps.changes.outputs.posts }}"
-        echo "Projects: ${{ steps.changes.outputs.projects }}"
-        echo "Media: ${{ steps.changes.outputs.media }}"
+        echo "Repository contents:"
+        ls -la
+        echo "Posts directory:"
+        ls -la posts/ || echo "No posts directory"
+        
+    - name: Test Strapi connection
+      env:
+        STRAPI_URL: ${{ secrets.STRAPI_URL }}
+        STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
+      run: |
+        echo "Strapi URL: $STRAPI_URL"
+        echo "Testing connection..."
+        # Простой тест подключения
