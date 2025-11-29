@@ -17,34 +17,29 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
         
-    - name: Install dependencies
-      working-directory: frontend
-      run: npm install
-      
-    - name: Copy content
+    - name: Install and build
       working-directory: frontend
       run: |
-        echo "=== Copying content ==="
-        # Копируем посты в папку content
-        mkdir -p content/posts
-        cp -r ../posts/* content/posts/ 2>/dev/null || echo "No posts to copy"
+        # Устанавливаем зависимости
+        npm install
         
-        # Копируем проекты
-        mkdir -p content/projects
-        cp -r ../projects/* content/projects/ 2>/dev/null || echo "No projects to copy"
+        # Создаем папку для контента
+        mkdir -p content/posts content/projects
         
+        # Копируем посты
+        echo "Copying content..."
+        cp ../posts/*.md content/posts/ 2>/dev/null || echo "No posts to copy"
+        cp ../projects/*.md content/projects/ 2>/dev/null || echo "No projects to copy"
+        
+        # Показываем что скопировалось
         echo "Content files:"
         find content/ -name "*.md" | head -10
         
-    - name: Build site
-      working-directory: frontend
-      run: |
-        echo "=== Building site ==="
+        # Собираем проект
+        echo "Building site..."
         npm run build
-        echo "=== Build completed ==="
+        echo "✅ Build completed"
         
     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v25
