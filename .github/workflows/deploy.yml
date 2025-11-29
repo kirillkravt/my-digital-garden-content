@@ -12,6 +12,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Create package.json if missing
+      run: |
+        if [ ! -f package.json ]; then
+          echo '{"name":"my-digital-garden","scripts":{"build":"mkdir -p public && cp *.md public/ && cp -r notes public/ || true"}}' > package.json
+        fi
+        
+    - name: Build project
+      run: npm run build
+      
     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v25
       with:
