@@ -2,14 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build"
+      "src": "*.md",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "notes/*.md",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "/$1.md"
+    },
+    {
+      "src": "/",
+      "dest": "/index.md"
     }
   ]
 }
