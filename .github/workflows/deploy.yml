@@ -44,7 +44,6 @@ jobs:
                   .note-list { list-style: none; padding: 0; }
                   .note-item { margin: 15px 0; padding: 15px; border-left: 4px solid #2c5aa0; background: #f8f9fa; border-radius: 0 8px 8px 0; }
                   footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #666; }
-                  .back-link { display: inline-block; margin-bottom: 20px; }
               </style>
           </head>
           <body>
@@ -55,16 +54,12 @@ jobs:
               <ul class="note-list">
                   <li class="note-item"><a href="notes/">Browse Notes</a> - Daily thoughts and observations</li>
                   <li class="note-item"><a href="posts/">Browse Posts</a> - Longer form writings</li>
-                  <li class="note-item"><a href="projects/">Projects</a> - My works and experiments</li>
+                  <li class="note-item"><a href="documents/">Documents</a> - Project documentation</li>
               </ul>
               
               <footer>
-                  <p><em>This digital garden is always growing. Last updated: <span id="date"></span></em></p>
+                  <p><em>This digital garden is always growing.</em></p>
               </footer>
-              
-              <script>
-                  document.getElementById('date').textContent = new Date().toLocaleDateString();
-              </script>
           </body>
           </html>
           EOF
@@ -78,86 +73,55 @@ jobs:
             echo "✅ Copied: $1"
           ' _ {} \;
           
-          # Создаем индекс для папки notes
-          if [ -d "_site/notes" ] && [ "$(ls -A _site/notes/*.md 2>/dev/null)" ]; then
-            echo "📝 Creating index for notes..."
-            cat > _site/notes/index.html << 'EOF'
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Notes - My Digital Garden</title>
-                <style>
-                    body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-                    a { color: #2c5aa0; text-decoration: none; }
-                    a:hover { text-decoration: underline; }
-                    .back-link { display: inline-block; margin-bottom: 20px; }
-                    .note-list { list-style: none; padding: 0; }
-                    .note-item { margin: 10px 0; padding: 15px; border: 1px solid #e1e4e8; border-radius: 6px; }
-                </style>
-            </head>
-            <body>
-                <a href="../" class="back-link">← Back to Garden</a>
-                <h1>📝 Notes</h1>
-                <p>Collection of my thoughts and observations.</p>
-                
-                <ul class="note-list">
-            EOF
+          # Создаем простые индексные файлы для папок
+          create_index() {
+            local folder=$1
+            local title=$2
+            local description=$3
             
-            # Добавляем ссылки на все markdown файлы в notes
-            for file in _site/notes/*.md; do
-              if [ -f "$file" ]; then
-                filename=$(basename "$file" .md)
-                echo "                    <li class=\"note-item\"><a href=\"${filename}.md\">${filename}</a></li>" >> _site/notes/index.html
-              fi
-            done
-            
-            cat >> _site/notes/index.html << 'EOF'
-                </ul>
-            </body>
-            </html>
-            EOF
-          fi
+            if [ -d "_site/$folder" ] && [ "$(ls -A _site/$folder/*.md 2>/dev/null)" ]; then
+              echo "📁 Creating index for $folder..."
+              
+              # Начало HTML
+              echo "<!DOCTYPE html>" > "_site/$folder/index.html"
+              echo "<html>" >> "_site/$folder/index.html"
+              echo "<head>" >> "_site/$folder/index.html"
+              echo "    <meta charset=\"UTF-8\">" >> "_site/$folder/index.html"
+              echo "    <title>$title - My Digital Garden</title>" >> "_site/$folder/index.html"
+              echo "    <style>" >> "_site/$folder/index.html"
+              echo "        body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; }" >> "_site/$folder/index.html"
+              echo "        a { color: #2c5aa0; text-decoration: none; }" >> "_site/$folder/index.html"
+              echo "        a:hover { text-decoration: underline; }" >> "_site/$folder/index.html"
+              echo "        .back-link { display: inline-block; margin-bottom: 20px; }" >> "_site/$folder/index.html"
+              echo "        .file-list { list-style: none; padding: 0; }" >> "_site/$folder/index.html"
+              echo "        .file-item { margin: 10px 0; padding: 15px; border: 1px solid #e1e4e8; border-radius: 6px; }" >> "_site/$folder/index.html"
+              echo "    </style>" >> "_site/$folder/index.html"
+              echo "</head>" >> "_site/$folder/index.html"
+              echo "<body>" >> "_site/$folder/index.html"
+              echo "    <a href=\"../\" class=\"back-link\">← Back to Garden</a>" >> "_site/$folder/index.html"
+              echo "    <h1>$title</h1>" >> "_site/$folder/index.html"
+              echo "    <p>$description</p>" >> "_site/$folder/index.html"
+              echo "    <ul class=\"file-list\">" >> "_site/$folder/index.html"
+              
+              # Добавляем файлы
+              for file in _site/$folder/*.md; do
+                if [ -f "$file" ]; then
+                  filename=$(basename "$file" .md)
+                  echo "        <li class=\"file-item\"><a href=\"${filename}.md\">${filename}</a></li>" >> "_site/$folder/index.html"
+                fi
+              done
+              
+              # Конец HTML
+              echo "    </ul>" >> "_site/$folder/index.html"
+              echo "</body>" >> "_site/$folder/index.html"
+              echo "</html>" >> "_site/$folder/index.html"
+            fi
+          }
           
-          # Создаем индекс для папки posts
-          if [ -d "_site/posts" ] && [ "$(ls -A _site/posts/*.md 2>/dev/null)" ]; then
-            echo "📄 Creating index for posts..."
-            cat > _site/posts/index.html << 'EOF'
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Posts - My Digital Garden</title>
-                <style>
-                    body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-                    a { color: #2c5aa0; text-decoration: none; }
-                    a:hover { text-decoration: underline; }
-                    .back-link { display: inline-block; margin-bottom: 20px; }
-                    .post-list { list-style: none; padding: 0; }
-                    .post-item { margin: 10px 0; padding: 15px; border: 1px solid #e1e4e8; border-radius: 6px; }
-                </style>
-            </head>
-            <body>
-                <a href="../" class="back-link">← Back to Garden</a>
-                <h1>📄 Posts</h1>
-                <p>Longer form writings and articles.</p>
-                
-                <ul class="post-list">
-            EOF
-            
-            for file in _site/posts/*.md; do
-              if [ -f "$file" ]; then
-                filename=$(basename "$file" .md)
-                echo "                    <li class=\"post-item\"><a href=\"${filename}.md\">${filename}</a></li>" >> _site/posts/index.html
-              fi
-            done
-            
-            cat >> _site/posts/index.html << 'EOF'
-                </ul>
-            </body>
-            </html>
-            EOF
-          fi
+          # Создаем индексные файлы для всех папок
+          create_index "notes" "📝 Notes" "Collection of my thoughts and observations"
+          create_index "posts" "📄 Posts" "Longer form writings and articles"
+          create_index "documents" "📋 Documents" "Project documentation and notes"
           
           echo "=== Final site structure ==="
           find _site -type f -name "*.html" -o -name "*.md" | sort
