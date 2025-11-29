@@ -12,6 +12,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
+    - name: Create basic structure if missing
+      run: |
+        # Создаем index.md если его нет
+        if [ ! -f index.md ]; then
+          echo "Creating index.md..."
+          echo '# Мой цифровой сад' > index.md
+          echo '' >> index.md
+          echo 'Добро пожаловать!' >> index.md
+          echo '' >> index.md
+          echo '- [Пример заметки](./notes/example.md)' >> index.md
+        fi
+        
+        # Создаем папку notes если её нет
+        mkdir -p notes
+        
+        # Создаем пример заметки если её нет
+        if [ ! -f notes/example.md ]; then
+          echo "Creating notes/example.md..."
+          echo '# Пример заметки' > notes/example.md
+          echo '' >> notes/example.md
+          echo 'Это пример заметки.' >> notes/example.md
+        fi
+        
     - name: Debug file structure
       run: |
         echo "=== File Structure ==="
@@ -20,31 +43,6 @@ jobs:
         ls -la
         echo "=== Notes directory ==="
         ls -la notes/ || echo "No notes directory"
-        
-    - name: Create basic structure if missing
-      run: |
-        if [ ! -f index.md ]; then
-          echo "Creating index.md..."
-          cat > index.md << 'EOF'
-          # Мой цифровой сад
-          
-          Добро пожаловать!
-          
-          - [Пример заметки](./notes/example.md)
-          EOF
-        fi
-        
-        if [ ! -d notes ]; then
-          mkdir -p notes
-        fi
-        
-        if [ ! -f notes/example.md ]; then
-          cat > notes/example.md << 'EOF'
-          # Пример заметки
-          
-          Это пример заметки.
-          EOF
-        fi
         
     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v25
