@@ -12,25 +12,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Node.js (without cache)
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'  # Убираем кеширование
-        
-    - name: Install Vercel CLI
-      run: npm install -g vercel@latest
-      
     - name: Build static files
       run: |
         mkdir -p public
-        # Копируем все markdown файлы в public
+        # Копируем все markdown файлы
         find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./public/*" -exec cp --parents {} public/ \; || true
-        echo "✅ Build completed - markdown files copied to public/"
+        echo "✅ Build completed"
+        ls -la public/ || echo "Public directory is empty"
         
-    - name: Deploy to Vercel
-      run: |
-        npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm
-      env:
-        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    - name: Deploy to Vercel using official action
+      uses: vercel/action@v20
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
