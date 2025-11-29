@@ -1,30 +1,103 @@
-name: Deploy to Vercel
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       
-    - name: Debug file structure
-      run: |
-        echo "=== ALL MARKDOWN FILES ==="
-        find . -name "*.md" -not -path "./.git/*"
-        echo "=== FILE CONTENTS ==="
-        cat index.md || echo "No index.md"
-        echo "=== NOTES FOLDER ==="
-        ls -la notes/ || echo "No notes folder"
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
         
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod --confirm'
+      - name: Create site structure
+        run: |
+          # Создаем директорию для сайта
+          mkdir -p _site
+          
+          # Создаем главную страницу
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>My Digital Garden</title>
+              <style>
+                  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; color: #333; }
+                  a { color: #2c5aa0; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+                  .note-list { list-style: none; padding: 0; }
+                  .note-item { margin: 15px 0; padding: 15px; border-left: 4px solid #2c5aa0; background: #f8f9fa; border-radius: 0 8px 8px 0; }
+                  footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #666; }
+              </style>
+          </head>
+          <body>
+              <h1>🌿 My Digital Garden</h1>
+              <p>Welcome to my digital garden! This is a collection of my notes, thoughts, and ideas.</p>
+              
+              <h2>📚 Content</h2>
+              <ul class="note-list">
+                  <li class="note-item"><a href="notes/">Browse Notes</a> - Daily thoughts and observations</li>
+                  <li class="note-item"><a href="posts/">Browse Posts</a> - Longer form writings</li>
+                  <li class="note-item"><a href="projects/">Projects</a> - My works and experiments</li>
+              </ul>
+              
+              <h2>🔍 Recent Updates</h2>
+              <ul>
+                  <li>Digital Garden setup completed</li>
+                  <li>GitHub Pages deployment configured</li>
+              </ul>
+              
+              <footer>
+                  <p><em>This digital garden is always growing. Last updated: <span id="date"></span></em></p>
+              </footer>
+              
+              <script>
+                  document.getElementById('date').textContent = new Date().toLocaleDateString();
+              </script>
+          </body>
+          </html>
+          EOF
+          
+          # Копируем все markdown файлы
+          echo "🌱 Copying markdown files..."
+          find . -name "*.md" -not -path "./.git/*" -not -path "./_site/*" -exec sh -c '
+            dest="_site/$(dirname "$1")"
+            mkdir -p "$dest"
+            cp "$1" "$dest/"
+            echo "✅ Copied: $1"
+          ' _ {} \;
+          
+          echo "=== Site structure ==="
+          find _site -name "*.md" | head -10
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
