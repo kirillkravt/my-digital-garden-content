@@ -24,7 +24,7 @@ jobs:
         npm run build
         echo "✅ Build successful!"
         
-        - name: Deploy to Vercel
+    - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         continue-on-error: true
         with:
