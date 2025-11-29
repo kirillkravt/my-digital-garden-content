@@ -12,19 +12,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Build static files
-      run: |
-        mkdir -p public
-        # Копируем все markdown файлы
-        find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./public/*" -exec cp --parents {} public/ \; || true
-        echo "✅ Build completed"
-        ls -la public/ || echo "Public directory is empty"
-        
-    - name: Deploy to Vercel using official action
-      uses: vercel/action@v20
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod'
+        vercel-args: '--prod --confirm'
