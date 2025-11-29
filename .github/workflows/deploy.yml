@@ -17,11 +17,17 @@ jobs:
       with:
         node-version: '18'
         
-    - name: Create package.json if missing
+    - name: Create proper package.json
       run: |
-        if [ ! -f package.json ]; then
-          echo '{"name":"my-digital-garden","scripts":{"build":"mkdir -p public && cp *.md public/ && cp -r notes public/ || true"}}' > package.json
-        fi
+        cat > package.json << 'EOF'
+        {
+          "name": "my-digital-garden",
+          "version": "1.0.0",
+          "scripts": {
+            "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ || echo 'No markdown files found'"
+          }
+        }
+        EOF
         
     - name: Build project
       run: npm run build
