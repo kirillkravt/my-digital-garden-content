@@ -12,24 +12,223 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+      with:
+        fetch-depth: 0
+        
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         
-    - name: Debug - List files
+    - name: Install dependencies
       run: |
-        echo "Repository contents:"
-        ls -la
-        echo "Posts directory:"
-        ls -la posts/ || echo "No posts directory"
+        npm init -y
+        npm install axios gray-matter
         
-    - name: Test Strapi connection
+    - name: Create sync scripts
+      run: |
+        cat > sync-posts.js << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+        const matter = require('gray-matter');
+        const axios = require('axios');
+
+        const STRAPI_URL = process.env.STRAPI_URL;
+        const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
+
+        const strapi = axios.create({
+          baseURL: STRAPI_URL,
+          headers: {
+            'Authorization': `Bearer ${STRAPI_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        // Функция для поиска поста по slug
+        async function findPostBySlug(slug) {
+          try {
+            const response = await strapi.get(\`/api/posts?filters[Slug][$eq]=\${slug}\`);
+            return response.data.data[0] || null;
+          } catch (error) {
+            console.error(\`Error finding post \${slug}:\`, error.message);
+            return null;
+          }
+        }
+
+        // Функция для создания/обновления поста
+        async function syncPost(filePath) {
+          try {
+            const fileContent = fs.readFileSync(filePath, 'utf8');
+            const { data: frontmatter, content } = matter(fileContent);
+            
+            const slug = frontmatter.slug || path.basename(filePath, '.md');
+            
+            console.log(\`Syncing post: \${frontmatter.title} (\${slug})\`);
+            
+            const postData = {
+              data: {
+                Title: frontmatter.title,
+                Excerpt: frontmatter.excerpt || '',
+                Content: [{ 
+                  type: 'paragraph', 
+                  children: [{ type: 'text', text: content }] 
+                }],
+                Slug: slug,
+                publishedAt: frontmatter.published !== false ? new Date().toISOString() : null
+              }
+            };
+            
+            const existingPost = await findPostBySlug(slug);
+            
+            if (existingPost) {
+              await strapi.put(\`/api/posts/\${existingPost.id}\`, postData);
+              console.log(\`✅ Updated post: \${frontmatter.title}\`);
+            } else {
+              await strapi.post('/api/posts', postData);
+              console.log(\`✅ Created post: \${frontmatter.title}\`);
+            }
+            
+          } catch (error) {
+            console.error(\`❌ Error syncing post \${filePath}:\`, error.response?.data || error.message);
+          }
+        }
+
+        // Главная функция
+        async function main() {
+          console.log('Starting posts sync...');
+          
+          const postsDir = path.join(process.cwd(), 'posts');
+          
+          if (!fs.existsSync(postsDir)) {
+            console.log('No posts directory found');
+            return;
+          }
+          
+          const postFiles = fs.readdirSync(postsDir)
+            .filter(file => file.endsWith('.md'));
+          
+          console.log(\`Found \${postFiles.length} post files\`);
+          
+          for (const file of postFiles) {
+            await syncPost(path.join(postsDir, file));
+          }
+          
+          console.log('Posts sync completed!');
+        }
+
+        main().catch(console.error);
+        EOF
+        
+        cat > sync-projects.js << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+        const matter = require('gray-matter');
+        const axios = require('axios');
+
+        const STRAPI_URL = process.env.STRAPI_URL;
+        const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
+
+        const strapi = axios.create({
+          baseURL: STRAPI_URL,
+          headers: {
+            'Authorization': `Bearer ${STRAPI_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        // Функция для поиска проекта по названию
+        async function findProjectByTitle(title) {
+          try {
+            const response = await strapi.get(\`/api/projects?filters[Название][$eq]=\${encodeURIComponent(title)}\`);
+            return response.data.data[0] || null;
+          } catch (error) {
+            console.error(\`Error finding project \${title}:\`, error.message);
+            return null;
+          }
+        }
+
+        // Функция для создания/обновления проекта
+        async function syncProject(filePath) {
+          try {
+            const fileContent = fs.readFileSync(filePath, 'utf8');
+            const { data: frontmatter, content } = matter(fileContent);
+            
+            console.log(\`Syncing project: \${frontmatter.title}\`);
+            
+            const projectData = {
+              data: {
+                Название: frontmatter.title,
+                Описание: frontmatter.description || '',
+                Детальное_описание: content,
+                Статус: frontmatter.status || 'active',
+                publishedAt: frontmatter.published !== false ? new Date().toISOString() : null
+              }
+            };
+            
+            const existingProject = await findProjectByTitle(frontmatter.title);
+            
+            if (existingProject) {
+              await strapi.put(\`/api/projects/\${existingProject.id}\`, projectData);
+              console.log(\`✅ Updated project: \${frontmatter.title}\`);
+            } else {
+              await strapi.post('/api/projects', projectData);
+              console.log(\`✅ Created project: \${frontmatter.title}\`);
+            }
+            
+          } catch (error) {
+            console.error(\`❌ Error syncing project \${filePath}:\`, error.response?.data || error.message);
+          }
+        }
+
+        async function main() {
+          console.log('Starting projects sync...');
+          
+          const projectsDir = path.join(process.cwd(), 'projects');
+          
+          if (!fs.existsSync(projectsDir)) {
+            console.log('No projects directory found');
+            return;
+          }
+          
+          const projectFiles = fs.readdirSync(projectsDir)
+            .filter(file => file.endsWith('.md'));
+          
+          console.log(\`Found \${projectFiles.length} project files\`);
+          
+          for (const file of projectFiles) {
+            await syncProject(path.join(projectsDir, file));
+          }
+          
+          console.log('Projects sync completed!');
+        }
+
+        main().catch(console.error);
+        EOF
+        
+    - name: Sync posts
       env:
         STRAPI_URL: ${{ secrets.STRAPI_URL }}
         STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
       run: |
-        echo "Strapi URL: $STRAPI_URL"
-        echo "Testing connection..."
-        # Простой тест подключения
+        if [ -d "posts" ] && [ "$(ls -A posts)" ]; then
+          echo "Syncing posts..."
+          node sync-posts.js
+        else
+          echo "No posts to sync"
+        fi
+        
+    - name: Sync projects
+      env:
+        STRAPI_URL: ${{ secrets.STRAPI_URL }}
+        STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
+      run: |
+        if [ -d "projects" ] && [ "$(ls -A projects)" ]; then
+          echo "Syncing projects..."
+          node sync-projects.js
+        else
+          echo "No projects to sync"
+        fi
+        
+    - name: Cleanup
+      run: |
+        rm -f sync-posts.js sync-projects.js
