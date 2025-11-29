@@ -12,26 +12,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Create proper package.json
-      run: |
-        cat > package.json << 'EOF'
-        {
-          "name": "my-digital-garden",
-          "version": "1.0.0",
-          "scripts": {
-            "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ || echo 'No markdown files found'"
-          }
-        }
-        EOF
-        
-    - name: Build project
-      run: npm run build
-      
     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v25
       with:
