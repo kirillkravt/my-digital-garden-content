@@ -1,34 +1,47 @@
-name: Deploy Static Site
+name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Setup Node
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
+        cache: 'npm'
         
-    - name: Install and Build
+    - name: Install dependencies
       run: |
-        cd frontend
-        npm install
-        npm run build
-        echo "✅ Build successful!"
+        npm ci
+        # Создаем package.json если его нет
+        if [ ! -f package.json ]; then
+          echo '{"name":"my-digital-garden","version":"1.0.0","scripts":{"build":"mkdir -p public && find . -name \"*.md\" -exec cp --parents {} public/ \\; || true"}}' > package.json
+        fi
         
+    - name: Build project
+      run: npm run build
+      
     - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        continue-on-error: true
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+      uses: amondnet/vercel-action@v25
+      id: vercel-deploy
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod --confirm'
+        
+    - name: Show deployment URL
+      run: |
+        echo "Production Deployment URL: ${{ steps.vercel-deploy.outputs.preview-url }}"

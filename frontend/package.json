@@ -7,6 +7,17 @@
     "build": "next build",
     "start": "next start"
   },
+  {
+    "name": "my-digital-garden",
+    "version": "1.0.0",
+    "scripts": {
+      "build": "mkdir -p public && cp -r *.md public/ || true",
+      "dev": "echo 'No dev server needed for static content'"
+    },
+    "devDependencies": {
+      "vercel": "^28.0.0"
+    }
+  },
   "dependencies": {
     "next": "14.0.0",
     "react": "^18.0.0",
