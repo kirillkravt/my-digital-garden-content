@@ -1,0 +1,10 @@
+{
+  "name": "my-digital-garden-content",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "mkdir -p public && find . -name \"*.md\" -exec cp --parents {} public/ \;"
+  },
+  "devDependencies": {
+    "vercel": "^28.4.1"
+  }
+}
