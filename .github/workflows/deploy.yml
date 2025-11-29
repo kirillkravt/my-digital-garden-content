@@ -1,0 +1,84 @@
+name: Deploy Static Site
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Позволяет запускать вручную
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout content repository
+      uses: actions/checkout@v4
+      with:
+        path: content-source
+        
+    - name: Checkout frontend repository
+      uses: actions/checkout@v4
+      with:
+        repository: kirillkravt/my-frontend
+        path: frontend
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Install dependencies
+      working-directory: frontend
+      run: npm install
+      
+    - name: Copy content to frontend
+      working-directory: frontend
+      run: |
+        echo "=== Copying content files ==="
+        # Создаем папки если не существуют
+        mkdir -p content/posts
+        mkdir -p content/projects
+        
+        # Копируем посты
+        if [ -d "../content-source/posts" ] && [ "$(ls -A ../content-source/posts)" ]; then
+          echo "Copying posts..."
+          cp -r ../content-source/posts/* content/posts/
+          echo "Posts copied: $(ls content/posts/ | wc -l) files"
+        else
+          echo "No posts found to copy"
+        fi
+        
+        # Копируем проекты (если есть)
+        if [ -d "../content-source/projects" ] && [ "$(ls -A ../content-source/projects)" ]; then
+          echo "Copying projects..."
+          cp -r ../content-source/projects/* content/projects/
+          echo "Projects copied: $(ls content/projects/ | wc -l) files"
+        else
+          echo "No projects found to copy"
+        fi
+        
+        echo "=== Final content structure ==="
+        find content/ -name "*.md" | head -10
+        
+    - name: Build Next.js site
+      working-directory: frontend
+      run: |
+        echo "=== Building Next.js site ==="
+        npm run build
+        echo "=== Build completed ==="
+        
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: frontend
+        vercel-args: '--prod'
+        
+    - name: Show deployment info
+      run: |
+        echo "✅ Deployment completed!"
+        echo "Your site should be live on Vercel shortly"
