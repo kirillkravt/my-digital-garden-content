@@ -1,2 +1,2 @@
-# my-digital-garden-content
-Content repository for My Digital Garden - posts and projects from Obsidian
+# My Digital Garden Content
+This repository contains all posts and projects for my digital garden.
