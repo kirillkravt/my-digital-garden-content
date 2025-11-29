@@ -1,36 +1,7 @@
 {
   "name": "my-digital-garden-content",
   "version": "1.0.0",
-  "description": "My personal digital garden - a collection of notes, thoughts, and ideas",
-  "type": "module",
   "scripts": {
-    "dev": "echo 'No dev server needed for static content'",
-    "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ \\; || echo 'No markdown files found'",
-    "clean": "rm -rf public",
-    "predeploy": "npm run build",
-    "deploy": "vercel --prod",
-    "preview": "vercel"
-  },
-  "keywords": [
-    "digital-garden",
-    "notes",
-    "knowledge-base",
-    "static-site"
-  ],
-  "author": {
-    "name": "kirillkravt",
-    "email": "your-email@example.com"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kirillkravt/my-digital-garden-content"
-  },
-  "devDependencies": {
-    "vercel": "^28.4.1"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ \\; || echo 'Build completed'"
   }
 }

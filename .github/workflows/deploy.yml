@@ -2,9 +2,7 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -13,55 +11,26 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        
+      
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         
-    - name: Create package.json if missing
-      run: |
-        if [ ! -f package.json ]; then
-          echo 'Creating package.json...'
-          cat > package.json << EOF
-          {
-            "name": "my-digital-garden-content",
-            "version": "1.0.0",
-            "scripts": {
-              "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ \\; || echo 'No markdown files found'",
-              "clean": "rm -rf public"
-            },
-            "devDependencies": {
-              "vercel": "^28.4.1"
-            }
-          }
-          EOF
-        fi
-        
-    - name: Install dependencies
-      run: |
-        # Создаем package-lock.json если его нет
-        if [ ! -f package-lock.json ]; then
-          echo "Creating package-lock.json..."
-          npm install --package-lock-only
-        fi
-        npm ci
-        
-    - name: Build project
-      run: npm run build
+    - name: Install Vercel CLI globally
+      run: npm install -g vercel@latest
       
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      id: vercel-deploy
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--confirm'
-        
-    - name: Show deployment URL
+    - name: Build static files
       run: |
-        echo "Deployment URL: ${{ steps.vercel-deploy.outputs.preview-url }}"
+        mkdir -p public
+        # Копируем все markdown файлы в public
+        find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./public/*" -exec cp --parents {} public/ \; || true
+        echo "Build completed"
+        
+    - name: Deploy to Vercel
+      run: |
+        npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm
+      env:
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
