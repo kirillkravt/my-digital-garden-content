@@ -3,25 +3,16 @@ name: Deploy Static Site
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Позволяет запускать вручную
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout content repository
+    - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        path: content-source
-        
-    - name: Checkout frontend repository
-      uses: actions/checkout@v4
-      with:
-        repository: kirillkravt/my-frontend
-        path: frontend
-        token: ${{ secrets.GITHUB_TOKEN }}
-        
+      
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -33,39 +24,25 @@ jobs:
       working-directory: frontend
       run: npm install
       
-    - name: Copy content to frontend
+    - name: Copy content
       working-directory: frontend
       run: |
-        echo "=== Copying content files ==="
-        # Создаем папки если не существуют
+        echo "=== Copying content ==="
+        # Копируем посты в папку content
         mkdir -p content/posts
+        cp -r ../posts/* content/posts/ 2>/dev/null || echo "No posts to copy"
+        
+        # Копируем проекты
         mkdir -p content/projects
+        cp -r ../projects/* content/projects/ 2>/dev/null || echo "No projects to copy"
         
-        # Копируем посты
-        if [ -d "../content-source/posts" ] && [ "$(ls -A ../content-source/posts)" ]; then
-          echo "Copying posts..."
-          cp -r ../content-source/posts/* content/posts/
-          echo "Posts copied: $(ls content/posts/ | wc -l) files"
-        else
-          echo "No posts found to copy"
-        fi
-        
-        # Копируем проекты (если есть)
-        if [ -d "../content-source/projects" ] && [ "$(ls -A ../content-source/projects)" ]; then
-          echo "Copying projects..."
-          cp -r ../content-source/projects/* content/projects/
-          echo "Projects copied: $(ls content/projects/ | wc -l) files"
-        else
-          echo "No projects found to copy"
-        fi
-        
-        echo "=== Final content structure ==="
+        echo "Content files:"
         find content/ -name "*.md" | head -10
         
-    - name: Build Next.js site
+    - name: Build site
       working-directory: frontend
       run: |
-        echo "=== Building Next.js site ==="
+        echo "=== Building site ==="
         npm run build
         echo "=== Build completed ==="
         
@@ -77,8 +54,3 @@ jobs:
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         working-directory: frontend
         vercel-args: '--prod'
-        
-    - name: Show deployment info
-      run: |
-        echo "✅ Deployment completed!"
-        echo "Your site should be live on Vercel shortly"
