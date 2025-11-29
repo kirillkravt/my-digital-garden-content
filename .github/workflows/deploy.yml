@@ -12,6 +12,40 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
+    - name: Debug file structure
+      run: |
+        echo "=== File Structure ==="
+        find . -name "*.md" -not -path "./.git/*" | head -20
+        echo "=== Current directory ==="
+        ls -la
+        echo "=== Notes directory ==="
+        ls -la notes/ || echo "No notes directory"
+        
+    - name: Create basic structure if missing
+      run: |
+        if [ ! -f index.md ]; then
+          echo "Creating index.md..."
+          cat > index.md << 'EOF'
+          # Мой цифровой сад
+          
+          Добро пожаловать!
+          
+          - [Пример заметки](./notes/example.md)
+          EOF
+        fi
+        
+        if [ ! -d notes ]; then
+          mkdir -p notes
+        fi
+        
+        if [ ! -f notes/example.md ]; then
+          cat > notes/example.md << 'EOF'
+          # Пример заметки
+          
+          Это пример заметки.
+          EOF
+        fi
+        
     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v25
       with:
