@@ -20,140 +20,160 @@ jobs:
       with:
         node-version: '18'
         
+    - name: Debug - Show repository structure
+      run: |
+        echo "=== Repository Structure ==="
+        find . -type f -name "*.md" | head -20
+        echo "=== Posts directory ==="
+        ls -la posts/ || echo "No posts directory"
+        echo "=== Projects directory ==="
+        ls -la projects/ || echo "No projects directory"
+        
     - name: Install dependencies
       run: |
-        npm init -y
+        npm init -y --silent
         npm install axios gray-matter
         
-    - name: Create sync scripts
+    - name: Create improved sync script
       run: |
-        cat > sync-posts.js << 'EOF'
+        cat > sync-content.js << 'EOF'
         const fs = require('fs');
         const path = require('path');
         const matter = require('gray-matter');
         const axios = require('axios');
 
+        // Конфигурация
         const STRAPI_URL = process.env.STRAPI_URL;
         const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
 
+        console.log('=== Starting Content Sync ===');
+        console.log('Strapi URL:', STRAPI_URL ? STRAPI_URL.replace(/\/$/, '') : 'Not set');
+        console.log('Token present:', !!STRAPI_TOKEN);
+
+        if (!STRAPI_URL || !STRAPI_TOKEN) {
+          throw new Error('STRAPI_URL or STRAPI_TOKEN environment variables are not set');
+        }
+
+        // Создаем axios instance
         const strapi = axios.create({
-          baseURL: STRAPI_URL,
+          baseURL: STRAPI_URL.replace(/\/$/, ''),
           headers: {
             'Authorization': `Bearer ${STRAPI_TOKEN}`,
             'Content-Type': 'application/json'
-          }
+          },
+          timeout: 10000
         });
+
+        // Тестируем подключение к Strapi
+        async function testConnection() {
+          try {
+            console.log('Testing Strapi connection...');
+            const response = await strapi.get('/api/posts');
+            console.log('✅ Strapi connection successful');
+            return true;
+          } catch (error) {
+            console.error('❌ Strapi connection failed:');
+            console.error('URL:', error.config?.url);
+            console.error('Status:', error.response?.status);
+            console.error('Message:', error.response?.data?.error?.message || error.message);
+            return false;
+          }
+        }
 
         // Функция для поиска поста по slug
         async function findPostBySlug(slug) {
           try {
-            const response = await strapi.get(\`/api/posts?filters[Slug][$eq]=\${slug}\`);
+            const response = await strapi.get(`/api/posts?filters[Slug][$eq]=${slug}`);
             return response.data.data[0] || null;
           } catch (error) {
-            console.error(\`Error finding post \${slug}:\`, error.message);
+            console.error(`Error finding post ${slug}:`, error.message);
             return null;
           }
         }
 
-        // Функция для создания/обновления поста
+        // Функция для поиска проекта по названию
+        async function findProjectByTitle(title) {
+          try {
+            const response = await strapi.get(`/api/projects?filters[Название][$eq]=${encodeURIComponent(title)}`);
+            return response.data.data[0] || null;
+          } catch (error) {
+            console.error(`Error finding project ${title}:`, error.message);
+            return null;
+          }
+        }
+
+        // Синхронизация поста
         async function syncPost(filePath) {
           try {
+            console.log(`\n--- Processing post: ${path.basename(filePath)} ---`);
+            
             const fileContent = fs.readFileSync(filePath, 'utf8');
             const { data: frontmatter, content } = matter(fileContent);
             
-            const slug = frontmatter.slug || path.basename(filePath, '.md');
+            // Валидация обязательных полей
+            if (!frontmatter.title) {
+              console.log('❌ Skipping post: missing title');
+              return;
+            }
             
-            console.log(\`Syncing post: \${frontmatter.title} (\${slug})\`);
+            const slug = frontmatter.slug || frontmatter.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            
+            console.log(`Title: ${frontmatter.title}`);
+            console.log(`Slug: ${slug}`);
+            console.log(`Published: ${frontmatter.published !== false}`);
             
             const postData = {
               data: {
                 Title: frontmatter.title,
                 Excerpt: frontmatter.excerpt || '',
-                Content: [{ 
-                  type: 'paragraph', 
-                  children: [{ type: 'text', text: content }] 
+                Content: [{
+                  type: 'paragraph',
+                  children: [{ type: 'text', text: content }]
                 }],
                 Slug: slug,
                 publishedAt: frontmatter.published !== false ? new Date().toISOString() : null
               }
             };
             
+            console.log('Post data prepared');
+            
             const existingPost = await findPostBySlug(slug);
             
             if (existingPost) {
-              await strapi.put(\`/api/posts/\${existingPost.id}\`, postData);
-              console.log(\`✅ Updated post: \${frontmatter.title}\`);
+              console.log(`Updating existing post (ID: ${existingPost.id})`);
+              await strapi.put(`/api/posts/${existingPost.id}`, postData);
+              console.log(`✅ Updated post: "${frontmatter.title}"`);
             } else {
+              console.log('Creating new post');
               await strapi.post('/api/posts', postData);
-              console.log(\`✅ Created post: \${frontmatter.title}\`);
+              console.log(`✅ Created post: "${frontmatter.title}"`);
             }
             
           } catch (error) {
-            console.error(\`❌ Error syncing post \${filePath}:\`, error.response?.data || error.message);
+            console.error(`❌ Error syncing post ${filePath}:`);
+            if (error.response) {
+              console.error('Status:', error.response.status);
+              console.error('Data:', JSON.stringify(error.response.data, null, 2));
+            } else {
+              console.error('Message:', error.message);
+            }
           }
         }
 
-        // Главная функция
-        async function main() {
-          console.log('Starting posts sync...');
-          
-          const postsDir = path.join(process.cwd(), 'posts');
-          
-          if (!fs.existsSync(postsDir)) {
-            console.log('No posts directory found');
-            return;
-          }
-          
-          const postFiles = fs.readdirSync(postsDir)
-            .filter(file => file.endsWith('.md'));
-          
-          console.log(\`Found \${postFiles.length} post files\`);
-          
-          for (const file of postFiles) {
-            await syncPost(path.join(postsDir, file));
-          }
-          
-          console.log('Posts sync completed!');
-        }
-
-        main().catch(console.error);
-        EOF
-        
-        cat > sync-projects.js << 'EOF'
-        const fs = require('fs');
-        const path = require('path');
-        const matter = require('gray-matter');
-        const axios = require('axios');
-
-        const STRAPI_URL = process.env.STRAPI_URL;
-        const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
-
-        const strapi = axios.create({
-          baseURL: STRAPI_URL,
-          headers: {
-            'Authorization': `Bearer ${STRAPI_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        // Функция для поиска проекта по названию
-        async function findProjectByTitle(title) {
-          try {
-            const response = await strapi.get(\`/api/projects?filters[Название][$eq]=\${encodeURIComponent(title)}\`);
-            return response.data.data[0] || null;
-          } catch (error) {
-            console.error(\`Error finding project \${title}:\`, error.message);
-            return null;
-          }
-        }
-
-        // Функция для создания/обновления проекта
+        // Синхронизация проекта
         async function syncProject(filePath) {
           try {
+            console.log(`\n--- Processing project: ${path.basename(filePath)} ---`);
+            
             const fileContent = fs.readFileSync(filePath, 'utf8');
             const { data: frontmatter, content } = matter(fileContent);
             
-            console.log(\`Syncing project: \${frontmatter.title}\`);
+            if (!frontmatter.title) {
+              console.log('❌ Skipping project: missing title');
+              return;
+            }
+            
+            console.log(`Project: ${frontmatter.title}`);
             
             const projectData = {
               data: {
@@ -168,67 +188,74 @@ jobs:
             const existingProject = await findProjectByTitle(frontmatter.title);
             
             if (existingProject) {
-              await strapi.put(\`/api/projects/\${existingProject.id}\`, projectData);
-              console.log(\`✅ Updated project: \${frontmatter.title}\`);
+              await strapi.put(`/api/projects/${existingProject.id}`, projectData);
+              console.log(`✅ Updated project: "${frontmatter.title}"`);
             } else {
               await strapi.post('/api/projects', projectData);
-              console.log(\`✅ Created project: \${frontmatter.title}\`);
+              console.log(`✅ Created project: "${frontmatter.title}"`);
             }
             
           } catch (error) {
-            console.error(\`❌ Error syncing project \${filePath}:\`, error.response?.data || error.message);
+            console.error(`❌ Error syncing project ${filePath}:`, error.response?.data || error.message);
           }
         }
 
+        // Главная функция
         async function main() {
-          console.log('Starting projects sync...');
+          console.log('\n=== Testing Strapi Connection ===');
+          const connectionOk = await testConnection();
+          if (!connectionOk) {
+            process.exit(1);
+          }
+
+          console.log('\n=== Syncing Posts ===');
+          const postsDir = path.join(process.cwd(), 'posts');
           
+          if (fs.existsSync(postsDir)) {
+            const postFiles = fs.readdirSync(postsDir)
+              .filter(file => file.endsWith('.md'))
+              .map(file => path.join(postsDir, file));
+            
+            console.log(`Found ${postFiles.length} post files`);
+            
+            for (const file of postFiles) {
+              await syncPost(file);
+            }
+          } else {
+            console.log('No posts directory found');
+          }
+
+          console.log('\n=== Syncing Projects ===');
           const projectsDir = path.join(process.cwd(), 'projects');
           
-          if (!fs.existsSync(projectsDir)) {
+          if (fs.existsSync(projectsDir)) {
+            const projectFiles = fs.readdirSync(projectsDir)
+              .filter(file => file.endsWith('.md'))
+              .map(file => path.join(projectsDir, file));
+            
+            console.log(`Found ${projectFiles.length} project files`);
+            
+            for (const file of projectFiles) {
+              await syncProject(file);
+            }
+          } else {
             console.log('No projects directory found');
-            return;
           }
-          
-          const projectFiles = fs.readdirSync(projectsDir)
-            .filter(file => file.endsWith('.md'));
-          
-          console.log(\`Found \${projectFiles.length} project files\`);
-          
-          for (const file of projectFiles) {
-            await syncProject(path.join(projectsDir, file));
-          }
-          
-          console.log('Projects sync completed!');
+
+          console.log('\n=== Content Sync Completed ===');
         }
 
-        main().catch(console.error);
+        main().catch(error => {
+          console.error('Fatal error:', error);
+          process.exit(1);
+        });
         EOF
         
-    - name: Sync posts
+    - name: Run content sync
       env:
         STRAPI_URL: ${{ secrets.STRAPI_URL }}
         STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
-      run: |
-        if [ -d "posts" ] && [ "$(ls -A posts)" ]; then
-          echo "Syncing posts..."
-          node sync-posts.js
-        else
-          echo "No posts to sync"
-        fi
-        
-    - name: Sync projects
-      env:
-        STRAPI_URL: ${{ secrets.STRAPI_URL }}
-        STRAPI_TOKEN: ${{ secrets.STRAPI_TOKEN }}
-      run: |
-        if [ -d "projects" ] && [ "$(ls -A projects)" ]; then
-          echo "Syncing projects..."
-          node sync-projects.js
-        else
-          echo "No projects to sync"
-        fi
+      run: node sync-content.js
         
     - name: Cleanup
-      run: |
-        rm -f sync-posts.js sync-projects.js
+      run: rm -f sync-content.js
