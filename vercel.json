@@ -6,14 +6,14 @@
       "use": "@vercel/static"
     },
     {
-      "src": "notes/*.md", 
+      "src": "notes/*.md",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/$1.md"
+      "dest": "/$1"
     }
   ]
 }
