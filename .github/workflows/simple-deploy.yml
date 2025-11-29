@@ -1,0 +1,36 @@
+name: Simple Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install and Build
+      run: |
+        cd frontend
+        npm install
+        
+        # Создаем контент
+        mkdir -p content/posts
+        find ../posts -name "*.md" -exec cp {} content/posts/ \; 2>/dev/null || echo "No posts"
+        
+        npm run build
+        echo "✅ Build complete"
+        
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: frontend/out
+        branch: gh-pages
