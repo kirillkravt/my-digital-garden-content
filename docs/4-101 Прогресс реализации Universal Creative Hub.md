@@ -73,9 +73,9 @@
 
 ### Неделя 1-2 Фокус: Django основа
 1. **Завершить Django настройку** (Срок: 3 дня)
-   - [ ] Модели: User, Article, MediaFile
-   - [ ] Настройка PostgreSQL + Redis
-   - [ ] Базовая миграция данных
+   - [x] Модели: User, Article, MediaFile
+   - [x] Настройка PostgreSQL + Redis
+   - [x] Базовая миграция данных
 
 2. **Админ-панель** (Срок: 2 дня)
    - [ ] Кастомизация Django Admin
