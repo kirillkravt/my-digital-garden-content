@@ -4,7 +4,7 @@
 
 ## 📚 Заметки
 
-- [Первая заметка](./notes/first-note.md)
+- [Первая заметка](first-note.md)
 - [Вторая заметка](./notes/second-note.md)
 
 ---
