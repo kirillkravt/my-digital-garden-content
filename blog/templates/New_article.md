@@ -1,15 +1,9 @@
 ---
-
 title: "{{title}}"
-
-date: "{{date:YYYY-MM-DD}}"
-
+date:
 published: true
-
 tags: []
-
 category: ""
-
 ---
 # {{title}}
 
