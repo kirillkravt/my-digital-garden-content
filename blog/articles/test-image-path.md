@@ -8,10 +8,10 @@ published: true
 
 ## 1. Изображение в той же папке
 
-![[blog/posts/test-image.png]]
+![[blog/articles/test-image.png]]
 ## 2. Изображение в подпапке
 
-![[blog/posts/images/test-image.png]]
+![[blog/articles/images/test-image.png]]
 ## 3. С подписью
 
 ![[Kirillkravt.png|Моя тестовая картинка]]
