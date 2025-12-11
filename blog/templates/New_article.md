@@ -1,8 +1,9 @@
 ---
 title: "{{title}}"
-date: {{date:YYYY-MM-DD}}
+date:
+  "{ date:YYYY-MM-DD }":
 tags: []
-category: 
+category:
 status: draft
 featured_image: ""
 ---
