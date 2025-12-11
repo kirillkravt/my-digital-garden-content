@@ -5,7 +5,7 @@
 ## 📚 Заметки
 
 - [Первая заметка](first-note.md)
-- [Вторая заметка](./notes/second-note.md)
+- [Вторая заметка](second-note.md)
 
 ---
 *Обновлено: {{ current_date }}*
