@@ -1,12 +1,3 @@
----
-title: "{{title}}"
-date:
-  "{ date:YYYY-MM-DD }":
-tags: []
-category:
-status: draft
-featured_image: ""
----
 
 # {{title}}
 
@@ -26,6 +17,7 @@ featured_image: ""
 def example():
     print("Пример кода")
     return True
+```
 
 - Пункт 1
     
