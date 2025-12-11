@@ -1,4 +1,16 @@
+---
 
+title: "{{title}}"
+
+date: "{{date:YYYY-MM-DD}}"
+
+published: true
+
+tags: []
+
+category: ""
+
+---
 # {{title}}
 
 ## Введение
