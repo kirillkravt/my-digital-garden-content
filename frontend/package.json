@@ -1,7 +1,0 @@
-{
-  "name": "my-digital-garden",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "mkdir -p public && find . -name \"*.md\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./public/*\" -exec cp --parents {} public/ || echo 'Build completed'"
-  }
-}
