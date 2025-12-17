@@ -1,7 +1,5 @@
 ---
-
-kanban-plugin: board
-
+kanban-plugin: list
 ---
 
 ## 📋 **БЛИЖАЙШИЕ ЗАДАЧИ** (следующие 3 дня)
@@ -42,6 +40,6 @@ kanban-plugin: board
 
 %% kanban:settings
 ```
-{"kanban-plugin":"board","list-collapse":[false,false],"new-note-template":"blog/templates/New_article.md","show-checkboxes":true}
+{"kanban-plugin":"board","list-collapse":[false,false],"new-note-template":"blog/templates/New_article.md","show-checkboxes":true,"full-list-lane-width":false,"move-tags":true,"move-dates":true,"show-relative-date":true}
 ```
 %%
