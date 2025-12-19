@@ -1,0 +1,95 @@
+// Импортируем контроллер
+import { strudelController } from "./strudel-controller";
+
+// Импортируем ядро, webaudio и repl
+import * as core from '@strudel/core';
+import { repl } from '@strudel/core'; // <-- ДОБАВЛЯЕМ repl
+import * as webaudio from '@strudel/webaudio';
+
+// Импортируем плагины
+import '@strudel/midi';
+import '@strudel/tonal';
+import '@strudel/soundfonts';
+
+// Экспортируем основные функции в глобальную область видимости
+declare global {
+  interface Window {
+    note: any;
+    silence: any;
+    seq: any;
+    s: any;        // <-- ДОБАВЛЯЕМ глобальную функцию s()
+    sound: any;    // <-- ДОБАВЛЯЕМ глобальную функцию sound()
+    initStrudel: any;
+    evaluate: any;
+    webaudio: any;
+    core: any;
+    strudel: any;
+    __strudelLoaded: boolean;
+    repl: any; // <-- ДОБАВЛЯЕМ в глобальную область
+    webaudioOutput: any; // <-- ДОБАВЛЯЕМ в глобальную область
+    initAudioOnFirstClick: any; // <-- ДОБАВЛЯЕМ (альтернатива initAudio)
+    strudelController: any; // <-- ДОБАВЛЕНО
+  }
+}
+
+// Экспортируем функции
+export const { note, silence, seq, s, sound } = core; // <-- ИМПОРТИРУЕМ s и sound из core
+export const init = webaudio.initAudio;
+export const webaudioOutput = webaudio.webaudioOutput; // <-- ДОБАВЛЯЕМ экспорт
+export const initAudioOnFirstClick = webaudio.initAudioOnFirstClick; // <-- ДОБАВЛЯЕМ экспорт
+export const evaluate = core.evaluate;
+export const getAudioContext = webaudio.getAudioContext;
+export { repl }; // <-- ДОБАВЛЯЕМ экспорт repl
+
+async function initStrudel() {
+  if (window.__strudelLoaded) {
+    console.warn('Strudel already loaded');
+    return;
+  }
+  
+  await init();
+  window.__strudelLoaded = true;
+  
+  // Используем контроллер для инициализации <-- ДОБАВЛЕНО
+  console.log('Initializing StrudelController...');
+}
+
+// Экспортируем функцию инициализации
+export { initStrudel };
+
+if (typeof window !== 'undefined') {
+  window.initStrudel = initStrudel;
+  
+  // Экспортируем основные функции в глобальную область
+  window.note = note;
+  window.s = s;
+  window.sound = sound;
+  window.strudel = {
+    evaluate: evaluate,
+    getAudioContext: getAudioContext,
+    hush: () => console.warn('hush() not implemented in custom bundle'),
+  };
+  // ДОБАВЛЯЕМ в window ключевые компоненты из webaudio
+  window.repl = repl;
+  window.webaudioOutput = webaudioOutput;
+  window.initAudioOnFirstClick = initAudioOnFirstClick;
+  
+  // Экспортируем контроллер в глобальную область <-- ДОБАВЛЕНО
+  window.strudelController = strudelController;
+  
+  // Для обратной совместимости
+  console.log('Strudel bundle loaded, functions available:', {
+    note: typeof note,
+    strudel: typeof window.strudel,
+    initStrudel: typeof window.initStrudel,
+    hasSoundfonts: true
+  });
+  
+  console.log("🎵 StrudelController доступен для управления воспроизведением");
+  console.log("Используйте: strudelController.initialize() → strudelController.play(code)");
+  
+  // Автоинициализация по запросу
+  window.addEventListener('load', () => {
+    console.log('UCH Strudel bundle ready with soundfonts');
+  });
+}
