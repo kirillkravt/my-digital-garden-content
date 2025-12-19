@@ -3607,7 +3607,6 @@ EOF
 bash
 
 ```
-cat > /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/ARCHITECTURE.md << 'EOF'
 # АРХИТЕКТУРНЫЕ РЕШЕНИЯ UCH v0.4
 
 ## 🏗️ ОБЩАЯ АРХИТЕКТУРА
