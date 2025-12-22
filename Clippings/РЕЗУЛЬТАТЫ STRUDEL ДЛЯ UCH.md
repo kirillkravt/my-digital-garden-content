@@ -1,151 +1,4 @@
 
-## 🎯 ИТОГОВЫЕ РЕЗУЛЬТАТЫ STRUDEL ДЛЯ UCH
-
-### ✅ РАБОТАЕТ:
-
-1. **Семплы** \- `s("bd sd")` ✅
-2. **Синтезаторы** \- `s("sine/triangle/etc")` ✅
-3. **Аккорды** \- через `stack()` и note("[c3,eb3,g3]") ✅
-4. **Эффекты** \- `room()`, `delay()`, `lpf()` ✅
-5. **Комплексные паттерны** \- coastline (упрощенный) ✅
-6. **Стоп** \- `hush()` ✅ (работает, хотя с ошибками)
-7. 
-
-### ⚠️ ОГРАНИЧЕНИЯ:
-
-1. **ESM модули** \- не работают через CDN (требуют сборки)
-2. **Soundfonts** \- требуют ESM (`@strudel/soundfonts`)
-3. **Некоторые ошибки** при остановке (но функционал работает)
-
-## 🚀 АРХИТЕКТУРА ДЛЯ UCH
-
-На основе тестов предлагаю следующую архитектуру:
-
-### Уровень 1: StrudelCoreService (Singleton)
-
-### Уровень 2: StrudelNode (React компонент)
-
-typescript
-
-```
-// uch-backend/uch/apps/studio/frontend/src/nodes/StrudelNode.tsx
-import React, { useEffect, useState } from 'react';
-import { StrudelCoreService } from '../core/StrudelCoreService';
-
-const StrudelNode: React.FC = () => {
-  const [code, setCode] = useState('s("bd sd hh")');
-  const [isPlaying, setIsPlaying] = useState(false);
-  
-  const handlePlay = async () => {
-    const service = await StrudelCoreService.getInstance();
-    service.play(code, 4); // 4 секунды
-    setIsPlaying(true);
-    setTimeout(() => setIsPlaying(false), 4000);
-  };
-  
-  const handleStop = async () => {
-    const service = await StrudelCoreService.getInstance();
-    service.stop();
-    setIsPlaying(false);
-  };
-  
-  return (
-    <div className="strudel-node">
-      <textarea value={code} onChange={e => setCode(e.target.value)} />
-      <button onClick={handlePlay} disabled={isPlaying}>Play</button>
-      <button onClick={handleStop}>Stop</button>
-    </div>
-  );
-};
-```
-
-### Уровень 3: NodeRegistry интеграция
-
-## 📦 РЕКОМЕНДУЕМЫЙ СТЕК ДЛЯ UCH
-
-### Базовый (работает сейчас):
-
-json
-
-```
-{
-  "dependencies": {
-    // Через CDN в runtime
-  }
-}
-```
-
-### Продвинутый (через npm + сборку):
-
-json
-
-```
-{
-  "dependencies": {
-    "@strudel/core": "^1.2.6",
-    "@strudel/webaudio": "^1.2.6", 
-    "@strudel/mini": "^1.2.6",
-    "@strudel/tonal": "^1.2.6"  // Требует сборку
-  }
-}
-```
-
-## 🎯 ПЛАН ВНЕДРЕНИЯ НА 1 НЕДЕЛЮ
-
-### День 1-2: StrudelCoreService
-
-- Создать сервис для управления Strudel
-- Интегрировать CDN загрузку
-- Добавить кэширование семплов
-
-### День 3-4: React компонент
-
-- Создать StrudelNode компонент
-- Добавить в NodeRegistry
-- Базовый UI: textarea + кнопки
-
-### День 5: Интеграция с CoreOrchestrator
-
-- Связь с мастер AudioContext
-- Управление BPM
-- События play/stop
-
-### День 6-7: Тестирование и оптимизация
-
-- Тест с реальными паттернами
-- Оптимизация загрузки
-- Обработка ошибок
-
-## 🔧 КЛЮЧЕВЫЕ ФИКСЫ ИЗ ТЕСТОВ:
-
-1. **Стоп**: Использовать `hush()` (принять ошибки в консоли)
-2. **Длительность**: Всегда указывать `.play(duration)` если нужно ограничить длительность воспроизведения для синтезаторов
-3. **Инициализация**: Делать один раз через Singleton
-
-## 📊 МЕТРИКИ ГОТОВНОСТИ ДЛЯ UCH:
-
-- **Базовые семплы** работают
-- **Синтезаторы** работают (4 волны)
-- **Эффекты** работают (reverb, delay, filter)
-- **Комплексные паттерны** работают (адаптированные)
-- **Soundfonts** (требуют сборку через npm)
-- **MIDI** (требуют сборку через npm)
-- **Микротональность** (требуют сборку через npm)
-
-**Готовность для MVP: 85%** \- основная функциональность работает!
-
-## 🚀 СЛЕДУЮЩИЙ ШАГ:
-
-Хотите начать интеграцию? Я подготовлю:
-
-1. **Конкретные файлы** для StrudelCoreService
-2. **React компонент** StrudelNode
-3. **Инструкцию** по добавлению в существующий проект
-
-Или хотите сначала решить проблему с ESM модулями для доступа к soundfonts и MIDI?
-
-Отлично! Фиксируй прогресс и итоги исследований в документации эксперимента. Новой задачей будет решение проблем с ESM
-
 ## 📊 ИТОГИ ИССЛЕДОВАНИЯ STRUDEL ДЛЯ UCH
 
 ## 🎯 ОСНОВНЫЕ РЕЗУЛЬТАТЫ
@@ -209,7 +62,6 @@ cat > RESEARCH_SUMMARY.md << 'EOF'
 - ✅ Эффекты: room(), delay(), lpf(), shape(), phaser()
 - ✅ Паттерны: stack(), struct(), scale(), every()
 - ✅ Управление: setcps(), hush()
-```
 
 ### 3\. ИЗВЕСТНЫЕ ПРОБЛЕМЫ И РЕШЕНИЯ
 
@@ -225,7 +77,6 @@ cat > RESEARCH_SUMMARY.md << 'EOF'
 
 typescript
 
-```
 // Загружает Strudel один раз, управляет AudioContext
 class StrudelCoreService {
   async initialize() {
@@ -233,24 +84,19 @@ class StrudelCoreService {
     // Инициализация семплов и синтезаторов
   }
 }
-```
 
 #### Уровень 2: StrudelNode (React компонент)
 
 typescript
 
-```
 // Нода-редактор для CoreOrchestrator
 // Textarea для кода + кнопки play/stop
-```
 
 #### Уровень 3: NodeRegistry интеграция
 
 typescript
 
-```
 // Регистрация как типа ноды в существующей системе
-```
 
 ## 📊 ТЕСТИРОВАННЫЕ ПАТТЕРНЫ
 
@@ -259,7 +105,7 @@ typescript
 1. `s("bd sd hh")` \- базовые семплы
 2. `note("c3").s("sine")` - синтезаторы
 3. `note("[c3,e3,g3]")` - аккорды
-4. `s("bd").room(0.5).delay(0.3) - эффекты
+4. `s("bd").room(0.5).delay(0.3)` - эффекты
 5. `n("0 2 4").scale("minor").s("sawtooth")` - гаммы
 
 ### Не работают (без ESM):
@@ -325,9 +171,9 @@ cat > ESM\_PROBLEM\_ANALYSIS.md << 'EOF'
 
 text
 
-```
+
 Uncaught SyntaxError: Cannot use import statement outside a module
-```
+
 
 ## 🧠 ПРИЧИНА
 
@@ -337,16 +183,16 @@ Uncaught SyntaxError: Cannot use import statement outside a module
 
 html
 
-```
+
 <script src="https://unpkg.com/@strudel/web@latest"></script>
 <!-- Экспортирует в window.initStrudel, window.note и т.д. -->
-```
+
 
 #### 2\. ESM (Требует type="module")
 
 html
 
-```
+
 <script type="module">
   import { chord } from 'https://unpkg.com/@strudel/tonal@latest';
   // Требует:
@@ -354,7 +200,7 @@ html
   // 2. Правильные CORS заголовки
   // 3. Разрешение импортов зависимостей
 </script>
-```
+
 
 ### Проблема зависимостей:
 
@@ -380,7 +226,6 @@ CDN не может разрешить эти импорты без сборщи
 
 bash
 
-```
 # Установка зависимостей
 npm install @strudel/core @strudel/webaudio @strudel/mini @strudel/tonal @strudel/soundfonts
 
@@ -395,13 +240,12 @@ export default {
     ]
   }
 }
-```
 
 ### Решение 3: Динамический импорт с препроцессингом
 
 javascript
 
-```
+
 // Препроцессинг зависимостей перед загрузкой
 async function loadESMPackage(packageName) {
   // 1. Скачиваем package.json
@@ -409,18 +253,16 @@ async function loadESMPackage(packageName) {
   // 3. Создаем bundle на лету
   // Сложно, но возможно
 }
-```
 
 ### Решение 4: Использовать Skypack/esm.sh
 
 html
 
-```
 <script type="module">
   // Skypack автоматически разрешает зависимости
   import { chord } from 'https://cdn.skypack.dev/@strudel/tonal';
 </script>
-```
+
 
 ## 🎯 РЕКОМЕНДУЕМЫЙ ПОДХОД ДЛЯ UCH
 
@@ -428,23 +270,19 @@ html
 
 html
 
-```
 <!-- Используем только @strudel/web -->
 <script src="https://unpkg.com/@strudel/web@latest"></script>
-```
 
 ### Этап B: Полная функциональность (После настройки сборки)
 
 javascript
 
-```
 // main.js (сборка через Vite)
 import { initStrudel } from '@strudel/web';
 import { chord } from '@strudel/tonal';
 import { loadSoundfont } from '@strudel/soundfonts';
 
 // Инициализация с полным функционалом
-```
 
 ## 🔧 ТЕХНИЧЕСКИЕ ДЕТАЛИ ESM
 
@@ -459,11 +297,9 @@ import { loadSoundfont } from '@strudel/soundfonts';
 
 text
 
-```
 @strudel/tonal (ESM)
   → импортирует → @tonaljs/tonal (ESM)
     → импортирует → @tonaljs/core (ESM)
-```
 
 CDN не может разрешить эту цепочку без препроцессинга.
 
@@ -497,9 +333,12 @@ CDN не может разрешить эту цепочку без препро
 
 ---
 
-*Для следующей фазы: создать тестовый проект Vite с полным стеком Strudel*  
-EOF
+*Для следующей фазы: создать тестовый проект Vite с полным стеком Strudel* 
 
+```
+
+
+```
 ## 4\. Создаем план решения ESM проблемы
 
 cat > ESM\_SOLUTION\_PLAN.md << 'EOF'
@@ -521,36 +360,30 @@ cat > ESM\_SOLUTION\_PLAN.md << 'EOF'
 
 html
 
-```
 <!-- test-skypack.html -->
 <script type="module">
   import { chord } from 'https://cdn.skypack.dev/@strudel/tonal';
   console.log('Tonal loaded:', chord('Cmajor'));
 </script>
-```
 
 ### Тест 2: Проверка esm.sh CDN
 
 html
 
-```
 <!-- test-esm.html -->
 <script type="module">
   import { chord } from 'https://esm.sh/@strudel/tonal';
   console.log('Tonal loaded via esm.sh');
 </script>
-```
 
 ### Тест 3: Локальная сборка Vite
 
 bash
 
-```
 # Создать тестовый проект
 npm create vite@latest strudel-esm-test -- --template vanilla-ts
 cd strudel-esm-test
 npm install @strudel/tonal @strudel/soundfonts
-```
 
 ## 🏗️ АРХИТЕКТУРА РЕШЕНИЯ
 
@@ -598,7 +431,6 @@ npm install @strudel/tonal @strudel/soundfonts
 
 text
 
-```
 uch-backend/uch/apps/studio/
 ├── frontend/           # Существующий React
 ├── strudel-bundle/     # Новая директория для Strudel
@@ -607,7 +439,6 @@ uch-backend/uch/apps/studio/
 │   ├── vite.config.js  # Конфигурация Vite
 │   └── dist/           # Собранный бандл
 └── integrate-strudel.js # Загрузка бандла в основной проект
-```
 
 ## 📅 ПЛАН РАБОТЫ ПО ДНЯМ
 
@@ -615,20 +446,17 @@ uch-backend/uch/apps/studio/
 
 bash
 
-```
 # Создать тестовый проект Vite
 cd /Users/kirillkravcov/UniversalCreativeHub/experiments
 mkdir vite-strudel-test
 cd vite-strudel-test
 npm init vite@latest . -- --template react-ts
 npm install @strudel/web @strudel/tonal @strudel/soundfonts
-```
 
 ### День 2: Тестирование импортов
 
 typescript
 
-```
 // src/main.tsx
 import { initStrudel } from '@strudel/web';
 import { chord } from '@strudel/tonal';
@@ -636,13 +464,11 @@ import { loadSoundfont } from '@strudel/soundfonts';
 
 // Проверить, что все импорты работают
 // Измерить размер бандла
-```
 
 ### День 3: Конфигурация оптимизации
 
 javascript
 
-```
 // vite.config.js
 export default {
   build: {
@@ -656,18 +482,15 @@ export default {
     }
   }
 }
-```
 
 ### День 4: Интеграция в существующий проект
 
 javascript
 
-```
 // Стратегия:
 // 1. Собрать Strudel бандл отдельно
 // 2. Загрузить как внешний скрипт в основной проект
 // 3. Проверить совместимость
-```
 
 ### День 5: Тестирование полного функционала
 
@@ -782,7 +605,6 @@ soundfonts: ' [https://cdn.skypack.dev/@strudel/soundfonts](https://cdn.skypack.
 
 text
 
-```
 for (const [name, url] of Object.entries(modules)) {
         console.log(\\`Importing \${name}...\\`);
         const module = await import(url);
@@ -792,7 +614,6 @@ for (const [name, url] of Object.entries(modules)) {
 } catch (error) {
     console.error('Import failed:', error);
 }
-```
 
 }
 
@@ -812,7 +633,6 @@ if (filePath === './') filePath = './index.html';
 
 text
 
-```
 const extname = path.extname(filePath);
 let contentType = 'text/html';
 
@@ -834,7 +654,6 @@ fs.readFile(filePath, (error, content) => {
         res.end(content, 'utf-8');
     }
 });
-```
 
 });
 
@@ -877,7 +696,6 @@ echo "Или хотите начать с интеграции Strudel в UCH ч
 
 text
 
-```
 ## 🎯 ИТОГ ИССЛЕДОВАНИЯ
 
 ### Готовность Strudel для UCH:
