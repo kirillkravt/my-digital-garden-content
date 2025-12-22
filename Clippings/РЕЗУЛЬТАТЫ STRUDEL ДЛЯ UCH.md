@@ -205,6 +205,7 @@ cat > RESEARCH_SUMMARY.md << 'EOF'
 - ✅ s(), note(), n() - генерация звука
 - ✅ samples() - загрузка семплов (github, custom)
 - ✅ registerSynthSounds() - 4 базовых синтезатора
+-[]   
 - ✅ Эффекты: room(), delay(), lpf(), shape(), phaser()
 - ✅ Паттерны: stack(), struct(), scale(), every()
 - ✅ Управление: setcps(), hush()
