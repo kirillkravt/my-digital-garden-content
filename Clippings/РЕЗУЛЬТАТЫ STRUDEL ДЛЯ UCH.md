@@ -258,7 +258,7 @@ typescript
 
 1. `s("bd sd hh")` \- базовые семплы
 2. `note("c3").s("sine")` - синтезаторы
-3.  `note("[c3,e3,g3]")` - аккорды
+3. `note("[c3,e3,g3]")` - аккорды
 4. `s("bd").room(0.5).delay(0.3) - эффекты
 5. `n("0 2 4").scale("minor").s("sawtooth")` - гаммы
 
