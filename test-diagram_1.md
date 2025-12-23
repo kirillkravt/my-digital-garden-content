@@ -1,13 +1,33 @@
 markdown
 
 
-```
-External_TargetsBuild_SystemCore_PackagesWeb_Platformstrudel.ccDocumentation_Site@strudel/react@strudel/midi@strudel/desktop-bridgevite.config.jspackage.jsonWeb_BrowsersMIDI_HardwareDesktop_Applications
-
-И таблица:
-
-|Component|Purpose|Target Environment|
-|---|---|---|
-|Web Application|Primary live coding interface|Web browsers|
-|Desktop Bridge|Cross-platform communication|Desktop applications|
+```mermaid
+graph TD
+    Component["Component"]
+    External_TargetsBuild_SystemCore_PackagesWeb_Platformstrudel["External_TargetsBuild_SystemCore_PackagesWeb_Platformstrudel"]
+    Application["Application"]
+    Desktop["Desktop"]
+    Bridge["Bridge"]
+    Target["Target"]
+    Documentation_Site["Documentation_Site"]
+    Web_BrowsersMIDI_HardwareDesktop_Applications["Web_BrowsersMIDI_HardwareDesktop_Applications"]
+    Environment["Environment"]
+    Cross["Cross"]
+    Web["Web"]
+    Purpose["Purpose"]
+    Primary["Primary"]
+    External_TargetsBuild_SystemCore_PackagesWeb_Platformstrudel --> Documentation_Site
+    Documentation_Site --> Web_BrowsersMIDI_HardwareDesktop_Applications
+    Web_BrowsersMIDI_HardwareDesktop_Applications --> Component
+    Component --> Purpose
+    Purpose --> Target
+    Target --> Environment
+    Environment --> Web
+    Web --> Application
+    Application --> Primary
+    Primary --> Web
+    Web --> Desktop
+    Desktop --> Bridge
+    Bridge --> Cross
+    Cross --> Desktop
 ```
