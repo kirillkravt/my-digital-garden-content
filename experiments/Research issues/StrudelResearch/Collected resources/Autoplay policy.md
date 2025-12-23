@@ -1,4 +1,4 @@
-## [  Autoplay policy](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy)
+## [Autoplay policy](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices#autoplay_policy)
 
 Browsers have started to implement an autoplay policy, which in general can be summed up as:
 
