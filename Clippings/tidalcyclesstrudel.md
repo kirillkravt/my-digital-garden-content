@@ -28,6 +28,7 @@ Strudel operates as a modular web platform with distinct layers for user interac
 
 ### High-Level System Structure
 
+
 ```
 External_TargetsBuild_SystemCore_PackagesWeb_Platformstrudel.ccDocumentation_Site@strudel/react@strudel/midi@strudel/desktop-bridgevite.config.jspackage.jsonWeb_BrowsersMIDI_HardwareDesktop_Applications
 ```
@@ -37,6 +38,7 @@ Sources: [README.md 1-9](https://github.com/tidalcycles/strudel/blob/8a8ae9ac/RE
 ## Core Component Architecture
 
 The system's modular design separates concerns across specialized packages, each handling specific aspects of the live coding environment. The architecture enables seamless integration between web-based pattern creation and external audio/MIDI ecosystems.
+
 
 ### Package Dependencies and Code Mapping
 
