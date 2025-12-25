@@ -1,0 +1,207 @@
+#!/bin/bash
+# ЕДИНЫЙ скрипт для создания заметок UCH с hex-нумерацией
+
+set -euo pipefail
+
+# --- Конфигурация ---
+VAULT_PATH="/Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs"
+cd "$VAULT_PATH" || exit 1
+
+# --- Функции ---
+print_error() { echo -e "\033[0;31m❌ $1\033[0m" >&2; }
+print_success() { echo -e "\033[0;32m✅ $1\033[0m"; }
+print_info() { echo -e "\033[0;34mℹ️  $1\033[0m"; }
+
+# Функция поиска первого свободного ID
+find_first_free_id() {
+    local parent_id="$1"
+    
+    # Собираем все существующие child IDs
+    local existing_ids=()
+    for file in *.md; do
+        if [[ "$file" =~ ^${parent_id}-([0-9a-fA-F]{2})\ -\ .*\.md$ ]]; then
+            existing_ids+=("${BASH_REMATCH[1]}")
+        fi
+    done
+    
+    # Если нет детей, возвращаем 01
+    if [ ${#existing_ids[@]} -eq 0 ]; then
+        echo "01"
+        return 0
+    fi
+    
+    # Ищем первый пропуск от 01 до FF
+    for i in {1..255}; do
+        expected_id=$(printf "%02x" $i)
+        found=0
+        
+        for existing in "${existing_ids[@]}"; do
+            if [[ "$existing" == "$expected_id" ]]; then
+                found=1
+                break
+            fi
+        done
+        
+        if [ $found -eq 0 ]; then
+            echo "$expected_id"
+            return 0
+        fi
+    done
+    
+    # Если все заняты, берем следующий после максимального
+    local max_id="00"
+    for id in "${existing_ids[@]}"; do
+        if [[ "$id" > "$max_id" ]]; then
+            max_id="$id"
+        fi
+    done
+    
+    local next_val=$((16#$max_id + 1))
+    printf "%02x" "$next_val"
+}
+
+# Функция расчета уровня
+calculate_level() {
+    local id="$1"
+    if [ -z "$id" ]; then
+        echo 0
+    else
+        local num_dashes=$(tr -cd '-' <<< "$id" | wc -c)
+        echo $((num_dashes + 1))
+    fi
+}
+
+# Функция создания файла
+create_note_file() {
+    local parent_id="$1"
+    local child_id="$2"
+    local title="$3"
+    local tags="$4"
+    
+    local note_id="${parent_id}-${child_id}"
+    local filename="${note_id} - ${title}.md"
+    local parent_level=$(calculate_level "$parent_id")
+    local note_level=$((parent_level + 1))
+    
+    cat > "$filename" << FILE_CONTENT
+# ${note_id} - ${title}
+
+## 📋 ОБЩАЯ ИНФОРМАЦИЯ
+- **Статус**: 🆕 НОВЫЙ ДОКУМЕНТ
+- **Родитель**: ${parent_id:-[корень]}
+- **ID**: \`${note_id}\`
+- **Уровень**: ${note_level}
+- **Теги**: ${tags}
+
+## 🎯 ОПИСАНИЕ
+
+*Добавьте описание здесь...*
+
+## 📋 ЗАДАЧИ
+
+- [ ] Задача 1
+- [ ] Задача 2
+
+## 🔗 СВЯЗАННЫЕ ДОКУМЕНТЫ
+
+### РОДИТЕЛЬСКИЕ:
+${parent_id:+- [[${parent_id}]]}
+
+### ДОЧЕРНИЕ:
+*Пока нет*
+
+### СМЕЖНЫЕ:
+*Добавьте ссылки...*
+
+---
+*Создано: $(date +%Y-%m-%d)*
+*Статус: Черновик*
+FILE_CONTENT
+    
+    echo "$filename"
+}
+
+# Функция обновления родительского файла
+update_parent_file() {
+    local parent_id="$1"
+    local note_id="$2"
+    local title="$3"
+    
+    local parent_file="${parent_id} - "*.md
+    parent_file=$(ls $parent_file 2>/dev/null | head -n1)
+    
+    if [ -z "$parent_file" ]; then
+        print_info "Родительский файл не найден: ${parent_id}"
+        return 0
+    fi
+    
+    # Проверяем есть ли уже ссылка
+    if grep -q "\[\[${note_id} -" "$parent_file"; then
+        print_info "Ссылка уже существует в родительском файле"
+        return 0
+    fi
+    
+    # Добавляем ссылку
+    if grep -q "### ДОЧЕРНИЕ:" "$parent_file"; then
+        sed -i '' "/### ДОЧЕРНИЕ:/a\\
+- [[${note_id} - ${title}]]" "$parent_file"
+    else
+        # Ищем разделитель ---
+        if grep -q "^---" "$parent_file"; then
+            local line_num=$(grep -n "^---" "$parent_file" | head -1 | cut -d: -f1)
+            sed -i '' "${line_num}i\\
+\\
+### ДОЧЕРНИЕ:\\
+- [[${note_id} - ${title}]]" "$parent_file"
+        else
+            echo "" >> "$parent_file"
+            echo "### ДОЧЕРНИЕ:" >> "$parent_file"
+            echo "- [[${note_id} - ${title}]]" >> "$parent_file"
+        fi
+    fi
+}
+
+# --- Основная логика ---
+main() {
+    if [ $# -lt 2 ]; then
+        print_error "Использование: $0 <parent_id> \"<note_title>\" [tags]"
+        print_info "Примеры:"
+        print_info "  $0 00-02-01 \"Новая задача\" @bug @audio"
+        print_info "  $0 00-02 \"Новый компонент\" @arch"
+        print_info "  $0 \"\" \"Новый проект\" @project"
+        exit 1
+    fi
+    
+    local parent_id="$1"
+    local note_title="$2"
+    local tags="${3:-@todo}"
+    
+    print_info "Создание заметки в системе UCH..."
+    
+    # Находим свободный ID
+    print_info "Поиск свободного ID для родителя: ${parent_id:-[корень]}"
+    local child_id=$(find_first_free_id "$parent_id")
+    local note_id="${parent_id:+"${parent_id}-"}${child_id}"
+    
+    print_success "Найден ID: ${note_id}"
+    
+    # Создаем файл
+    print_info "Создание файла..."
+    local filename=$(create_note_file "$parent_id" "$child_id" "$note_title" "$tags")
+    print_success "Файл создан: ${filename}"
+    
+    # Обновляем родительский файл (если не корневой уровень)
+    if [ -n "$parent_id" ] && [ "$parent_id" != "00" ]; then
+        print_info "Обновление родительского файла..."
+        update_parent_file "$parent_id" "$note_id" "$note_title"
+        print_success "Родительский файл обновлен"
+    fi
+    
+    print_success "🎉 Заметка успешно создана!"
+    echo ""
+    print_info "ID: ${note_id}"
+    print_info "Файл: ${filename}"
+    print_info "Теги: ${tags}"
+}
+
+main "$@"
