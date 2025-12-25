@@ -1,0 +1,197 @@
+#!/bin/bash
+# РАБОЧИЙ скрипт для генерации новых ID заметок в системе hex-нумерации
+
+set -e  # Выход при ошибке
+
+# Цвета для вывода
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Функция для вывода цветного текста
+print_color() {
+    echo -e "${1}${2}${NC}"
+}
+
+# Проверка наличия родительского ID
+if [ -z "$1" ]; then
+    print_color $YELLOW "Использование: $0 <parent_id> [note_title]"
+    print_color $BLUE "Примеры:"
+    print_color $BLUE "  $0 00-02-01 \"Новая задача\""
+    print_color $BLUE "  $0 00-02 \"Новый компонент\""
+    print_color $BLUE "  $0 \"\" \"Новый проект\" (для корневого уровня)"
+    exit 1
+fi
+
+PARENT_ID="$1"
+NOTE_TITLE="$2"
+VAULT_PATH="/Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs"
+
+# Переходим в директорию vault
+cd "$VAULT_PATH" || {
+    print_color $RED "Ошибка: Не могу перейти в $VAULT_PATH"
+    exit 1
+}
+
+print_color $GREEN "🎯 Генерация нового ID для системы нумерации UCH"
+print_color $BLUE "=============================================="
+
+# Если пустой parent_id - генерируем корневой ID
+if [ -z "$PARENT_ID" ]; then
+    print_color $YELLOW "Генерация ID для корневого уровня..."
+    
+    # Ищем максимальный существующий корневой ID
+    MAX_ROOT=$(find . -maxdepth 1 -name "*.md" -type f | while read f; do
+        basename "$f" | grep -E '^[0-9a-fA-F]{2} - .*\.md$' | sed 's/^\([0-9a-fA-F]\{2\}\) - .*\.md$/\1/'
+    done | sort -r | head -n1)
+    
+    if [ -z "$MAX_ROOT" ]; then
+        NEW_ID="00"
+    else
+        # Конвертируем hex в decimal, увеличиваем, обратно в hex
+        DEC_VAL=$((16#$MAX_ROOT))
+        NEXT_VAL=$((DEC_VAL + 1))
+        NEW_ID=$(printf "%02x" $NEXT_VAL)
+    fi
+    
+    PARENT_LEVEL=0
+    NEW_LEVEL=1
+else
+    # Проверяем формат parent_id
+    if [[ ! "$PARENT_ID" =~ ^[0-9a-fA-F]{2}(-[0-9a-fA-F]{2})*$ ]]; then
+        print_color $RED "Ошибка: Неверный формат parent_id: $PARENT_ID"
+        print_color $YELLOW "Формат должен быть: XX-XX-XX (hex, разделитель -)"
+        exit 1
+    fi
+    
+    # Определяем уровень нового документа
+    PARENT_LEVEL=$(( ($(echo "$PARENT_ID" | tr -cd '-' | wc -c) / 2) + 1 ))
+    NEW_LEVEL=$((PARENT_LEVEL + 1))
+    
+    # Ищем существующие документы с этим parent_id
+    print_color $BLUE "Поиск существующих детей для $PARENT_ID..."
+    
+    # Ищем максимальный child ID
+    MAX_CHILD="00"
+    for file in *.md; do
+        if [[ "$file" =~ ^${PARENT_ID}-([0-9a-fA-F]{2})\ -\ .*\.md$ ]]; then
+            CHILD_ID="${BASH_REMATCH[1]}"
+            if [[ "$CHILD_ID" > "$MAX_CHILD" ]]; then
+                MAX_CHILD="$CHILD_ID"
+            fi
+        fi
+    done
+    
+    if [ "$MAX_CHILD" = "00" ]; then
+        NEW_CHILD_ID="01"
+    else
+        # Увеличиваем hex значение
+        DEC_VAL=$((16#$MAX_CHILD))
+        NEXT_VAL=$((DEC_VAL + 1))
+        NEW_CHILD_ID=$(printf "%02x" $NEXT_VAL)
+    fi
+    
+    NEW_ID="${PARENT_ID}-${NEW_CHILD_ID}"
+fi
+
+print_color $BLUE "  Родительский уровень: $PARENT_LEVEL"
+print_color $BLUE "  Новый уровень: $NEW_LEVEL"
+print_color $BLUE "  Найден максимальный child: ${MAX_CHILD:-none}"
+
+# Генерируем имя файла
+if [ -n "$NOTE_TITLE" ]; then
+    FILENAME="${NEW_ID} - ${NOTE_TITLE}.md"
+    
+    # Запрашиваем теги
+    print_color $YELLOW "Введите теги через пробел (например: @bug @audio @high-priority):"
+    read -r TAGS_INPUT
+    
+    # Создаем файл с базовой структурой
+    cat > "$FILENAME" << FILE_CONTENT
+# ${NEW_ID} - ${NOTE_TITLE}
+
+## 📋 ОБЩАЯ ИНФОРМАЦИЯ
+- **Статус**: 🆕 НОВЫЙ ДОКУМЕНТ
+- **Родитель**: ${PARENT_ID:-[корень]}
+- **ID**: \`${NEW_ID}\`
+- **Уровень**: ${NEW_LEVEL}
+- **Теги**: ${TAGS_INPUT:-@todo}
+
+## 🎯 ОПИСАНИЕ
+
+*Добавьте описание здесь...*
+
+## 📋 ЗАДАЧИ
+
+- [ ] Задача 1
+- [ ] Задача 2
+
+## 🔗 СВЯЗАННЫЕ ДОКУМЕНТЫ
+
+### РОДИТЕЛЬСКИЕ:
+${PARENT_ID:+- [[${PARENT_ID}]]}
+
+### ДОЧЕРНИЕ:
+*Пока нет*
+
+### СМЕЖНЫЕ:
+*Добавьте ссылки...*
+
+---
+*Создано: $(date +%Y-%m-%d)*
+*Статус: Черновик*
+*Уровень: ${NEW_LEVEL}*
+FILE_CONTENT
+    
+    print_color $GREEN "✅ Создан файл: $FILENAME"
+    
+    # Если есть parent_id, обновляем родительский файл
+    if [ -n "$PARENT_ID" ] && [ "$PARENT_ID" != "00" ]; then
+        PARENT_FILE=$(ls "${PARENT_ID} - "*.md 2>/dev/null | head -n1)
+        
+        if [ -n "$PARENT_FILE" ]; then
+            print_color $BLUE "📝 Обновляю родительский файл: $PARENT_FILE"
+            
+            # Проверяем есть ли уже ссылка на этот документ
+            if ! grep -q "\[\[${NEW_ID} -" "$PARENT_FILE"; then
+                # Добавляем в раздел дочерних документов
+                if grep -q "### ДОЧЕРНИЕ:" "$PARENT_FILE"; then
+                    # Вставляем после "### ДОЧЕРНИЕ:"
+                    sed -i '' "/### ДОЧЕРНИЕ:/a\\
+- [[${NEW_ID} - ${NOTE_TITLE}]]" "$PARENT_FILE"
+                else
+                    # Добавляем раздел в конец перед ---
+                    if grep -q "^\-\-\-" "$PARENT_FILE"; then
+                        LINE_NUM=$(grep -n "^\-\-\-" "$PARENT_FILE" | head -1 | cut -d: -f1)
+                        sed -i '' "${LINE_NUM}i\\
+\\
+### ДОЧЕРНИЕ:\\
+- [[${NEW_ID} - ${NOTE_TITLE}]]" "$PARENT_FILE"
+                    else
+                        echo "" >> "$PARENT_FILE"
+                        echo "### ДОЧЕРНИЕ:" >> "$PARENT_FILE"
+                        echo "- [[${NEW_ID} - ${NOTE_TITLE}]]" >> "$PARENT_FILE"
+                    fi
+                fi
+                print_color $GREEN "✅ Ссылка добавлена в родительский документ"
+            fi
+        else
+            print_color $YELLOW "⚠️ Родительский файл не найден: $PARENT_ID"
+        fi
+    fi
+else
+    # Только вывод ID без создания файла
+    print_color $GREEN "📋 Результат генерации:"
+    print_color $BLUE "  Новый ID: ${NEW_ID}"
+    print_color $BLUE "  Уровень: ${NEW_LEVEL}"
+    print_color $BLUE "  Родитель: ${PARENT_ID:-[корень]}"
+    print_color $BLUE "  Родительский уровень: ${PARENT_LEVEL}"
+    print_color $YELLOW ""
+    print_color $YELLOW "Чтобы создать файл, укажите название:"
+    print_color $YELLOW "  $0 \"$PARENT_ID\" \"Название заметки\""
+fi
+
+print_color $BLUE "=============================================="
+print_color $GREEN "🎉 Готово! Система hex-нумерации активна."
