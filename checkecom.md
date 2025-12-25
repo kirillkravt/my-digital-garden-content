@@ -1,6 +1,5 @@
-Вот таблица для `CheckEcomObject` на основе предоставленной спецификации OpenAPI:
+Вот таблица для `CheckEcomObject` в точном порядке, как в спецификации:
 
-## CheckEcomObject — Проверка ecom-операции
 
 | Параметр | Тип | Обязательность | Описание |
 |----------|-----|---------------|----------|
@@ -12,27 +11,6 @@
 | issInstId | string (maxLength: 4) | **Да** | Номер института-эмитента в ПЦ КС |
 | acqInstId | string (maxLength: 4) | **Да** | Номер института-эквайера в ПЦ КС |
 | merchantOperId | string (maxLength: 40) | **Да** | Идентификатор операции в системе мерчанта |
-| rrn | string (maxLength: 12) | **Да** | Retrieval Reference Number (DE37) |
-| amountTxn | string (maxLength: 12, pattern: '^[0-9]{1,12}$', example: '45100') | **Да** | Сумма транзакции в валюте транзакции (DE04) |
-| currencyTxn | string (maxLength: 3, pattern: '^[0-9]{1,3}$', example: '840') | **Да** | ISO код валюты транзакции (DE49) |
-| mcc | string (maxLength: 4, example: '6538') | **Да** | Merchant category code (DE18) |
-| merchantId | string (maxLength: 15) | **Да** | Идентификатор мерчанта (DE42) |
-| merchantName | string (maxLength: 40, example: 'PRIMSOTSATM020438') | **Да** | Имя мерчанта |
-| merchantCity | string (maxLength: 31, example: 'VOLGOGRAD') | **Да** | Город, URL, e-mail или номер телефона мерчанта |
-| merchantCountry | string (maxLength: 2, example: 'RU') | **Да** | Страна мерчанта |
-| terminalType | string (maxLength: 2, pattern: '^[0-9]{1,2}$', example: '8') | **Да** | Тип терминала |
-| terminalId | string (maxLength: 16) | **Да** | Идентификатор терминала (DE41) |
-| posEntryMode | string (maxLength: 4, pattern: '^[0-9]{1,4}$') | **Да** | Point of Service Entry Mode (DE22) |
-| posDataCode | string (maxLength: 12) | **Да** | Условия обслуживания |
-| cardDataInputCap | string (maxLength: 1) | **Да** | Card data input capability (см. справочник) |
-| cardholderAuthCap | string (maxLength: 1) | **Да** | Cardholder authentication capability (см. справочник) |
-| cardCaptureCap | string (maxLength: 1) | **Да** | Card capture capability (см. справочник) |
-| operEnvironment | string (maxLength: 1) | **Да** | Operating environment (см. справочник) |
-| cardholderPresent | string (maxLength: 1) | **Да** | POS cardholder presence indicator (см. справочник) |
-| cardPresent | string (maxLength: 1) | **Да** | Card presents (см. справочник) |
-| cardDataInputMode | string (maxLength: 1) | **Да** | Card data input mode (см. справочник) |
-| cardholderAuthMethod | string (maxLength: 1) | **Да** | Cardholder authentication method (см. справочник) |
-| cardholderAuthEntity | string (maxLength: 1) | **Да** | Cardholder authentication entity (см. справочник) |
 | paymentPurpose | string (maxLength: 50) | Нет | Назначение платежа |
 | customerId | string (maxLength: 40) | Нет | Идентификатор клиента у мерчанта |
 | pan | string (maxLength: 19, example: '5331572000044252') | Нет | PAN карты |
@@ -56,6 +34,27 @@
 | rCardProduct | string (maxLength: 3) | Нет | Карточный продукт карты получателя |
 | rCardIssuerCountry | string (maxLength: 2) | Нет | Страна банка эмитента карты получателя |
 | rCardholderName | string (maxLength: 30) | Нет | Имя владельца карты получателя |
+| rrn | string (maxLength: 12) | **Да** | Retrieval Reference Number (DE37) |
+| amountTxn | string (maxLength: 12, pattern: '^[0-9]{1,12}$', example: '45100') | **Да** | Сумма транзакции в валюте транзакции (DE04) |
+| currencyTxn | string (maxLength: 3, pattern: '^[0-9]{1,3}$', example: '840') | **Да** | ISO код валюты транзакции (DE49) |
+| mcc | string (maxLength: 4, example: '6538') | **Да** | Merchant category code (DE18) |
+| merchantId | string (maxLength: 15) | **Да** | Идентификатор мерчанта (DE42) |
+| merchantName | string (maxLength: 40, example: 'PRIMSOTSATM020438') | **Да** | Имя мерчанта |
+| merchantCity | string (maxLength: 31, example: 'VOLGOGRAD') | **Да** | Город, URL, e-mail или номер телефона мерчанта |
+| merchantCountry | string (maxLength: 2, example: 'RU') | **Да** | Страна мерчанта |
+| terminalType | string (maxLength: 2, pattern: '^[0-9]{1,2}$', example: '8') | **Да** | Тип терминала |
+| terminalId | string (maxLength: 16) | **Да** | Идентификатор терминала (DE41) |
+| posEntryMode | string (maxLength: 4, pattern: '^[0-9]{1,4}$') | **Да** | Point of Service Entry Mode (DE22) |
+| posDataCode | string (maxLength: 12) | **Да** | Условия обслуживания |
+| cardDataInputCap | string (maxLength: 1) | **Да** | Card data input capability (см. справочник) |
+| cardholderAuthCap | string (maxLength: 1) | **Да** | Cardholder authentication capability (см. справочник) |
+| cardCaptureCap | string (maxLength: 1) | **Да** | Card capture capability (см. справочник) |
+| operEnvironment | string (maxLength: 1) | **Да** | Operating environment (см. справочник) |
+| cardholderPresent | string (maxLength: 1) | **Да** | POS cardholder presence indicator (см. справочник) |
+| cardPresent | string (maxLength: 1) | **Да** | Card presents (см. справочник) |
+| cardDataInputMode | string (maxLength: 1) | **Да** | Card data input mode (см. справочник) |
+| cardholderAuthMethod | string (maxLength: 1) | **Да** | Cardholder authentication method (см. справочник) |
+| cardholderAuthEntity | string (maxLength: 1) | **Да** | Cardholder authentication entity (см. справочник) |
 | cvcExists | string (maxLength: 10) | Нет | Факт наличия CVV2, true/false |
 | bdasPageHref | string (maxLength: 2048, example: 'https://pay.cardstandard.ru/card2card/ks-bank/form/') | Нет | Полный адрес страницы, на которой был вызван bdas |
 | bdasPageHostname | string (maxLength: 45, example: 'pay.cardstandard.ru') | Нет | Имя хоста, на котором был вызван bdas |
