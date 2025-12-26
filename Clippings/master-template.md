@@ -1,6 +1,10 @@
-
 ---
 id: "{{DOC_ID}}"
+type: project
+category:
+---
+
+id: 
 name: "{{DOC_NAME}}"
 type: "project"
 level: 1
