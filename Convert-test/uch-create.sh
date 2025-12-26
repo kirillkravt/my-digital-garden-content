@@ -231,8 +231,23 @@ create_child_document() {
         exit 1
     fi
     
-    # Получаем имя родителя
-    parent_name=$(basename "$parent_file" .md | sed 's/^[^-]*- //')
+    # Получаем имя родителя КОРРЕКТНО
+    # Пример: файл "00-01 - Компонент.md" -> имя "Компонент"
+    parent_name=$(basename "$parent_file" .md)
+    
+    # Убираем ID и " - " из начала
+    # Безопасный способ: удаляем все до первого " - "
+    parent_name=$(echo "$parent_name" | sed 's/^[^-]*- //')
+    
+    # Дополнительная проверка: если после удаления остался ID (значит было два ID)
+    # Пример: "00-01 - 00-01 - Компонент" -> "00-01 - Компонент"
+    # Еще раз удаляем ID если он остался
+    if [[ "$parent_name" =~ ^[0-9A-Fa-f]{2}(-[0-9A-Fa-f]{2})* - ]]; then
+        parent_name=$(echo "$parent_name" | sed 's/^[^-]*- //')
+    fi
+    
+    echo "Родительский файл: $parent_file"
+    echo "Имя родителя (очищенное): $parent_name"
     
     # Определяем уровень
     level=$(echo "$parent_id" | tr -cd '-' | wc -c)
