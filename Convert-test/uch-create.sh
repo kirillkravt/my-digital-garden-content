@@ -216,7 +216,58 @@ EOF
     echo "✅ Создан мастер-документ: $filename"
 }
 
-# Функция для создания дочернего документа
+# НОВАЯ функция для надежной очистки имени файла от ID
+clean_parent_name() {
+    local full_filename="$1"
+    
+    # Убираем расширение .md
+    filename=$(basename "$full_filename" .md)
+    
+    echo "  Очистка имени из: $filename" >&2
+    
+    # Разделяем по " - " и берем все части кроме первой (ID)
+    # Пример: "00-01 - 00-01 - Компонент" -> ["00-01", "00-01", "Компонент"]
+    
+    # Используем IFS для разделения
+    OLD_IFS="$IFS"
+    IFS=" - "
+    parts=($filename)
+    IFS="$OLD_IFS"
+    
+    # Проверяем сколько частей получилось
+    if [ ${#parts[@]} -eq 0 ]; then
+        echo "$filename"
+        return
+    fi
+    
+    # Первая часть - это всегда ID (или первый ID если их несколько)
+    # Нам нужно проверить все части и оставить только те, которые НЕ являются ID
+    
+    clean_parts=()
+    for part in "${parts[@]}"; do
+        # Проверяем, является ли часть ID (hex формат с дефисами)
+        if echo "$part" | grep -qE '^[0-9A-Fa-f]{2}(-[0-9A-Fa-f]{2})*$'; then
+            # Это ID - пропускаем
+            continue
+        else
+            # Это не ID - добавляем в результат
+            clean_parts+=("$part")
+        fi
+    done
+    
+    # Если после очистки ничего не осталось, возвращаем последний ID как имя
+    if [ ${#clean_parts[@]} -eq 0 ]; then
+        # Берем последнюю часть (последний ID) как имя
+        last_part="${parts[-1]}"
+        echo "$last_part"
+    else
+        # Собираем оставшиеся части обратно в строку
+        clean_name=$(IFS=" - "; echo "${clean_parts[*]}")
+        echo "$clean_name"
+    fi
+}
+
+# Исправленная функция для создания дочернего документа
 create_child_document() {
     local parent_id="$1"
     local doc_name="$2"
@@ -231,26 +282,11 @@ create_child_document() {
         exit 1
     fi
     
-    # Получаем имя родителя КОРРЕКТНО
-    # Пример: файл "00-01 - Компонент.md" -> имя "Компонент"
-    parent_name=$(basename "$parent_file" .md)
+    # Получаем очищенное имя родителя
+    parent_name=$(clean_parent_name "$parent_file")
     
-    # Убираем ID и " - " из начала
-    # Безопасный способ: удаляем все до первого " - "
-    parent_name=$(echo "$parent_name" | sed 's/^[^-]*- //')
-    
-    # Дополнительная проверка: если после удаления остался ID (значит было два ID)
-    # Для совместимости с macOS используем более простую проверку
-    
-    # Проверяем, начинается ли имя с паттерна ID (две hex цифры, возможно с дефисами)
-    # Используем grep вместо [[ =~ ]] для совместимости
-    if echo "$parent_name" | grep -qE '^[0-9A-Fa-f]{2}(-[0-9A-Fa-f]{2})* - '; then
-        # Еще раз удаляем ID если он остался
-        parent_name=$(echo "$parent_name" | sed 's/^[^-]*- //')
-    fi
-    
-    echo "Родительский файл: $parent_file"
-    echo "Имя родителя (очищенное): $parent_name"
+    echo "Родительский файл: $(basename "$parent_file")"
+    echo "Очищенное имя родителя: $parent_name"
     
     # Определяем уровень
     level=$(echo "$parent_id" | tr -cd '-' | wc -c)
