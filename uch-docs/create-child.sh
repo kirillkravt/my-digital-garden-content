@@ -1,48 +1,61 @@
 #!/bin/bash
 
-echo "=== СОЗДАНИЕ ДОЧЕРНЕГО ДОКУМЕНТА ==="
+echo "=== СОЗДАНИЕ ДОЧЕРНЕГО ДОКУМЕНТА v2 ==="
 
 # Функция для поиска первого свободного дочернего ID
 find_free_child_id() {
     local parent_id="$1"
-    local level="$2"
     
-    # Ищем все дочерние файлы для данного родителя
-    pattern="${parent_id}-[0-9A-Fa-f]\{2\}"
+    echo "Поиск свободного ID для родителя: $parent_id" >&2
+    
+    # Ищем все файлы, которые начинаются с parent_id-
+    # Пример: для parent_id="00" ищем "00-01", "00-02" и т.д.
+    pattern="${parent_id}-[0-9A-Fa-f][0-9A-Fa-f]"
+    
+    # Получаем список всех дочерних ID
     existing_ids=$(find . -maxdepth 1 -name "*.md" -type f 2>/dev/null | \
         grep -E "^\./${pattern} - " | \
         sed 's/^\.\///' | \
         cut -d' ' -f1 | \
-        cut -d'-' -f$((level + 1)) | \
+        grep -E "^${parent_id}-[0-9A-Fa-f]{2}$" | \
+        awk -F"${parent_id}-" '{print $2}' | \
         sort | uniq)
+    
+    echo "Найдены существующие ID: $existing_ids" >&2
     
     # Если нет дочерних файлов, начинаем с 01
     if [ -z "$existing_ids" ]; then
+        echo "01" >&2
         echo "01"
         return
     fi
     
-    # Конвертируем все ID в десятичные
-    declare -a dec_ids=()
+    # Конвертируем hex ID в decimal и находим пропуски
+    declare -a dec_array=()
+    
     for hex_id in $existing_ids; do
+        # Конвертируем hex в decimal
         dec_id=$((16#$hex_id))
-        dec_ids+=($dec_id)
+        dec_array+=($dec_id)
     done
     
-    # Сортируем decimal ID
-    sorted_ids=($(printf "%d\n" "${dec_ids[@]}" | sort -n))
+    # Сортируем массив чисел
+    sorted_array=($(printf "%d\n" "${dec_array[@]}" | sort -n))
     
     # Ищем первый пропуск, начиная с 1
     expected=1
-    for id in "${sorted_ids[@]}"; do
+    for id in "${sorted_array[@]}"; do
         if [ $id -gt $expected ]; then
+            # Нашли пропуск
             break
         fi
         expected=$((id + 1))
     done
     
     # Конвертируем обратно в hex с лидирующим нулем
-    printf "%02X" $expected
+    result=$(printf "%02X" $expected)
+    echo "Свободный ID: $result" >&2
+    echo "$result"
 }
 
 # Запрашиваем ID родителя
@@ -65,14 +78,12 @@ fi
 parent_name=$(basename "$parent_file" .md | sed 's/^[^-]*- //')
 
 # Определяем уровень дочернего документа
-# Считаем количество дефисов в parent_id + 1
 level=$(echo "$parent_id" | tr -cd '-' | wc -c)
 level=$((level + 2))
-
 echo "Уровень нового документа: $level"
 
 # Генерируем дочерний ID
-child_suffix=$(find_free_child_id "$parent_id" "$level")
+child_suffix=$(find_free_child_id "$parent_id")
 child_id="${parent_id}-${child_suffix}"
 
 echo "Сгенерирован дочерний ID: $child_id"
