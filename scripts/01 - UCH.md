@@ -4,9 +4,7 @@ name: "UCH"
 type: "project"
 level: 1
 status: "active"
-tags: ["@project"
-, "@@test"
-, "@@project"
+tags: ["@project", "@@test", "@@project"
 ]
 parent: null
 created: "2025-12-26"
