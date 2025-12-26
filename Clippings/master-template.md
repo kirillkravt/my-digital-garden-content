@@ -1,20 +1,22 @@
-
-id: 
-name: "{{DOC_NAME}}"
+---
+id: "<% tp.file.title.split(' - ')[0] %>"
+name: "<% tp.file.title.split(' - ').slice(1).join(' - ') %>"
 type: "project"
 level: 1
 status: "active-development"
 version: "0.1.0"
-tags: ["{{TAGS}}", "@project", "@master"]
+tags: [<% tp.file.cursor() %>]
 parent: null
 children: []
 related: []
-created: "{{CREATED_DATE}}"
-updated: "{{UPDATED_DATE}}"
+created: "<% tp.date.now("YYYY-MM-DD") %>"
+updated: "<% tp.date.now("YYYY-MM-DD") %>"
 priority: "medium"
-author: "{{AUTHOR}}"
+author: "<% tp.user.get_author() %>"
 ---
-# {{DOC_NAME}}
+# <% tp.file.title.split(' - ').slice(1).join(' - ') %>
+
+
 ### 1\. Мастер-шаблон (уровень 1): master-template.md
 
 ИЛИ (если Dataview не используется):
