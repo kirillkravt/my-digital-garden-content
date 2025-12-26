@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "=== СОЗДАНИЕ МАСТЕР-ДОКУМЕНТА ==="
+echo "=== СОЗДАНИЕ МАСТЕР-ДОКУМЕНТА v2 ==="
 
 # Запрашиваем данные
 echo "Введите ID документа (например: 01):"
@@ -9,7 +9,7 @@ read doc_id
 echo "Введите название проекта:"
 read doc_name
 
-echo "Введите теги через пробел (например: project test):"
+echo "Введите теги через пробел (например: test automation):"
 read doc_tags
 
 # Текущая дата
@@ -20,7 +20,14 @@ filename="${doc_id} - ${doc_name}.md"
 
 echo "Создаю файл: $filename"
 
-# Создаем содержимое файла
+# Создаем массив тегов правильно
+tags_array="[\"@project\""
+for tag in $doc_tags; do
+    tags_array="${tags_array}, \"@$tag\""
+done
+tags_array="${tags_array}]"
+
+# Создаем весь файл сразу
 cat > "$filename" << EOF
 ---
 id: "$doc_id"
@@ -28,17 +35,7 @@ name: "$doc_name"
 type: "project"
 level: 1
 status: "active"
-tags: ["@project"
-EOF
-
-# Добавляем теги
-for tag in $doc_tags; do
-    echo ", \"@$tag\"" >> "$filename"
-done
-
-# Продолжаем остальную часть файла
-cat >> "$filename" << EOF
-]
+tags: $tags_array
 parent: null
 created: "$current_date"
 updated: "$current_date"
