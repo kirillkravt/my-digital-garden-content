@@ -1,36 +1,85 @@
 #!/bin/bash
 
-echo "=== СОЗДАНИЕ МАСТЕР-ДОКУМЕНТА v2 ==="
+echo "=== СОЗДАНИЕ МАСТЕР-ДОКУМЕНТА С ПОИСКОМ СВОБОДНОГО ID ==="
 
-# Запрашиваем данные
-echo "Введите ID документа (например: 01):"
-read doc_id
+# Функция для поиска первого свободного HEX ID
+find_first_free_id() {
+    # Получаем список всех ID в текущей папке
+    # Ищем файлы с паттерном: две hex цифры, пробел, дефис, пробел
+    existing_ids=$(find . -maxdepth 1 -name "*.md" -type f 2>/dev/null | \
+        grep -E '^\./[0-9A-Fa-f]{2} - ' | \
+        sed 's/^\.\///' | \
+        cut -d' ' -f1 | \
+        sort | uniq)
+    
+    # Если нет файлов, возвращаем 00
+    if [ -z "$existing_ids" ]; then
+        echo "00"
+        return
+    fi
+    
+    # Конвертируем все ID в десятичные
+    declare -a dec_ids=()
+    for hex_id in $existing_ids; do
+        # Конвертируем hex в decimal
+        dec_id=$((16#$hex_id))
+        dec_ids+=($dec_id)
+    done
+    
+    # Сортируем decimal ID
+    sorted_ids=($(printf "%d\n" "${dec_ids[@]}" | sort -n))
+    
+    # Ищем первый пропуск, начиная с 0
+    expected=0
+    for id in "${sorted_ids[@]}"; do
+        if [ $id -gt $expected ]; then
+            # Нашли пропуск
+            break
+        fi
+        expected=$((id + 1))
+    done
+    
+    # Конвертируем обратно в hex с лидирующим нулем
+    printf "%02X" $expected
+}
 
+# Получаем свободный ID
+free_id=$(find_first_free_id)
+echo "Найден свободный ID: $free_id"
+
+# Запрашиваем остальные данные
 echo "Введите название проекта:"
 read doc_name
 
-echo "Введите теги через пробел (например: test automation):"
+if [ -z "$doc_name" ]; then
+    echo "Ошибка: название не может быть пустым"
+    exit 1
+fi
+
+echo "Введите теги через пробел (например: music studio):"
 read doc_tags
 
 # Текущая дата
 current_date=$(date +%Y-%m-%d)
 
 # Имя файла
-filename="${doc_id} - ${doc_name}.md"
+filename="${free_id} - ${doc_name}.md"
 
 echo "Создаю файл: $filename"
 
-# Создаем массив тегов правильно
+# Создаем массив тегов
 tags_array="[\"@project\""
-for tag in $doc_tags; do
-    tags_array="${tags_array}, \"@$tag\""
-done
+if [ -n "$doc_tags" ]; then
+    for tag in $doc_tags; do
+        tags_array="${tags_array}, \"@$tag\""
+    done
+fi
 tags_array="${tags_array}]"
 
-# Создаем весь файл сразу
+# Создаем файл
 cat > "$filename" << EOF
 ---
-id: "$doc_id"
+id: "$free_id"
 name: "$doc_name"
 type: "project"
 level: 1
@@ -44,7 +93,7 @@ author: "$USER"
 ### $doc_name
 
 #### ОБЩАЯ ИНФОРМАЦИЯ
-- **ID**: \`$doc_id\`
+- **ID**: \`$free_id\`
 - **Статус**: Активная разработка
 - **Уровень**: 1
 - **Создано**: \`$current_date\`
@@ -65,4 +114,4 @@ author: "$USER"
 Система документирования UCH
 EOF
 
-echo "Документ создан: $filename"
+echo "✅ Документ создан: $filename"
