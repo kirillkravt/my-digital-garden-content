@@ -1,4 +1,21 @@
 
+---
+id: "{{DOC_ID}}"
+name: "{{DOC_NAME}}"
+type: "project"
+level: 1
+status: "active-development"
+version: "0.1.0"
+tags: ["{{TAGS}}", "@project", "@master"]
+parent: null
+children: []
+related: []
+created: "{{CREATED_DATE}}"
+updated: "{{UPDATED_DATE}}"
+priority: "medium"
+author: "{{AUTHOR}}"
+---
+# {{DOC_NAME}}
 ### 1\. Мастер-шаблон (уровень 1): master-template.md
 
 ИЛИ (если Dataview не используется):
