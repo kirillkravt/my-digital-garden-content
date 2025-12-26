@@ -81,11 +81,13 @@ find_free_child_id() {
     printf "%02X" $expected
 }
 
-# Функция для обновления родительского документа
+# Функция для добавления ссылки в родительский документ (ИСПРАВЛЕННАЯ)
 update_parent_document() {
     local parent_file="$1"
     local child_id="$2"
     local child_name="$3"
+    
+    echo "  Обновляю родительский документ: $(basename "$parent_file")"
     
     if [ ! -f "$parent_file" ]; then
         echo "  ⚠️  Родительский файл не найден, пропускаю обновление"
@@ -95,9 +97,25 @@ update_parent_document() {
     # Создаем временный файл
     temp_file="${parent_file}.tmp"
     
-    # Удаляем "Пока нет дочерних документов" и добавляем ссылку
+    # Флаг для отслеживания, добавили ли мы ссылку
+    link_added=0
+    
+    # Читаем файл построчно и обрабатываем
     awk -v child_id="$child_id" -v child_name="$child_name" '
-    BEGIN { in_children_section = 0; children_section_found = 0; children_added = 0 }
+    BEGIN { 
+        in_children_section = 0
+        children_section_found = 0
+        link_exists = 0
+        link_added = 0
+    }
+    
+    # Проверяем, не существует ли уже такая ссылка
+    /\[\[.* - .*\]\]/ && in_children_section {
+        if ($0 ~ "\\[\\[" child_id " - " child_name "\\]\\]") {
+            link_exists = 1
+            print "  ℹ️  Ссылка уже существует, пропускаю" > "/dev/stderr"
+        }
+    }
     
     # Если находим начало раздела ДОЧЕРНИЕ ДОКУМЕНТЫ
     /#### ДОЧЕРНИЕ ДОКУМЕНТЫ/ {
@@ -109,6 +127,7 @@ update_parent_document() {
     
     # Если мы внутри раздела и находим "Пока нет дочерних документов" - пропускаем
     in_children_section && /^[[:space:]]*Пока нет дочерних документов/ {
+        # Пропускаем эту строку
         next
     }
     
@@ -117,25 +136,44 @@ update_parent_document() {
         in_children_section = 0
     }
     
-    # Если мы внутри раздела и это конец файла или пустая строка
-    in_children_section && (/^[[:space:]]*$/ || /^---/) {
-        # Добавляем ссылку перед пустой строкой или разделителем
-        print "- [[" child_id " - " child_name "]]"
+    # Если мы внутри раздела и это пустая строка
+    in_children_section && /^[[:space:]]*$/ {
+        # Если ссылка еще не добавлена и не существует
+        if (!link_exists && !link_added) {
+            print "- [[" child_id " - " child_name "]]"
+            link_added = 1
+        }
         in_children_section = 0
-        children_added = 1
         print $0
         next
     }
     
-    # Если нашли раздел ДОЧЕРНИЕ ДОКУМЕНТЫ, но еще не добавили ссылку
-    children_section_found && !children_added && !in_children_section {
-        # Добавляем ссылку после раздела
-        print "- [[" child_id " - " child_name "]]"
-        children_added = 1
+    # Если мы внутри раздела и это конец файла
+    in_children_section && /^---/ {
+        # Если ссылка еще не добавлена и не существует
+        if (!link_exists && !link_added) {
+            print "- [[" child_id " - " child_name "]]"
+            link_added = 1
+        }
+        in_children_section = 0
         print $0
         next
     }
     
+    # Если мы в конце раздела ДОЧЕРНИЕ ДОКУМЕНТЫ (последняя строка раздела)
+    in_children_section && !/^- \[\[/ && !/^[[:space:]]*$/ {
+        # Если это не ссылка и не пустая строка, значит конец списка ссылок
+        # Добавляем новую ссылку перед выходом из раздела
+        if (!link_exists && !link_added) {
+            print "- [[" child_id " - " child_name "]]"
+            link_added = 1
+        }
+        in_children_section = 0
+        print $0
+        next
+    }
+    
+    # Печатаем текущую строку
     { print $0 }
     
     END {
@@ -144,12 +182,17 @@ update_parent_document() {
             print ""
             print "#### ДОЧЕРНИЕ ДОКУМЕНТЫ"
             print "- [[" child_id " - " child_name "]]"
+        } else if (!link_exists && !link_added) {
+            # Если раздел найден, но ссылка не добавлена (случай когда нет пустой строки в конце)
+            print "- [[" child_id " - " child_name "]]"
         }
     }
     ' "$parent_file" > "$temp_file"
     
     # Заменяем оригинальный файл
     mv "$temp_file" "$parent_file"
+    
+    echo "  ✅ Ссылка добавлена в родительский документ"
 }
 
 # Функция для создания мастер-документа
