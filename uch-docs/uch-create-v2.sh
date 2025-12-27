@@ -314,7 +314,32 @@ clean_parent_name() {
         echo "$clean_name"
     fi
 }
+
+# Исправленная функция для создания дочернего документа
+create_child_document() {
+    local parent_id="$1"
+    local doc_name="$2"
+    local tags="$3"
     
+    echo "Создание дочернего документа"
+    
+    # Проверяем существование родительского файла
+    parent_file=$(find . -maxdepth 1 -name "${parent_id} - *.md" -type f | head -1)
+    if [ -z "$parent_file" ]; then
+        echo "❌ Ошибка: родительский файл с ID $parent_id не найден"
+        exit 1
+    fi
+    
+    # Получаем очищенное имя родителя
+    parent_name=$(clean_parent_name "$parent_file")
+    
+    echo "Родительский файл: $(basename "$parent_file")"
+    echo "Очищенное имя родителя: $parent_name"
+    
+    # Определяем уровень
+    level=$(echo "$parent_id" | tr -cd '-' | wc -c)
+    level=$((level + 2))
+  
     # Генерируем ID
     child_suffix=$(find_free_child_id "$parent_id")
     doc_id="${parent_id}-${child_suffix}"
