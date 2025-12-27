@@ -463,15 +463,21 @@ done
 if [ -n "$DOC_NAME" ]; then
     if [ -n "$PARENT_ID" ]; then
         DOC_TYPE="2"  # Дочерний
-    elif [ -n "$MANUAL_ID" ] && [ -z "$PARENT_ID" ]; then
-        # Если указан manual-id без parent - это мастер документ
-        DOC_TYPE="1"  # Мастер
     else
-        DOC_TYPE="1"  # По умолчанию мастер
+        DOC_TYPE="1"  # Мастер (даже если есть MANUAL_ID без PARENT_ID)
     fi
+    echo "Автоматически определен тип: $DOC_TYPE"
 fi
 
 # Основная логика
+echo "=== ДЕБАГ ПЕРЕД ЛОГИКОЙ ==="
+echo "DOC_NAME='$DOC_NAME'"
+echo "PARENT_ID='$PARENT_ID'" 
+echo "MANUAL_ID='$MANUAL_ID'"
+echo "DOC_TYPE='$DOC_TYPE'"
+echo "DOC_TAGS='$DOC_TAGS'"
+echo "=== КОНЕЦ ДЕБАГА ==="
+
 if [ -n "$DOC_NAME" ]; then
     # Режим с параметрами
     echo "Создание документа с параметрами"
