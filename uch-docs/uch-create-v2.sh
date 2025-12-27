@@ -409,6 +409,53 @@ EOF
     echo "✅ Создан дочерний документ: $filename"
 }
 
+# Парсинг аргументов командной строки
+MANUAL_ID=""
+FORCE_PARENT=""
+DOC_NAME=""
+PARENT_ID=""
+DOC_TAGS=""
+DOC_TYPE=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --name)
+            DOC_NAME="$2"
+            shift 2
+            ;;
+        --parent)
+            PARENT_ID="$2"
+            shift 2
+            ;;
+        --tags)
+            DOC_TAGS="$2"
+            shift 2
+            ;;
+        --manual-id)
+            MANUAL_ID="$2"
+            shift 2
+            ;;
+        --force-parent)
+            FORCE_PARENT="$2"
+            shift 2
+            ;;
+        *)
+            echo "Неизвестный параметр: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# Если переданы параметры, используем их вместо интерактивного режима
+if [ -n "$DOC_NAME" ]; then
+    # Определяем тип документа
+    if [ -n "$PARENT_ID" ]; then
+        DOC_TYPE="2"  # Дочерний
+    else
+        DOC_TYPE="1"  # Мастер
+    fi
+fi
+
 # Основная логика
 echo ""
 echo "Выберите тип документа:"
