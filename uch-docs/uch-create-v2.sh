@@ -426,15 +426,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# После парсинга аргументов, перед "Определяем тип документа"
-echo "=== ОТЛАДКА ПАРСИНГА ==="
-echo "Переданные параметры:"
-echo "  --name: '$DOC_NAME'"
-echo "  --parent: '$PARENT_ID'"
-echo "  --manual-id: '$MANUAL_ID'"
-echo "  --tags: '$DOC_TAGS'"
-echo "=== КОНЕЦ ОТЛАДКИ ==="
-
 # Определяем тип документа на основе параметров
 if [ -n "$DOC_NAME" ]; then
     if [ -n "$PARENT_ID" ]; then
@@ -442,18 +433,9 @@ if [ -n "$DOC_NAME" ]; then
     else
         DOC_TYPE="1"  # Мастер (даже если есть MANUAL_ID без PARENT_ID)
     fi
-    echo "Автоматически определен тип: $DOC_TYPE"
 fi
 
 # Основная логика
-echo "=== ДЕБАГ ПЕРЕД ЛОГИКОЙ ==="
-echo "DOC_NAME='$DOC_NAME'"
-echo "PARENT_ID='$PARENT_ID'" 
-echo "MANUAL_ID='$MANUAL_ID'"
-echo "DOC_TYPE='$DOC_TYPE'"
-echo "DOC_TAGS='$DOC_TAGS'"
-echo "=== КОНЕЦ ДЕБАГА ==="
-
 if [ -n "$DOC_NAME" ]; then
     # Режим с параметрами
     echo "Создание документа с параметрами"
@@ -462,14 +444,14 @@ if [ -n "$DOC_NAME" ]; then
         # Мастер-документ
         create_master_document "$DOC_NAME" "$DOC_TAGS"
     elif [ "$DOC_TYPE" = "2" ]; then
-        # Дочерний документ
+        # Дочерний документ - НУЖНО СОЗДАТЬ ЭТУ ФУНКЦИЮ
         create_child_document "$PARENT_ID" "$DOC_NAME" "$DOC_TAGS"
     else
         echo "❌ Ошибка: неопределённый тип документа"
         exit 1
     fi
 else
-    # Интерактивный режим (старый)
+    # Интерактивный режим (оригинальный)
     echo ""
     echo "Выберите тип документа:"
     echo "1 - Мастер-документ (уровень 1, корневой)"
