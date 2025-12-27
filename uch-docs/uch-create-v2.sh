@@ -426,6 +426,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# После парсинга аргументов, перед "Определяем тип документа"
+echo "=== ОТЛАДКА ПАРСИНГА ==="
+echo "Переданные параметры:"
+echo "  --name: '$DOC_NAME'"
+echo "  --parent: '$PARENT_ID'"
+echo "  --manual-id: '$MANUAL_ID'"
+echo "  --tags: '$DOC_TAGS'"
+echo "=== КОНЕЦ ОТЛАДКИ ==="
+
 # Определяем тип документа на основе параметров
 if [ -n "$DOC_NAME" ]; then
     if [ -n "$PARENT_ID" ]; then
