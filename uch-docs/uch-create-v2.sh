@@ -202,8 +202,13 @@ create_master_document() {
     
     echo "Создание мастер-документа (уровень 1)"
     
-    # Генерируем ID
-    doc_id=$(find_free_master_id)
+        # Генерируем ID
+    if [ -n "$MANUAL_ID" ]; then
+        doc_id="$MANUAL_ID"
+        echo "Используется ручной ID: $doc_id"
+    else
+        doc_id=$(find_free_master_id)
+    fi
     echo "Сгенерирован ID: $doc_id"
     
     current_date=$(date +%Y-%m-%d)
