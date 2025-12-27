@@ -472,11 +472,27 @@ if [ -n "$DOC_NAME" ]; then
 fi
 
 # Основная логика
-echo ""
-echo "Выберите тип документа:"
-echo "1 - Мастер-документ (уровень 1, корневой)"
-echo "2 - Дочерний документ (уровень 2+)"
-read -p "Ваш выбор (1 или 2): " doc_type
+if [ -n "$DOC_NAME" ]; then
+    # Режим с параметрами
+    echo "Создание документа с параметрами"
+    
+    if [ "$DOC_TYPE" = "1" ]; then
+        # Мастер-документ
+        create_master_document "$DOC_NAME" "$DOC_TAGS"
+    elif [ "$DOC_TYPE" = "2" ]; then
+        # Дочерний документ
+        create_child_document "$PARENT_ID" "$DOC_NAME" "$DOC_TAGS"
+    else
+        echo "❌ Ошибка: неопределённый тип документа"
+        exit 1
+    fi
+else
+    # Интерактивный режим (старый)
+    echo ""
+    echo "Выберите тип документа:"
+    echo "1 - Мастер-документ (уровень 1, корневой)"
+    echo "2 - Дочерний документ (уровень 2+)"
+    read -p "Ваш выбор (1 или 2): " doc_type
 
 case $doc_type in
     1)
