@@ -202,7 +202,7 @@ create_master_document() {
     
     echo "Создание мастер-документа (уровень 1)"
     
-        # Генерируем ID
+    # Генерируем ID
     if [ -n "$MANUAL_ID" ]; then
         doc_id="$MANUAL_ID"
         echo "Используется ручной ID: $doc_id"
@@ -214,7 +214,7 @@ create_master_document() {
     current_date=$(date +%Y-%m-%d)
     filename="${doc_id} - ${doc_name}.md"
     
-    # Создаем массив тегов
+    # Создаем массив теги
     tags_array="[\"@project\""
     if [ -n "$tags" ]; then
         for tag in $tags; do
@@ -315,7 +315,7 @@ clean_parent_name() {
     fi
 }
 
-# Исправленная функция для создания дочернего документа
+# ПРАВИЛЬНАЯ функция для создания дочернего документа
 create_child_document() {
     local parent_id="$1"
     local doc_name="$2"
@@ -323,42 +323,38 @@ create_child_document() {
     
     echo "Создание дочернего документа"
     
-    # Проверяем существование родительского файла
+    # Находим родительский файл
     parent_file=$(find . -maxdepth 1 -name "${parent_id} - *.md" -type f | head -1)
+    
     if [ -z "$parent_file" ]; then
-        echo "❌ Ошибка: родительский файл с ID $parent_id не найден"
+        echo "❌ Ошибка: родительский документ с ID $parent_id не найден"
         exit 1
     fi
     
-    # Получаем очищенное имя родителя
-    parent_name=$(clean_parent_name "$parent_file")
-    
-    echo "Родительский файл: $(basename "$parent_file")"
-    echo "Очищенное имя родителя: $parent_name"
-    
-    # Определяем уровень
-    level=$(echo "$parent_id" | tr -cd '-' | wc -c)
-    level=$((level + 2))
-  
     # Генерируем ID
-    child_suffix=$(find_free_child_id "$parent_id")
-    doc_id="${parent_id}-${child_suffix}"
+    if [ -n "$MANUAL_ID" ]; then
+        doc_id="$MANUAL_ID"
+        echo "Используется ручной ID: $doc_id"
+        
+        # Проверяем что manual-id начинается с parent_id
+        if [[ ! "$doc_id" =~ ^$parent_id- ]]; then
+            echo "⚠️  Внимание: manual-id '$doc_id' не начинается с parent-id '$parent_id'"
+        fi
+    else
+        child_suffix=$(find_free_child_id "$parent_id")
+        doc_id="${parent_id}-${child_suffix}"
+    fi
     
-    echo "Родитель: $parent_name ($parent_id)"
-    echo "Уровень: $level"
     echo "Сгенерирован ID: $doc_id"
     
     current_date=$(date +%Y-%m-%d)
     filename="${doc_id} - ${doc_name}.md"
     
-    # Определяем тип по уровню
-    case $level in
-        2|3) doc_type="component" ;;
-        *) doc_type="task" ;;
-    esac
+    # Извлекаем имя родителя без ID
+    parent_name=$(clean_parent_name "$parent_file")
     
     # Создаем массив тегов
-    tags_array="[\"@$doc_type\""
+    tags_array="[\"@component\""
     if [ -n "$tags" ]; then
         for tag in $tags; do
             tags_array="${tags_array}, \"@$tag\""
@@ -366,8 +362,20 @@ create_child_document() {
     fi
     tags_array="${tags_array}]"
     
+    # Определяем уровень
+    level=$(echo "$doc_id" | tr -cd '-' | wc -c)
+    level=$((level + 1))
+    
+    # Определяем тип по уровню
+    case $level in
+        2) doc_type="component" ;;
+        3) doc_type="task" ;;
+        4) doc_type="feature" ;;
+        *) doc_type="document" ;;
+    esac
+    
     # Создаем файл
-    cat > "$filename" << EOF
+    cat > "$filename" << CHILD_EOF
 ---
 id: "$doc_id"
 name: "$doc_name"
@@ -385,9 +393,9 @@ author: "$USER"
 
 #### ОБЩАЯ ИНФОРМАЦИЯ
 - **ID**: \`$doc_id\`
-- **Уровень**: $level
 - **Родитель**: [[$parent_id - $parent_name]]
 - **Статус**: Активная разработка
+- **Уровень**: $level
 - **Создано**: \`$current_date\`
 - **Теги**: $tags
 
@@ -403,12 +411,10 @@ author: "$USER"
 
 ---
 Создано: $current_date
-Уровень: $level
-Родитель: $parent_id
-EOF
+Система документирования UCH
+CHILD_EOF
     
     # Обновляем родительский документ
-    echo "Обновляю родительский документ..."
     update_parent_document "$parent_file" "$doc_id" "$doc_name"
     
     echo "✅ Создан дочерний документ: $filename"
@@ -451,6 +457,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# После парсинга аргументов, перед "Определяем тип документа"
+echo "=== ОТЛАДКА ПАРСИНГА ==="
+echo "Переданные параметры:"
+echo "  --name: '$DOC_NAME'"
+echo "  --parent: '$PARENT_ID'"
+echo "  --manual-id: '$MANUAL_ID'"
+echo "  --tags: '$DOC_TAGS'"
+echo "=== КОНЕЦ ОТЛАДКИ ==="
+
 # Определяем тип документа на основе параметров
 if [ -n "$DOC_NAME" ]; then
     if [ -n "$PARENT_ID" ]; then
@@ -458,6 +473,7 @@ if [ -n "$DOC_NAME" ]; then
     else
         DOC_TYPE="1"  # Мастер (даже если есть MANUAL_ID без PARENT_ID)
     fi
+    echo "Автоматически определен тип: $DOC_TYPE"
 fi
 
 # Основная логика
@@ -469,74 +485,75 @@ if [ -n "$DOC_NAME" ]; then
         # Мастер-документ
         create_master_document "$DOC_NAME" "$DOC_TAGS"
     elif [ "$DOC_TYPE" = "2" ]; then
-        # Дочерний документ - НУЖНО СОЗДАТЬ ЭТУ ФУНКЦИЮ
+        # Дочерний документ
         create_child_document "$PARENT_ID" "$DOC_NAME" "$DOC_TAGS"
     else
         echo "❌ Ошибка: неопределённый тип документа"
         exit 1
     fi
 else
-    # Интерактивный режим (оригинальный)
+    # Интерактивный режим (старый)
     echo ""
     echo "Выберите тип документа:"
     echo "1 - Мастер-документ (уровень 1, корневой)"
     echo "2 - Дочерний документ (уровень 2+)"
     read -p "Ваш выбор (1 или 2): " doc_type
 
-case $doc_type in
-    1)
-        # Создание мастер-документа
-        echo ""
-        echo "--- СОЗДАНИЕ МАСТЕР-ДОКУМЕНТА ---"
-        echo ""
-        echo "Введите название проекта:"
-        read doc_name
+    case $doc_type in
+        1)
+            # Создание мастер-документа
+            echo ""
+            echo "--- СОЗДАНИЕ МАСТЕР-ДОКУМЕНТА ---"
+            echo ""
+            echo "Введите название проекта:"
+            read doc_name
+            
+            if [ -z "$doc_name" ]; then
+                echo "Ошибка: название не может быть пустым"
+                exit 1
+            fi
+            
+            echo "Введите теги через пробел (можно оставить пустым):"
+            read doc_tags
+            
+            echo ""
+            create_master_document "$doc_name" "$doc_tags"
+            ;;
         
-        if [ -z "$doc_name" ]; then
-            echo "Ошибка: название не может быть пустым"
+        2)
+            # Создание дочернего документа
+            echo ""
+            echo "--- СОЗДАНИЕ ДОЧЕРНЕГО ДОКУМЕНТА ---"
+            echo ""
+            echo "Введите ID родительского документа (например: 00 или 00-01):"
+            read parent_id
+            
+            if [ -z "$parent_id" ]; then
+                echo "Ошибка: ID родителя не может быть пустым"
+                exit 1
+            fi
+            
+            echo "Введите название документа:"
+            read doc_name
+            
+            if [ -z "$doc_name" ]; then
+                echo "Ошибка: название не может быть пустым"
+                exit 1
+            fi
+            
+            echo "Введите теги через пробел (можно оставить пустым):"
+            read doc_tags
+            
+            echo ""
+            create_child_document "$parent_id" "$doc_name" "$doc_tags"
+            ;;
+        
+        *)
+            echo "Ошибка: неверный выбор"
             exit 1
-        fi
-        
-        echo "Введите теги через пробел (можно оставить пустым):"
-        read doc_tags
-        
-        echo ""
-        create_master_document "$doc_name" "$doc_tags"
-        ;;
-    
-    2)
-        # Создание дочернего документа
-        echo ""
-        echo "--- СОЗДАНИЕ ДОЧЕРНЕГО ДОКУМЕНТА ---"
-        echo ""
-        echo "Введите ID родительского документа (например: 00 или 00-01):"
-        read parent_id
-        
-        if [ -z "$parent_id" ]; then
-            echo "Ошибка: ID родителя не может быть пустым"
-            exit 1
-        fi
-        
-        echo "Введите название документа:"
-        read doc_name
-        
-        if [ -z "$doc_name" ]; then
-            echo "Ошибка: название не может быть пустым"
-            exit 1
-        fi
-        
-        echo "Введите теги через пробел (можно оставить пустым):"
-        read doc_tags
-        
-        echo ""
-        create_child_document "$parent_id" "$doc_name" "$doc_tags"
-        ;;
-    
-    *)
-        echo "Ошибка: неверный выбор"
-        exit 1
-        ;;
-esac
+            ;;
+    esac
+fi
 
 echo ""
 echo "=== ВЫПОЛНЕНО ==="
