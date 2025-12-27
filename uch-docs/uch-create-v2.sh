@@ -315,11 +315,19 @@ clean_parent_name() {
     fi
 }
 
-# Исправленная функция для создания дочернего документа
-create_child_document() {
-    local parent_id="$1"
-    local doc_name="$2"
-    local tags="$3"
+    # Генерируем ID
+    if [ -n "$MANUAL_ID" ]; then
+        doc_id="$MANUAL_ID"
+        echo "Используется ручной ID: $doc_id"
+        
+        # Проверяем что manual-id начинается с parent_id
+        if [[ ! "$doc_id" =~ ^$parent_id- ]]; then
+            echo "⚠️  Внимание: manual-id '$doc_id' не начинается с parent-id '$parent_id'"
+        fi
+    else
+        child_suffix=$(find_free_child_id "$parent_id")
+        doc_id="${parent_id}-${child_suffix}"
+    fi
     
     echo "Создание дочернего документа"
     
