@@ -320,7 +320,7 @@ create_document() {
     echo "Создать документ? (y/n)"
     read -r CONFIRM
     
-    if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]; then
+    if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ] ]; then
         echo "Отменено."
         return 0
     fi
