@@ -66,38 +66,33 @@ generate_id_for_level() {
     fi
 }
 
-# Функция для корректного форматирования тегов в YAML
+# Функция для корректного форматирования тегов
 format_tags() {
     local tags_input="$1"
     local type="$2"
     
-    # Всегда начинаем с типа документа
-    local yaml_tags=""
+    # Начинаем с типа документа как первого тега
+    local tags_array="[\"@${type}\""
     
-    # Очищаем теги от @ и # в начале, если есть
     if [ -n "$tags_input" ]; then
         # Разделяем теги по запятым
         IFS=',' read -r -a tag_parts <<< "$tags_input"
         
-        # Начинаем YAML массив
-        yaml_tags=""
-        
-        # Добавляем тип как первый тег (без @)
-        yaml_tags="- \"${type}\""
-        
         for tag in "${tag_parts[@]}"; do
-            # Убираем пробелы и префиксы @/#
-            tag_clean=$(echo "$tag" | xargs | sed 's/^[@#]//')
+            # Убираем пробелы и добавляем @ если нет
+            tag_clean=$(echo "$tag" | xargs)
             if [ -n "$tag_clean" ]; then
-                yaml_tags="${yaml_tags}"$'\n'"- \"${tag_clean}\""
+                if [[ "$tag_clean" != @* ]]; then
+                    tags_array="${tags_array}, \"@${tag_clean}\""
+                else
+                    tags_array="${tags_array}, \"${tag_clean}\""
+                fi
             fi
         done
-    else
-        # Только тип документа
-        yaml_tags="- \"${type}\""
     fi
     
-    echo "$yaml_tags"
+    tags_array="${tags_array}]"
+    echo "$tags_array"
 }
 
 # Функция для извлечения имени родителя
@@ -222,7 +217,7 @@ if [ -z "$NAME" ]; then
     fi
 fi
 
-# Форматируем теги в YAML формат
+# Форматируем теги
 FORMATTED_TAGS=$(format_tags "$TAGS" "$TYPE")
 
 # Определяем шаблон
@@ -248,8 +243,7 @@ echo "ID: $DOC_ID"
 echo "Уровень: $LEVEL"
 echo "Название: $NAME"
 echo "Тип: $TYPE"
-echo "Теги:"
-echo "$FORMATTED_TAGS"
+echo "Теги: $FORMATTED_TAGS"
 echo "Родитель: $PARENT_ID ($PARENT_NAME)"
 echo "Файл: $FILENAME"
 echo ""
@@ -265,25 +259,21 @@ fi
 # Создаем документ
 cp "$TEMPLATE" "$FILENAME"
 
-# Заменяем переменные в шаблоне - специальная обработка для тегов
+# Заменяем переменные в шаблоне
 sed -i '' "s/{id}/$DOC_ID/g" "$FILENAME"
 sed -i '' "s/{name}/$NAME/g" "$FILENAME"
 sed -i '' "s/{type}/$TYPE/g" "$FILENAME"
 sed -i '' "s/{level}/$LEVEL/g" "$FILENAME"
+sed -i '' "s/{tags}/$FORMATTED_TAGS/g" "$FILENAME"
 sed -i '' "s/{parent}/$PARENT_ID/g" "$FILENAME"
 sed -i '' "s/{parent_name}/$PARENT_NAME/g" "$FILENAME"
 sed -i '' "s/{date}/$CURRENT_DATE/g" "$FILENAME"
 sed -i '' "s/{author}/$AUTHOR/g" "$FILENAME"
 
-# Специальная обработка для тегов - заменяем всю строку
+# Для мастер-документов обновляем раздел ДОЧЕРНИЕ ДОКУМЕНТЫ
 if [ -z "$PARENT_ID" ]; then
-    # Для мастер-документа
-    sed -i '' "s/tags: {tags}/tags:"$'\\\n'"$FORMATTED_TAGS/g" "$FILENAME"
     # Убираем строку "Пока нет дочерних документов" если есть
     sed -i '' '/Пока нет дочерних документов/d' "$FILENAME"
-else
-    # Для дочернего документа
-    sed -i '' "s/tags: {tags}/tags:"$'\\\n'"$FORMATTED_TAGS/g" "$FILENAME"
 fi
 
 echo "✅ Документ создан: $FILENAME"
@@ -319,3 +309,4 @@ echo "=== ВЫПОЛНЕНО ==="
 echo "Документ: $FILENAME"
 echo "ID: $DOC_ID"
 echo "Уровень: $LEVEL"
+echo "Теги: $FORMATTED_TAGS"
