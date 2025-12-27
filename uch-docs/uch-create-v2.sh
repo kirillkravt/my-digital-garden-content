@@ -314,39 +314,6 @@ clean_parent_name() {
         echo "$clean_name"
     fi
 }
-
-    # Генерируем ID
-    if [ -n "$MANUAL_ID" ]; then
-        doc_id="$MANUAL_ID"
-        echo "Используется ручной ID: $doc_id"
-        
-        # Проверяем что manual-id начинается с parent_id
-        if [[ ! "$doc_id" =~ ^$parent_id- ]]; then
-            echo "⚠️  Внимание: manual-id '$doc_id' не начинается с parent-id '$parent_id'"
-        fi
-    else
-        child_suffix=$(find_free_child_id "$parent_id")
-        doc_id="${parent_id}-${child_suffix}"
-    fi
-    
-    echo "Создание дочернего документа"
-    
-    # Проверяем существование родительского файла
-    parent_file=$(find . -maxdepth 1 -name "${parent_id} - *.md" -type f | head -1)
-    if [ -z "$parent_file" ]; then
-        echo "❌ Ошибка: родительский файл с ID $parent_id не найден"
-        exit 1
-    fi
-    
-    # Получаем очищенное имя родителя
-    parent_name=$(clean_parent_name "$parent_file")
-    
-    echo "Родительский файл: $(basename "$parent_file")"
-    echo "Очищенное имя родителя: $parent_name"
-    
-    # Определяем уровень
-    level=$(echo "$parent_id" | tr -cd '-' | wc -c)
-    level=$((level + 2))
     
     # Генерируем ID
     child_suffix=$(find_free_child_id "$parent_id")
