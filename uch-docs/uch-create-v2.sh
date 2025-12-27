@@ -459,13 +459,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Если переданы параметры, используем их вместо интерактивного режима
+# Определяем тип документа на основе параметров
 if [ -n "$DOC_NAME" ]; then
-    # Определяем тип документа
     if [ -n "$PARENT_ID" ]; then
         DOC_TYPE="2"  # Дочерний
-    else
+    elif [ -n "$MANUAL_ID" ] && [ -z "$PARENT_ID" ]; then
+        # Если указан manual-id без parent - это мастер документ
         DOC_TYPE="1"  # Мастер
+    else
+        DOC_TYPE="1"  # По умолчанию мастер
     fi
 fi
 
