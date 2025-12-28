@@ -40,7 +40,15 @@ if [ -f "$SCRIPT_DIR/batch-mode.sh" ]; then
 fi
 
 if [ -f "$SCRIPT_DIR/replace-mode.sh" ]; then
+if [ -f "$SCRIPT_DIR/replace-shift.sh" ]; then
+    source "$SCRIPT_DIR/replace-shift.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
     source "$SCRIPT_DIR/replace-mode.sh"
+if [ -f "$SCRIPT_DIR/replace-shift.sh" ]; then
+    source "$SCRIPT_DIR/replace-shift.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
 
@@ -77,9 +85,7 @@ show_main_menu() {
             show_main_menu
             ;;
         4)
-            show_replace_shift_menu
-if [ -f "$SCRIPT_DIR/replace-mode-v2.sh" ]; then
-    source "$SCRIPT_DIR/replace-mode-v2.sh"
+            show_document_operations_menu
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
             echo ""
