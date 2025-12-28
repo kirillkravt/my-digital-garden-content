@@ -1,10 +1,10 @@
 #!/bin/bash
-# Главный скрипт UCH Document System - Модульная версия
+# Главный скрипт UCH Document System - исправленная версия
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== UCH CREATE: МОДУЛЬНАЯ СИСТЕМА ==="
-echo "Версия: 1.0.0"
+echo "Версия: 1.1.0"
 echo ""
 
 # Подключаем модули
@@ -77,7 +77,13 @@ show_main_menu() {
             show_main_menu
             ;;
         4)
-            show_document_operations_menu
+            if command -v show_simple_operations_menu &> /dev/null; then
+                show_simple_operations_menu
+            elif command -v show_document_operations_menu &> /dev/null; then
+                show_document_operations_menu
+            else
+                echo "❌ Функция операций с документами не найдена"
+            fi
             echo ""
             show_main_menu
             ;;
