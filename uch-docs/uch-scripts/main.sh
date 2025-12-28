@@ -4,16 +4,28 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== UCH CREATE: МОДУЛЬНАЯ СИСТЕМА ==="
-echo "Версия: 0.1.0"
+echo "Версия: 0.2.0"
 echo ""
 
 # Подключаем модули
+MODULES_LOADED=0
 if [ -f "$SCRIPT_DIR/utils.sh" ]; then
     source "$SCRIPT_DIR/utils.sh"
-    echo "✅ Модуль utils.sh загружен"
-else
-    echo "⚠️  Модуль utils.sh не найден"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
+
+if [ -f "$SCRIPT_DIR/types.sh" ]; then
+    source "$SCRIPT_DIR/types.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+if [ -f "$SCRIPT_DIR/create.sh" ]; then
+    source "$SCRIPT_DIR/create.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+echo "✅ Загружено модулей: $MODULES_LOADED"
+echo ""
 
 # Главное меню
 show_main_menu() {
@@ -22,36 +34,48 @@ show_main_menu() {
     echo "2 - Показать справку по типам"
     echo "3 - Проверить систему"
     echo "4 - Протестировать утилиты"
+    echo "5 - Пакетное создание (эксперимент)"
     echo "q - Выход"
     echo ""
-    read -p "Ваш выбор (1-4/q): " choice
+    read -p "Ваш выбор (1-5/q): " choice
     
     case $choice in
         1) 
-            echo "⚠️  Функция в разработке"
+            create_document_basic
+            echo ""
             show_main_menu 
             ;;
         2)
-            echo "📚 Справка по типам документов:"
-            echo "- project, line (уровень 1)"
-            echo "- component, module, epic (уровень 2)"
-            echo "- task, feature, user_story, bug, инцидент, snapshot (уровень 3)"
-            echo "- solution, subtask, code_block, decision (уровень 4)"
-            echo "- idea, reference, meeting (неиерархические)"
+            echo "📚 СПРАВКА ПО ТИПАМ ДОКУМЕНТОВ:"
+            echo ""
+            if [ -f "$SCRIPT_DIR/types.sh" ]; then
+                for level in 1 2 3 4 N; do
+                    show_type_info_for_level "$level"
+                done
+            else
+                echo "⚠️  Модуль types.sh не загружен"
+            fi
             echo ""
             show_main_menu
             ;;
         3)
-            echo "✅ Базовая система загружена"
-            echo "�� Директория: $SCRIPT_DIR"
-            echo "📅 Дата: $(get_current_date 2>/dev/null || echo 'функция не доступна')"
+            echo "✅ СИСТЕМА:"
+            echo "📁 Директория: $SCRIPT_DIR"
+            echo "📅 Дата: $(get_current_date 2>/dev/null || echo 'N/A')"
+            echo "📦 Модулей: $MODULES_LOADED"
             echo ""
             show_main_menu
             ;;
         4)
-            echo "🧪 Тест утилит:"
+            echo "🧪 ТЕСТ УТИЛИТ:"
             echo "- Текущая дата: $(get_current_date 2>/dev/null || echo 'Ошибка')"
             echo "- Свободный master ID: $(find_free_master_id 2>/dev/null || echo 'Ошибка')"
+            echo "- Тип по умолчанию для уровня 3: $(get_default_type_for_level 3 2>/dev/null || echo 'N/A')"
+            echo ""
+            show_main_menu
+            ;;
+        5)
+            create_batch_documents
             echo ""
             show_main_menu
             ;;
