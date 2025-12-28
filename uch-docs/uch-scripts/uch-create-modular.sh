@@ -8,3 +8,6 @@ if [ ! -f "uch-scripts/main.sh" ]; then
     echo "Создайте структуру командой: ./setup-modular.sh"
     exit 1
 fi
+
+# Запускаем модульную систему
+./uch-scripts/main.sh "$@"
