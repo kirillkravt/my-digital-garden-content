@@ -77,7 +77,11 @@ show_main_menu() {
             show_main_menu
             ;;
         4)
-            replace_document
+            show_replace_shift_menu
+if [ -f "$SCRIPT_DIR/replace-mode-v2.sh" ]; then
+    source "$SCRIPT_DIR/replace-mode-v2.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
             echo ""
             show_main_menu
             ;;
