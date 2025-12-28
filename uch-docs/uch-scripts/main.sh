@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== UCH CREATE: МОДУЛЬНАЯ СИСТЕМА ==="
-echo "Версия: 0.4.0"
+echo "Версия: 1.0.0"
 echo ""
 
 # Подключаем модули
@@ -29,19 +29,36 @@ if [ -f "$SCRIPT_DIR/document-creator.sh" ]; then
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
 
+if [ -f "$SCRIPT_DIR/manual-mode.sh" ]; then
+    source "$SCRIPT_DIR/manual-mode.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+if [ -f "$SCRIPT_DIR/batch-mode.sh" ]; then
+    source "$SCRIPT_DIR/batch-mode.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+if [ -f "$SCRIPT_DIR/replace-mode.sh" ]; then
+    source "$SCRIPT_DIR/replace-mode.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
 echo "✅ Загружено модулей: $MODULES_LOADED"
 echo ""
 
 # Главное меню
 show_main_menu() {
     echo "=== ГЛАВНОЕ МЕНЮ ==="
-    echo "1 - Создать документ"
-    echo "2 - Проверить систему"
-    echo "3 - Протестировать утилиты"
-    echo "4 - Пакетное создание (эксперимент)"
+    echo "1 - Создать документ (авто-ID)"
+    echo "2 - Создать по имени (ручной ID)"
+    echo "3 - Пакетное создание"
+    echo "4 - Заменить документ"
+    echo "5 - Проверить систему"
+    echo "6 - Протестировать утилиты"
     echo "q - Выход"
     echo ""
-    read -p "Ваш выбор (1-4/q): " choice
+    read -p "Ваш выбор (1-6/q): " choice
     
     case $choice in
         1) 
@@ -50,6 +67,21 @@ show_main_menu() {
             show_main_menu 
             ;;
         2)
+            create_document_manual
+            echo ""
+            show_main_menu
+            ;;
+        3)
+            create_batch_documents
+            echo ""
+            show_main_menu
+            ;;
+        4)
+            replace_document
+            echo ""
+            show_main_menu
+            ;;
+        5)
             echo "✅ СИСТЕМА:"
             echo "📁 Директория: $SCRIPT_DIR"
             echo "📅 Дата: $(get_current_date 2>/dev/null || echo 'N/A')"
@@ -57,16 +89,11 @@ show_main_menu() {
             echo ""
             show_main_menu
             ;;
-        3)
+        6)
             echo "🧪 ТЕСТ УТИЛИТ:"
             echo "- Текущая дата: $(get_current_date 2>/dev/null || echo 'Ошибка')"
             echo "- Свободный master ID: $(find_free_master_id 2>/dev/null || echo 'Ошибка')"
             echo "- Тип по умолчанию для уровня 3: $(get_default_type_for_level 3 2>/dev/null || echo 'N/A')"
-            echo ""
-            show_main_menu
-            ;;
-        4)
-            create_batch_documents
             echo ""
             show_main_menu
             ;;
