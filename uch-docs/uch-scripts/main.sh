@@ -39,16 +39,8 @@ if [ -f "$SCRIPT_DIR/batch-mode.sh" ]; then
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
 
-if [ -f "$SCRIPT_DIR/replace-mode.sh" ]; then
 if [ -f "$SCRIPT_DIR/replace-shift.sh" ]; then
     source "$SCRIPT_DIR/replace-shift.sh"
-    MODULES_LOADED=$((MODULES_LOADED + 1))
-fi
-    source "$SCRIPT_DIR/replace-mode.sh"
-if [ -f "$SCRIPT_DIR/replace-shift.sh" ]; then
-    source "$SCRIPT_DIR/replace-shift.sh"
-    MODULES_LOADED=$((MODULES_LOADED + 1))
-fi
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
 
@@ -61,7 +53,7 @@ show_main_menu() {
     echo "1 - Создать документ (авто-ID)"
     echo "2 - Создать по имени (ручной ID)"
     echo "3 - Пакетное создание"
-    echo "4 - Заменить документ"
+    echo "4 - Операции с документами (замена/смещение)"
     echo "5 - Проверить систему"
     echo "6 - Протестировать утилиты"
     echo "q - Выход"
@@ -86,8 +78,6 @@ show_main_menu() {
             ;;
         4)
             show_document_operations_menu
-    MODULES_LOADED=$((MODULES_LOADED + 1))
-fi
             echo ""
             show_main_menu
             ;;
