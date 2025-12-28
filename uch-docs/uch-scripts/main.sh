@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== UCH CREATE: МОДУЛЬНАЯ СИСТЕМА ==="
-echo "Версия: 0.3.0"
+echo "Версия: 0.4.0"
 echo ""
 
 # Подключаем модули
@@ -21,6 +21,11 @@ fi
 
 if [ -f "$SCRIPT_DIR/create.sh" ]; then
     source "$SCRIPT_DIR/create.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+if [ -f "$SCRIPT_DIR/document-creator.sh" ]; then
+    source "$SCRIPT_DIR/document-creator.sh"
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
 
