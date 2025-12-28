@@ -3,11 +3,14 @@
 
 echo "=== Запуск модульной системы UCH ==="
 
-if [ ! -f "uch-scripts/main.sh" ]; then
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+
+if [ ! -f "$SCRIPT_DIR/uch-scripts/main.sh" ]; then
     echo "❌ Ошибка: Модульная система не найдена"
-    echo "Создайте структуру командой: ./setup-modular.sh"
+    echo "Текущая директория: $(pwd)"
+    echo "Ищем: $SCRIPT_DIR/uch-scripts/main.sh"
     exit 1
 fi
 
 # Запускаем модульную систему
-./uch-scripts/main.sh "$@"
+"$SCRIPT_DIR/uch-scripts/main.sh" "$@"
