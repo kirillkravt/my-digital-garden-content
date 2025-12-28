@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== UCH CREATE: МОДУЛЬНАЯ СИСТЕМА ==="
-echo "Версия: 0.2.0"
+echo "Версия: 0.3.0"
 echo ""
 
 # Подключаем модули
@@ -31,34 +31,20 @@ echo ""
 show_main_menu() {
     echo "=== ГЛАВНОЕ МЕНЮ ==="
     echo "1 - Создать документ"
-    echo "2 - Показать справку по типам"
-    echo "3 - Проверить систему"
-    echo "4 - Протестировать утилиты"
-    echo "5 - Пакетное создание (эксперимент)"
+    echo "2 - Проверить систему"
+    echo "3 - Протестировать утилиты"
+    echo "4 - Пакетное создание (эксперимент)"
     echo "q - Выход"
     echo ""
-    read -p "Ваш выбор (1-5/q): " choice
+    read -p "Ваш выбор (1-4/q): " choice
     
     case $choice in
         1) 
-            create_document_basic
+            create_document_improved
             echo ""
             show_main_menu 
             ;;
         2)
-            echo "📚 СПРАВКА ПО ТИПАМ ДОКУМЕНТОВ:"
-            echo ""
-            if [ -f "$SCRIPT_DIR/types.sh" ]; then
-                for level in 1 2 3 4 N; do
-                    show_type_info_for_level "$level"
-                done
-            else
-                echo "⚠️  Модуль types.sh не загружен"
-            fi
-            echo ""
-            show_main_menu
-            ;;
-        3)
             echo "✅ СИСТЕМА:"
             echo "📁 Директория: $SCRIPT_DIR"
             echo "📅 Дата: $(get_current_date 2>/dev/null || echo 'N/A')"
@@ -66,7 +52,7 @@ show_main_menu() {
             echo ""
             show_main_menu
             ;;
-        4)
+        3)
             echo "🧪 ТЕСТ УТИЛИТ:"
             echo "- Текущая дата: $(get_current_date 2>/dev/null || echo 'Ошибка')"
             echo "- Свободный master ID: $(find_free_master_id 2>/dev/null || echo 'Ошибка')"
@@ -74,7 +60,7 @@ show_main_menu() {
             echo ""
             show_main_menu
             ;;
-        5)
+        4)
             create_batch_documents
             echo ""
             show_main_menu

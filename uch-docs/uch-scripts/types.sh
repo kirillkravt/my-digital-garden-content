@@ -1,104 +1,107 @@
 #!/bin/bash
-# Модуль типов документов для UCH
+# Модуль типов документов для UCH - с цифровым выбором
 
-# Показываем меню типов для уровня ДО выбора
-show_type_info_for_level() {
+# Показываем меню типов для уровня
+show_type_menu_for_level() {
     local level=$1
     
     case $level in
         1)
             echo ""
-            echo "📋 ТИПЫ ДОКУМЕНТОВ УРОВНЯ 1:"
-            echo "  project   - Проект (основной контейнер)"
-            echo "  line      - Линия развития (направление работы)"
+            echo "=== ТИПЫ ДОКУМЕНТОВ УРОВНЯ 1 ==="
+            echo "1 - project (Проект)"
+            echo "2 - line (Линия развития)"
             echo ""
             ;;
         2)
             echo ""
-            echo "📋 ТИПЫ ДОКУМЕНТОВ УРОВНЯ 2:"
-            echo "  component - Компонент системы"
-            echo "  module    - Модуль/блок функциональности"
-            echo "  epic      - Эпик (крупная функциональность)"
+            echo "=== ТИПЫ ДОКУМЕНТОВ УРОВНЯ 2 ==="
+            echo "1 - component (Компонент системы)"
+            echo "2 - module (Модуль/блок)"
+            echo "3 - epic (Эпик)"
             echo ""
             ;;
         3)
             echo ""
-            echo "📋 ТИПЫ ДОКУМЕНТОВ УРОВНЯ 3:"
-            echo "  task      - Задача (что нужно сделать)"
-            echo "  feature   - Функциональность (что должно работать)"
-            echo "  user_story- Пользовательская история"
-            echo "  bug       - Ошибка/баг"
-            echo "  инцидент  - Инцидент (проблема в работе)"
-            echo "  snapshot  - Снимок состояния системы"
+            echo "=== ТИПЫ ДОКУМЕНТОВ УРОВНЯ 3 ==="
+            echo "1 - task (Задача)"
+            echo "2 - feature (Функциональность)"
+            echo "3 - bug (Ошибка/баг)"
+            echo "4 - snapshot (Снимок системы)"
+            # Убрали: инцидент, user_story
             echo ""
             ;;
         4)
             echo ""
-            echo "📋 ТИПЫ ДОКУМЕНТОВ УРОВНЯ 4:"
-            echo "  solution  - Техническое решение"
-            echo "  subtask   - Подзадача"
-            echo "  code_block- Блок кода"
-            echo "  decision  - Архитектурное решение"
+            echo "=== ТИПЫ ДОКУМЕНТОВ УРОВНЯ 4 ==="
+            echo "1 - solution (Техническое решение)"
+            echo "2 - subtask (Подзадача)"
+            echo "3 - code_block (Блок кода)"
+            echo "4 - decision (Архитектурное решение)"
             echo ""
             ;;
         N)
             echo ""
-            echo "📋 ТИПЫ НЕИЕРАРХИЧЕСКИХ ДОКУМЕНТОВ:"
-            echo "  idea      - Идея/концепция (Z-префикс)"
-            echo "  reference - Ссылка/ресурс (R-префикс)"
-            echo "  meeting   - Встреча/обсуждение (M-префикс)"
+            echo "=== ТИПЫ НЕИЕРАРХИЧЕСКИХ ДОКУМЕНТОВ ==="
+            echo "1 - idea (Идея/концепция)"
+            echo "2 - reference (Ссылка/ресурс)"
+            echo "3 - meeting (Встреча/обсуждение)"
             echo ""
             ;;
     esac
 }
 
-# Выбор типа с показом информации
-select_type_interactive() {
+# Выбор типа по цифре
+select_type_by_number() {
     local level=$1
-    local default_type=$2
     
-    # Сначала показываем информацию
-    show_type_info_for_level "$level"
-    
-    # Потом запрашиваем выбор
     case $level in
         1)
-            read -p "Введите тип (project/line) [$default_type]: " type_input
-            case "$type_input" in
-                project|line) echo "$type_input" ;;
-                *) echo "$default_type" ;;
+            read -p "Выберите тип (1-2) [1]: " type_choice
+            case $type_choice in
+                1|"") echo "project" ;;
+                2) echo "line" ;;
+                *) echo "project" ;;
             esac
             ;;
         2)
-            read -p "Введите тип (component/module/epic) [$default_type]: " type_input
-            case "$type_input" in
-                component|module|epic) echo "$type_input" ;;
-                *) echo "$default_type" ;;
+            read -p "Выберите тип (1-3) [1]: " type_choice
+            case $type_choice in
+                1|"") echo "component" ;;
+                2) echo "module" ;;
+                3) echo "epic" ;;
+                *) echo "component" ;;
             esac
             ;;
         3)
-            read -p "Введите тип (task/feature/user_story/bug/инцидент/snapshot) [$default_type]: " type_input
-            case "$type_input" in
-                task|feature|user_story|bug|инцидент|snapshot) echo "$type_input" ;;
-                *) echo "$default_type" ;;
+            read -p "Выберите тип (1-4) [1]: " type_choice
+            case $type_choice in
+                1|"") echo "task" ;;
+                2) echo "feature" ;;
+                3) echo "bug" ;;
+                4) echo "snapshot" ;;
+                # Убрали: инцидент, user_story
+                *) echo "task" ;;
             esac
             ;;
         4)
-            read -p "Введите тип (solution/subtask/code_block/decision) [$default_type]: " type_input
-            case "$type_input" in
-                solution|subtask|code_block|decision) echo "$type_input" ;;
-                *) echo "$default_type" ;;
+            read -p "Выберите тип (1-4) [1]: " type_choice
+            case $type_choice in
+                1|"") echo "solution" ;;
+                2) echo "subtask" ;;
+                3) echo "code_block" ;;
+                4) echo "decision" ;;
+                *) echo "solution" ;;
             esac
             ;;
         N)
-            read -p "Введите тип (idea/reference/meeting) [$default_type]: " type_input
-            case "$type_input" in
-                idea|reference|meeting) echo "$type_input" ;;
-                *) echo "$default_type" ;;
+            read -p "Выберите тип (1-3) [1]: " type_choice
+            case $type_choice in
+                1|"") echo "idea" ;;
+                2) echo "reference" ;;
+                3) echo "meeting" ;;
+                *) echo "idea" ;;
             esac
-            ;;
-        *)
-            echo "$default_type"
             ;;
     esac
 }
@@ -114,20 +117,5 @@ get_default_type_for_level() {
         4) echo "solution" ;;
         N) echo "idea" ;;
         *) echo "task" ;;
-    esac
-}
-
-# Проверить валидность типа для уровня
-is_valid_type_for_level() {
-    local type=$1
-    local level=$2
-    
-    case $level in
-        1) [[ "$type" =~ ^(project|line)$ ]] ;;
-        2) [[ "$type" =~ ^(component|module|epic)$ ]] ;;
-        3) [[ "$type" =~ ^(task|feature|user_story|bug|инцидент|snapshot)$ ]] ;;
-        4) [[ "$type" =~ ^(solution|subtask|code_block|decision)$ ]] ;;
-        N) [[ "$type" =~ ^(idea|reference|meeting)$ ]] ;;
-        *) false ;;
     esac
 }
