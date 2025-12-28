@@ -56,7 +56,7 @@ find_free_child_id() {
     
     declare -a dec_array=()
     for hex_id in $existing_ids; do
-        dec_id=$((16#$hex_id)
+        dec_id=$((16#$hex_id))
         dec_array+=($dec_id)
     done
     
