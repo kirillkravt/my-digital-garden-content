@@ -1,11 +1,10 @@
 #!/bin/bash
-# Замена и смещение документов - исправлено для macOS
+# Упрощенные функции замены и смещения
 
-# Простая замена документа
-simple_replace_document() {
+# ПРОСТАЯ ЗАМЕНА: создать новый документ с указанным ID
+simple_replace() {
     echo ""
-    echo "🔄 ЗАМЕНА ДОКУМЕНТА"
-    echo "Создаем новый документ, который заменит старый"
+    echo "🔄 ПРОСТАЯ ЗАМЕНА"
     echo ""
     
     # 1. ID заменяемого документа
@@ -17,55 +16,49 @@ simple_replace_document() {
         return 1
     fi
     
-    # Ищем заменяемый файл
-    local target_file=$(find . -maxdepth 1 -name "${target_id} - *.md" -type f | head -1)
+    # Ищем файл
+    local target_file=$(ls -1 "${target_id} - "*.md 2>/dev/null | head -1)
     if [ -z "$target_file" ]; then
         echo "❌ Документ с ID '$target_id' не найден"
         return 1
     fi
     
     local target_name=$(basename "$target_file" .md | sed "s/^${target_id} - //")
-    echo "Найден документ: $target_name"
+    echo "Найден: $target_name"
     
-    # 2. Создаем НОВЫЙ документ (не выбираем существующий)
+    # 2. Параметры нового документа
     echo ""
-    echo "=== СОЗДАНИЕ НОВОГО ДОКУМЕНТА ==="
+    echo "=== НОВЫЙ ДОКУМЕНТ ==="
+    read -p "Введите название нового документа: " new_name
     
-    # Определяем уровень
-    local level=$(echo "$target_id" | tr -cd '-' | wc -c)
-    level=$((level + 1))
-    
-    read -p "Введите название для нового документа: " new_name
     if [ -z "$new_name" ]; then
         echo "❌ Название не может быть пустым"
         return 1
     fi
     
-    # Выбор типа
+    # Уровень
+    local level=$(echo "$target_id" | tr -cd '-' | wc -c)
+    level=$((level + 1))
+    
+    # Тип
     if [ -f "$SCRIPT_DIR/types.sh" ]; then
         source "$SCRIPT_DIR/types.sh"
         show_type_menu_for_level "$level"
         type=$(select_type_by_number "$level")
     else
-        type=$(get_default_type_for_level "$level")
+        type="task"
     fi
     
     # Теги
     echo ""
-    read -p "Введите теги через запятую: " new_tags
+    read -p "Введите теги через запятую: " tags
     
-    # 3. Сводка
+    # 3. Подтверждение
     echo ""
-    echo "📋 СВОДКА ЗАМЕНЫ:"
-    echo "  ЗАМЕНЯЕМЫЙ (будет заархивирован):"
-    echo "    ID: $target_id"
-    echo "    Название: $target_name"
-    echo ""
-    echo "  НОВЫЙ (займет его место):"
-    echo "    ID: $target_id (сохраняется)"
-    echo "    Название: $new_name"
-    echo "    Тип: $type"
-    echo "    Уровень: $level"
+    echo "📋 СВОДКА:"
+    echo "  Заменяем: $target_id - $target_name"
+    echo "  Новый:    $target_id - $new_name"
+    echo "  Тип: $type, Уровень: $level"
     echo ""
     
     read -p "Выполнить замену? (y/n): " confirm
@@ -78,113 +71,131 @@ simple_replace_document() {
     echo ""
     echo "🔄 Выполняю замену..."
     
-    # 4.1 Создаем директорию для бэкапов
+    # 4.1 Создаем бэкап
     local backup_dir="changed-backup"
     mkdir -p "$backup_dir"
-    
-    # 4.2 Архивируем заменяемый документ
-    echo "📁 Архивирую заменяемый документ..."
     local timestamp=$(date +%Y%m%d-%H%M%S)
-    local backup_file="${backup_dir}/${timestamp}-${target_id}-${target_name}.md"
+    local backup_file="${backup_dir}/${timestamp}-$(basename "$target_file")"
     
-    {
-        echo "# АРХИВИРОВАН: $(date '+%Y-%m-%d %H:%M:%S')"
-        echo "# ЗАМЕНА: $target_id - $target_name → $target_id - $new_name"
-        echo "---"
-        cat "$target_file"
-    } > "$backup_file"
+    cp "$target_file" "$backup_file"
+    echo "📁 Архив: $backup_file"
     
-    echo "    ✅ Сохранен в: $backup_file"
-    
-    # 4.3 Определяем родителя (если не уровень 1)
+    # 4.2 Определяем родителя
     local parent_id=""
+    local parent_name=""
     if [ $level -gt 1 ]; then
         parent_id=$(echo "$target_id" | sed 's/-[^-]*$//')
-    fi
-    
-    # 4.4 Создаем новый документ через нашу систему
-    echo "📝 Создаю новый документ..."
-    
-    if [ -f "$SCRIPT_DIR/document-creator.sh" ]; then
-        # Временно переопределяем генерацию ID
-        local original_find_free_master_id=$(declare -f find_free_master_id 2>/dev/null || echo "")
-        local original_find_free_child_id=$(declare -f find_free_child_id 2>/dev/null || echo "")
-        
-        # Функция для принудительного использования target_id
-        force_id_generator() {
-            echo "$1"  # Просто возвращаем переданный ID
-        }
-        
-        # Создаем временный файл с нужным ID
-        local temp_id_file=".temp_id_file"
-        echo "$target_id" > "$temp_id_file"
-        
-        # Создаем документ
-        if create_real_document "$new_name" "$level" "$type" "$parent_id" "$new_tags"; then
-            # Находим созданный файл (последний созданный)
-            local latest_md=$(ls -t *.md | head -1)
-            if [ -f "$latest_md" ]; then
-                # Извлекаем фактический ID из созданного файла
-                local created_id=$(echo "$latest_md" | cut -d' ' -f1)
-                local created_name=$(echo "$latest_md" | sed "s/^${created_id} - //" | sed 's/.md$//')
-                
-                # Если ID не совпадает с целевым, переименовываем
-                if [ "$created_id" != "$target_id" ]; then
-                    local new_filename="${target_id} - ${created_name}.md"
-                    echo "  Переименовываю: $latest_md → $new_filename"
-                    mv "$latest_md" "$new_filename"
-                    latest_md="$new_filename"
-                fi
-            fi
+        local parent_file=$(ls -1 "${parent_id} - "*.md 2>/dev/null | head -1)
+        if [ -n "$parent_file" ]; then
+            parent_name=$(basename "$parent_file" .md | sed "s/^${parent_id} - //")
         fi
-        
-        # Удаляем временный файл
-        rm -f "$temp_id_file"
-        
-        echo "    ✅ Новый документ создан"
-    else
-        echo "❌ Не удалось создать документ"
-        return 1
     fi
     
-    # 4.5 Обновляем ссылки
-    echo "🔗 Обновляю ссылки..."
+    # 4.3 Создаем новый документ ВРУЧНУЮ
+    local new_filename="${target_id} - ${new_name}.md"
+    local current_date=$(date +%Y-%m-%d)
     
-    local updated_count=0
+    echo "📝 Создаю: $new_filename"
+    
+    # Форматируем теги
+    local tags_yaml="tags:"
+    tags_yaml="$tags_yaml"$'\n'"  - \"$type\""
+    if [ -n "$tags" ]; then
+        IFS=',' read -r -a tag_array <<< "$tags"
+        for tag in "${tag_array[@]}"; do
+            tag_clean=$(echo "$tag" | xargs)
+            if [ -n "$tag_clean" ]; then
+                tags_yaml="$tags_yaml"$'\n'"  - \"$tag_clean\""
+            fi
+        done
+    fi
+    
+    # Создаем файл
+    cat > "$new_filename" << DOC_EOF
+---
+id: "$target_id"
+name: "$new_name"
+type: "$type"
+level: $level
+status: "planning"
+$(echo "$tags_yaml")
+created: "$current_date"
+updated: "$current_date"
+author: "$USER"
+---
+
+### $new_name
+
+#### ОБЩАЯ ИНФОРМАЦИЯ
+- **ID**: \`$target_id\`
+- **Уровень**: $level
+DOC_EOF
+    
+    if [ -n "$parent_id" ] && [ -n "$parent_name" ]; then
+        cat >> "$new_filename" << DOC_EOF
+- **Родитель**: [[$parent_id - $parent_name]]
+DOC_EOF
+    fi
+    
+    cat >> "$new_filename" << DOC_EOF
+- **Статус**: Планирование
+- **Создано**: \`$current_date\`
+
+#### ОПИСАНИЕ
+Добавьте описание здесь.
+
+#### ЗАДАЧИ
+- [ ] Задача 1
+- [ ] Задача 2
+
+#### ДОЧЕРНИЕ ДОКУМЕНТЫ
+Пока нет дочерних документов.
+
+---
+Создано: $current_date
+Уровень: $level
+DOC_EOF
+    
+    if [ -n "$parent_id" ]; then
+        echo "Родитель: $parent_id" >> "$new_filename"
+    fi
+    
+    # 4.4 Удаляем старый файл
+    rm "$target_file"
+    echo "🗑️  Удален: $(basename "$target_file")"
+    
+    # 4.5 Обновляем ссылки (простая замена)
+    echo "🔗 Обновляю ссылки..."
+    local updated=0
+    
     for file in *.md; do
-        if [ ! -f "$file" ] || [[ "$file" == *"changed-backup"* ]] || [[ "$(basename "$file")" == "${target_id} - ${new_name}.md" ]]; then
+        if [ ! -f "$file" ] || [[ "$file" == "$new_filename" ]] || [[ "$file" == *"changed-backup"* ]]; then
             continue
         fi
         
         if grep -q "\\[\\[${target_id} - ${target_name}\\]\\]" "$file"; then
-            echo "  Обновляю: $(basename "$file")"
             sed -i '' "s/\[\[${target_id} - ${target_name}\]\]/\[\[${target_id} - ${new_name}\]\]/g" "$file"
-            updated_count=$((updated_count + 1))
+            updated=$((updated + 1))
+            echo "  ✅ $(basename "$file")"
         fi
     done
     
-    echo "  🔄 Обновлено ссылок: $updated_count"
-    
-    # 4.6 Удаляем старый файл
-    if [ -f "$target_file" ]; then
-        rm "$target_file"
-        echo "🗑️  Удален старый файл: $(basename "$target_file")"
-    fi
+    echo "  🔄 Обновлено: $updated"
     
     echo ""
     echo "✅ ЗАМЕНА ВЫПОЛНЕНА!"
     echo "   📁 Архив: $backup_file"
-    echo "   📄 Новый документ: $target_id - $new_name"
+    echo "   📄 Новый: $new_filename"
 }
 
-# Функция смещения документа (исправлено для macOS)
-simple_shift_document() {
+# ПРОСТОЕ СМЕЩЕНИЕ
+simple_shift() {
     echo ""
-    echo "📐 СМЕЩЕНИЕ ДОКУМЕНТА"
+    echo "📐 ПРОСТОЕ СМЕЩЕНИЕ"
     echo ""
     
-    # 1. Ввод ID
-    echo "=== НОВЫЙ ДОКУМЕНТ ==="
+    # 1. Желаемый ID
+    echo "=== ЖЕЛАЕМЫЙ ID ==="
     read -p "Введите ID для нового документа: " desired_id
     
     if [ -z "$desired_id" ]; then
@@ -192,219 +203,203 @@ simple_shift_document() {
         return 1
     fi
     
-    # Проверяем формат
-    if ! echo "$desired_id" | grep -qE '^[0-9A-Fa-f]{2}(-[0-9A-Fa-f]{2})*$'; then
-        echo "❌ Неверный формат ID"
-        return 1
-    fi
-    
-    # 2. Проверяем существование
-    local existing_file=$(find . -maxdepth 1 -name "${desired_id} - *.md" -type f | head -1)
+    # Проверяем существование
+    local existing_file=$(ls -1 "${desired_id} - "*.md 2>/dev/null | head -1)
     
     if [ -z "$existing_file" ]; then
         echo "✅ ID $desired_id свободен"
-        echo "Используйте обычное создание документа"
+        echo "Используйте обычное создание"
         return 0
     fi
     
     local existing_name=$(basename "$existing_file" .md | sed "s/^${desired_id} - //")
-    echo "⚠️  Документ с ID $desired_id уже существует: $existing_name"
+    echo "⚠️  Существует: $existing_name"
     
-    # 3. Параметры нового документа
+    # 2. Параметры нового
     echo ""
-    echo "=== ПАРАМЕТРЫ НОВОГО ДОКУМЕНТА ==="
-    read -p "Введите название для нового документа: " new_name
+    echo "=== НОВЫЙ ДОКУМЕНТ ==="
+    read -p "Название нового документа: " new_name
     
     if [ -z "$new_name" ]; then
         echo "❌ Название не может быть пустым"
         return 1
     fi
     
-    # Определяем уровень
+    # Уровень
     local level=$(echo "$desired_id" | tr -cd '-' | wc -c)
     level=$((level + 1))
     
-    # Выбор типа
+    # Тип
     if [ -f "$SCRIPT_DIR/types.sh" ]; then
         source "$SCRIPT_DIR/types.sh"
         show_type_menu_for_level "$level"
         type=$(select_type_by_number "$level")
     else
-        type=$(get_default_type_for_level "$level")
+        type="task"
     fi
     
     # Теги
     echo ""
-    read -p "Введите теги через запятую: " tags
+    read -p "Теги через запятую: " tags
     
-    # 4. Подтверждение
+    # 3. Вычисляем смещенный ID
+    local last_part=$(echo "$desired_id" | grep -o '[^-]*$')
+    local base_part=$(echo "$desired_id" | sed "s/-${last_part}$//")
+    
+    # HEX → decimal → +1 → HEX
+    local last_decimal=$((16#${last_part}))
+    local new_last_decimal=$((last_decimal + 1))
+    local new_last_hex=$(printf "%02X" $new_last_decimal)
+    local shifted_id="${base_part}-${new_last_hex}"
+    
     echo ""
-    echo "⚠️  ВНИМАНИЕ: Будет выполнено смещение!"
-    echo "Новый документ: $desired_id - $new_name"
-    echo "Существующий будет смещен на +1"
+    echo "📋 ПЛАН СМЕЩЕНИЯ:"
+    echo "  Новый документ: $desired_id - $new_name"
+    echo "  Существующий:   $desired_id → $shifted_id"
+    echo "  Название:       $existing_name"
     echo ""
     
-    read -p "Подтвердить смещение? (y/n): " confirm
+    read -p "Подтвердить? (y/n): " confirm
     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
         echo "❌ Отменено"
         return 0
     fi
     
-    # 5. Выполняем смещение
+    # 4. Выполняем смещение
     echo ""
     echo "🔄 Выполняю смещение..."
     
-    # 5.1 Вычисляем смещенный ID
-    local last_part=$(echo "$desired_id" | grep -o '[^-]*$')
-    local base_part=$(echo "$desired_id" | sed "s/-${last_part}$//")
+    # 4.1 Смещаем существующий документ
+    echo "  📝 Смещаем: $existing_file → $shifted_id - $existing_name.md"
     
-    # Конвертируем HEX в decimal (без ведущего нуля для octal)
-    local last_hex_clean=$(echo "$last_part" | sed 's/^0*//')
-    if [ -z "$last_hex_clean" ]; then
-        last_hex_clean="0"
-    fi
-    local last_decimal=$(printf "%d" "0x$last_hex_clean")
-    local new_last_decimal=$((last_decimal + 1))
-    local new_last_hex=$(printf "%02X" $new_last_decimal)
-    local shifted_id="${base_part}-${new_last_hex}"
+    # Обновляем ID внутри файла
+    sed "s/^id: \"${desired_id}\"/id: \"${shifted_id}\"/" "$existing_file" > "${shifted_id} - ${existing_name}.md"
+    rm "$existing_file"
     
-    echo "   Существующий: $desired_id → $shifted_id"
-    
-    # 5.2 Находим все документы для смещения
-    local files_to_shift=""
-    files_to_shift="$existing_file"
-    
-    # Дочерние документы
-    local child_pattern="${desired_id}-[0-9A-Fa-f][0-9A-Fa-f]"
-    for child_file in $(find . -maxdepth 1 -name "${child_pattern} - *.md" -type f); do
-        files_to_shift="$files_to_shift $child_file"
-    done
-    
-    echo "   Найдено документов: $(echo "$files_to_shift" | wc -w | tr -d ' ')"
-    
-    # 5.3 Создаем карту смещения через временные файлы
-    for old_file in $files_to_shift; do
-        local old_id=$(basename "$old_file" | cut -d' ' -f1)
-        local old_name=$(basename "$old_file" .md | sed "s/^${old_id} - //")
-        
-        # Вычисляем новый ID
-        local new_id="$old_id"
-        if [ "$old_id" = "$desired_id" ]; then
-            new_id="$shifted_id"
-        elif [[ "$old_id" == "$desired_id"-* ]]; then
-            new_id=$(echo "$old_id" | sed "s/^${desired_id}/${shifted_id}/")
-        fi
-        
-        echo "     $old_id → $new_id"
-        
-        # Создаем временную копию с новым ID
-        local temp_file="TEMP-${new_id}-${old_name}.md"
-        
-        # Обновляем ID в файле
-        sed "s/^id: \"${old_id}\"/id: \"${new_id}\"/" "$old_file" > "$temp_file"
-    done
-    
-    # 5.4 Создаем новый документ с желаемым ID
-    echo ""
-    echo "📝 Создаю новый документ: $desired_id - $new_name"
+    # 4.2 Создаем новый документ с desired_id
+    echo "  📝 Создаем новый: $desired_id - $new_name.md"
     
     # Определяем родителя
     local parent_id=""
+    local parent_name=""
     if [ $level -gt 1 ]; then
         parent_id="$base_part"
+        local parent_file=$(ls -1 "${parent_id} - "*.md 2>/dev/null | head -1)
+        if [ -n "$parent_file" ]; then
+            parent_name=$(basename "$parent_file" .md | sed "s/^${parent_id} - //")
+        fi
     fi
     
-    # Используем функцию создания документа с принудительным ID
-    if [ -f "$SCRIPT_DIR/document-creator.sh" ]; then
-        # Создаем временную переменную окружения для ID
-        export FORCE_ID="$desired_id"
-        
-        # Создаем документ
-        if create_real_document "$new_name" "$level" "$type" "$parent_id" "$tags"; then
-            # Находим и переименовываем если нужно
-            sleep 1
-            local created_file=$(find . -maxdepth 1 -name "*${new_name}.md" -type f | head -1)
-            if [ -n "$created_file" ]; then
-                local created_id=$(basename "$created_file" | cut -d' ' -f1)
-                if [ "$created_id" != "$desired_id" ]; then
-                    mv "$created_file" "${desired_id} - ${new_name}.md"
-                fi
+    # Создаем новый файл
+    local new_filename="${desired_id} - ${new_name}.md"
+    local current_date=$(date +%Y-%m-%d)
+    
+    # Форматируем теги
+    local tags_yaml="tags:"
+    tags_yaml="$tags_yaml"$'\n'"  - \"$type\""
+    if [ -n "$tags" ]; then
+        IFS=',' read -r -a tag_array <<< "$tags"
+        for tag in "${tag_array[@]}"; do
+            tag_clean=$(echo "$tag" | xargs)
+            if [ -n "$tag_clean" ]; then
+                tags_yaml="$tags_yaml"$'\n'"  - \"$tag_clean\""
             fi
-        fi
-        
-        unset FORCE_ID
+        done
     fi
     
-    # 5.5 Удаляем оригинальные файлы и переименовываем временные
-    echo "📝 Применяю смещенные имена..."
+    cat > "$new_filename" << DOC_EOF
+---
+id: "$desired_id"
+name: "$new_name"
+type: "$type"
+level: $level
+status: "planning"
+$(echo "$tags_yaml")
+created: "$current_date"
+updated: "$current_date"
+author: "$USER"
+---
+
+### $new_name
+
+#### ОБЩАЯ ИНФОРМАЦИЯ
+- **ID**: \`$desired_id\`
+- **Уровень**: $level
+DOC_EOF
     
-    for old_file in $files_to_shift; do
-        rm "$old_file"
-    done
+    if [ -n "$parent_id" ] && [ -n "$parent_name" ]; then
+        cat >> "$new_filename" << DOC_EOF
+- **Родитель**: [[$parent_id - $parent_name]]
+DOC_EOF
+    fi
     
-    for temp_file in TEMP-*.md; do
-        if [ -f "$temp_file" ]; then
-            local perm_name=$(echo "$temp_file" | sed 's/^TEMP-//')
-            mv "$temp_file" "$perm_name"
-            echo "   ✅ $perm_name"
-        fi
-    done
+    cat >> "$new_filename" << DOC_EOF
+- **Статус**: Планирование
+- **Создано**: \`$current_date\`
+
+#### ОПИСАНИЕ
+Добавьте описание здесь.
+
+#### ЗАДАЧИ
+- [ ] Задача 1
+- [ ] Задача 2
+
+#### ДОЧЕРНИЕ ДОКУМЕНТЫ
+Пока нет дочерних документов.
+
+---
+Создано: $current_date
+Уровень: $level
+DOC_EOF
     
-    # 5.6 Обновляем ссылки
-    echo "🔗 Обновляю ссылки..."
+    if [ -n "$parent_id" ]; then
+        echo "Родитель: $parent_id" >> "$new_filename"
+    fi
     
-    local updated_count=0
+    # 4.3 Обновляем ссылки
+    echo "  🔗 Обновляю ссылки..."
+    local updated=0
+    
     for file in *.md; do
         if [ ! -f "$file" ] || [[ "$file" == *"changed-backup"* ]]; then
             continue
         fi
         
-        local file_changed=0
+        local file_updated=0
         
-        # Обновляем ссылки на старый документ
+        # Ссылки на старый документ
         if grep -q "\\[\\[${desired_id} - ${existing_name}\\]\\]" "$file"; then
             sed -i '' "s/\[\[${desired_id} - ${existing_name}\]\]/\[\[${shifted_id} - ${existing_name}\]\]/g" "$file"
-            file_changed=1
+            file_updated=1
         fi
         
-        # Обновляем ссылки на дочерние документы
-        for child_file in $(find . -maxdepth 1 -name "${shifted_id}-[0-9A-Fa-f][0-9A-Fa-f] - *.md" -type f); do
-            local child_id=$(basename "$child_file" | cut -d' ' -f1)
-            local child_name=$(basename "$child_file" .md | sed "s/^${child_id} - //")
-            local old_child_id=$(echo "$child_id" | sed "s/^${shifted_id}/${desired_id}/")
-            
-            if grep -q "\\[\\[${old_child_id} - " "$file"; then
-                sed -i '' "s/\[\[${old_child_id} - /\[\[${child_id} - /g" "$file"
-                file_changed=1
-            fi
-        done
-        
-        if [ $file_changed -eq 1 ]; then
-            updated_count=$((updated_count + 1))
+        if [ $file_updated -eq 1 ]; then
+            updated=$((updated + 1))
+            echo "    ✅ $(basename "$file")"
         fi
     done
     
-    echo "   🔄 Обновлено документов: $updated_count"
+    echo "  🔄 Обновлено: $updated"
     
     echo ""
     echo "✅ СМЕЩЕНИЕ ВЫПОЛНЕНО!"
-    echo "   📝 Новый документ: $desired_id - $new_name"
+    echo "   📝 Новый: $desired_id - $new_name"
     echo "   🔄 Смещенный: $shifted_id - $existing_name"
 }
 
-# Главное меню
-show_document_operations_menu() {
+# Меню
+show_simple_operations_menu() {
     echo ""
-    echo "=== ОПЕРАЦИИ С ДОКУМЕНТАМИ ==="
-    echo "1 - Заменить документ (создать новый на месте старого)"
+    echo "=== ПРОСТЫЕ ОПЕРАЦИИ ==="
+    echo "1 - Заменить документ (создать новый с тем же ID)"
     echo "2 - Сместить документ (вставить новый, сдвинуть существующий)"
     echo "3 - Назад"
     echo ""
-    read -p "Ваш выбор (1-3): " choice
+    read -p "Выбор (1-3): " choice
     
     case $choice in
-        1) simple_replace_document ;;
-        2) simple_shift_document ;;
+        1) simple_replace ;;
+        2) simple_shift ;;
         3) return 0 ;;
         *) echo "❌ Неверный выбор" ;;
     esac
