@@ -1,7 +1,7 @@
 ---
 id: "00"
 name: "Шаблон дочернего документа"
-type: "hub"
+type: "line"
 level: 1
 status: "active"
 tags: ["@component"]
