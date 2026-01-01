@@ -1,9 +1,10 @@
 ---
-id: "XX"
+id: "{id}"
 name: "{name}"
 type: "{type}"
 level: {level}
 status: "planning"
+tags: {tags}
 created: "{date}"
 updated: "{date}"
 author: "{author}"
