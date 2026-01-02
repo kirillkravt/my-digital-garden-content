@@ -10,6 +10,7 @@ parent_name: "Линия Г. Документация"
 created: "2025-12-27"
 updated: "2025-12-27"
 author: "kirillkravcov"
+---
 ### Брендбук UCH - UniversalCreativeHub
 
 #### ОБЩАЯ ИНФОРМАЦИЯ
