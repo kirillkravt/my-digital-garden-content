@@ -1,3 +1,15 @@
+---
+id: "50"
+name: "CURRENT"
+type: "line"
+level: 1
+status: "active"
+tags: []
+created: "2026-01-02"
+updated: "2026-01-02"
+author: "kirillkravcov"
+---
+
 ## 🏗️ АКТИВНАЯ СТРУКТУРА UCH
 **Обновлено:** 2025-12-19  
 **Версия:** 0.4.4 (Strudel + Scheduler интегрирован)

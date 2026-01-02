@@ -9,6 +9,7 @@ tags:
 created: "2025-12-30"
 updated: "2025-12-30"
 author: "kirillkravcov"
+---
 
 ### Улучшение системы документации uch-docs
 

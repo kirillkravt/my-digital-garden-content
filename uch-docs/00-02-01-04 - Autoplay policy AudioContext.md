@@ -1,3 +1,15 @@
+---
+id: "00-02-01-04"
+name: "00-02-01-04 - Autoplay policy AudioContext"
+type: "solution"
+level: 4
+status: "active"
+tags: []
+created: "2026-01-02"
+updated: "2026-01-02"
+author: "kirillkravcov"
+---
+
 
 ## 📋 ОБЩАЯ ИНФОРМАЦИЯ
 - **Полный путь**: UCH > Студия > Strudel интеграция > Autoplay policy AudioContext
