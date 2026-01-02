@@ -1,5 +1,5 @@
 ---
-id: "XX"
+id: "00"
 name: "{name}"
 type: "{type}"
 level: {level}
