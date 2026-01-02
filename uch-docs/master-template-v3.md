@@ -1,5 +1,5 @@
 ---
-id: "00"
+id: "T-MASTER-V3"
 name: "{name}"
 type: "{type}"
 level: {level}

@@ -1,22 +1,20 @@
 ---
-id: "T-CHILD-V3"
+id: "00"
 name: "{name}"
 type: "{type}"
 level: {level}
 status: "planning"
-parent: "{parent}"
-parent_name: "{parent_name}"
+tags: {tags}
 created: "{date}"
 updated: "{date}"
 author: "{author}"
 ---
 
 ### ОПИСАНИЕ
-Добавьте описание здесь.
+{description}
 
 ### ЗАДАЧИ
-- [ ] Задача 1
-- [ ] Задача 2
+- [ ] Добавить задачи
 
 ### ДОЧЕРНИЕ ДОКУМЕНТЫ
 Пока нет дочерних документов.
