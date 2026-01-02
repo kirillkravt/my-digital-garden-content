@@ -1,3 +1,15 @@
+---
+id: "00"
+name: "UCH"
+type: "line"
+level: 1
+status: "active"
+tags: []
+created: "2026-01-02"
+updated: "2026-01-02"
+author: "kirillkravcov"
+---
+
 # 00 - UNIVERSAL CREATIVE HUB
 
 ## 📋 ОБЩАЯ ИНФОРМАЦИЯ

@@ -10,6 +10,7 @@ parent_name: "Система нумерации документов UCH"
 created: "2025-12-27"
 updated: "2025-12-27"
 author: "kirillkravcov"
+---
 ### Documentation-first подход
 
 #### ОБЩАЯ ИНФОРМАЦИЯ
