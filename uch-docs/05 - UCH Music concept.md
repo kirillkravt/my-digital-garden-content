@@ -10,6 +10,7 @@ parent_name: "UCH"
 created: "2025-12-27"
 updated: "2025-12-27"
 author: "kirillkravcov"
+---
 ### UCH Music concept
 
 #### ОБЩАЯ ИНФОРМАЦИЯ
