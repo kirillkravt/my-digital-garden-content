@@ -68,7 +68,7 @@ cd "$UCH_DOCS" || exit 1
 TIMESTAMP=$(date -Iseconds)
 JSON_FILE="uch-project-tech-stack.json"
 
-cat > "$JSON_FILE" << EOF
+cat > "$JSON_FILE" << JSON_EOF
 {
   "report": {
     "id": "90-04-tech-project",
@@ -93,3 +93,11 @@ cat > "$JSON_FILE" << EOF
     "docker_version": "$(docker --version 2>/dev/null | head -c 50 || echo "не найден")"
   }
 }
+JSON_EOF
+
+echo "✅ Технологический стек проекта сохранен в: $JSON_FILE"
+echo ""
+echo "📋 ТЕХНОЛОГИЧЕСКАЯ СВОДКА ПРОЕКТА:"
+echo "• Django версия: $DJANGO_VERSION"
+echo "• React версия: $REACT_VERSION"
+echo "• Docker Compose: $([ -f "$UCH_BACKEND/docker-compose.yml" ] && echo "✅ настроен" || echo "⚠️ не настроен")"
