@@ -3,7 +3,7 @@
     "id": "90-04-tech-project",
     "name": "Технологический стек проекта UCH",
     "version": "0.6.0",
-    "generated_at": "2026-01-03T13:10:24+03:00",
+    "generated_at": "2026-01-03T13:13:33+03:00",
     "type": "tech_stack_project"
   },
   "django_dependencies": {
