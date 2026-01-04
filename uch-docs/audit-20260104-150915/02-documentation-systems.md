@@ -169,3 +169,39 @@ uch-tech-debt-analyzer.sh
 uch-cron-manager.sh
 uch-tech-debt-analyzer.sh
 uch-metrics-collector.sh
+## 📈 СТАТИСТИКА ДОКУМЕНТОВ
+
+Всего .md файлов: 490
+
+### Распределение по уровням:
+  23 level: 3
+  22 level: 2
+  12 level: 1
+  11 level: 4
+   6 level: "N"
+   3 level: {level}
+   2 level: "2"
+   1 level: 3         # вычисляется автоматически
+   1 # Автоматическое определение type по level:
+
+### Распределение по типам:
+  22 type: "task"
+  17 type: "component"
+  10 type: "line"
+   7 type: "snapshot"
+   6 type: "solution"
+   6 type: "idea"
+   4     type: "project"
+   3     type: "line"
+   2 type: "test"
+   2 type: "project"
+
+### Распределение по статусам:
+  49 status: "active"
+  26 status: "planning"
+   1 status: published  # или draft, archived
+   1 status: done
+   1 status: "done"
+   1 status: "active" # или planning, in_progress, done, archived
+   1 3. Для черновиков использовать `status: draft`
+
