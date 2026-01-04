@@ -2,7 +2,7 @@
 # uch-frontmatter-tool.sh - объединенный инструмент для работы с frontmatter
 # Объединяет функциональность fix_frontmatter.sh и check_frontmatter.sh
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 SCRIPT_NAME=$(basename "$0")
 
 # Цвета для вывода
@@ -35,25 +35,95 @@ print_version() {
     echo "Объединяет fix_frontmatter.sh и check_frontmatter.sh"
 }
 
-# Основная логика будет добавлена из существующих скриптов
-# Пока создаем каркас
+# ================================
+# ФУНКЦИЯ CHECK (из check_frontmatter.sh)
+# ================================
+check_frontmatter() {
+    echo "=== ПРОВЕРКА FRONTMATTER (ТОЛЬКО ЧТЕНИЕ) ==="
+    echo ""
+    
+    TOTAL_FILES=0
+    CORRECT_FILES=0
+    FILES_WITHOUT_FM=0
+    FILES_WITH_ERRORS=0
+    
+    echo "🔍 Поиск .md файлов..."
+    
+    # Ищем все .md файлы
+    for file in *.md; do
+        if [ -f "$file" ]; then
+            TOTAL_FILES=$((TOTAL_FILES + 1))
+            
+            # Проверяем наличие frontmatter
+            if head -1 "$file" | grep -q "^---"; then
+                # Проверяем что frontmatter закрыт
+                if grep -q "^---" <(tail -n +2 "$file"); then
+                    CORRECT_FILES=$((CORRECT_FILES + 1))
+                else
+                    FILES_WITH_ERRORS=$((FILES_WITH_ERRORS + 1))
+                    echo "  ⚠️  $file: frontmatter не закрыт"
+                fi
+            else
+                FILES_WITHOUT_FM=$((FILES_WITHOUT_FM + 1))
+                echo "  ❌ $file: отсутствует frontmatter"
+            fi
+        fi
+    done
+    
+    echo ""
+    echo "📊 СТАТИСТИКА:"
+    echo "  Всего файлов: $TOTAL_FILES"
+    echo "  Корректный frontmatter: $CORRECT_FILES"
+    
+    if [ $FILES_WITHOUT_FM -gt 0 ]; then
+        echo "  Без frontmatter: $FILES_WITHOUT_FM"
+    fi
+    
+    if [ $FILES_WITH_ERRORS -gt 0 ]; then
+        echo "  С ошибками: $FILES_WITH_ERRORS"
+    fi
+    
+    if [ $CORRECT_FILES -eq $TOTAL_FILES ]; then
+        echo ""
+        echo "✅ Все файлы в порядке!"
+    fi
+}
 
+# ================================
+# ФУНКЦИЯ FIX (заглушка пока)
+# ================================
+fix_frontmatter() {
+    echo "=== ИСПРАВЛЕНИЕ FRONTMATTER ==="
+    echo "1. Добавление отсутствующего frontmatter"
+    echo "2. Исправление некорректного frontmatter"
+    echo "3. Добавление обязательных полей"
+    echo ""
+    echo "⚠️  Функция в разработке..."
+    echo "Используйте fix_frontmatter.sh пока"
+}
+
+# ================================
+# ФУНКЦИЯ STATS (заглушка пока)
+# ================================
+show_stats() {
+    echo "📊 Статистика frontmatter..."
+    echo "Функция в разработке"
+}
+
+# ================================
+# ОСНОВНАЯ ЛОГИКА
+# ================================
 COMMAND="${1:-check}"
 
 case "$COMMAND" in
     check)
-        echo "🔍 Режим проверки frontmatter..."
-        # Здесь будет код из check_frontmatter.sh
-        echo "TODO: имплементировать проверку"
+        check_frontmatter
         ;;
     fix)
-        echo "🔧 Режим исправления frontmatter..."
-        # Здесь будет код из fix_frontmatter.sh
-        echo "TODO: имплементировать исправление"
+        fix_frontmatter
         ;;
     stats)
-        echo "📊 Статистика frontmatter..."
-        echo "TODO: имплементировать статистику"
+        show_stats
         ;;
     -h|--help)
         print_help
