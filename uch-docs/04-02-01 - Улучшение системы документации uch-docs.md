@@ -2,7 +2,7 @@
 id: "04-02-01"
 name: "Улучшение системы документации uch-docs"
 type: "task"
-level: 3
+level: 2
 status: "planning"
 tags:
   - "decision"
