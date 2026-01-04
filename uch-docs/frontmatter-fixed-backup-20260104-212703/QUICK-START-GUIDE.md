@@ -1,15 +1,3 @@
----
-id: "XX"
-name: "QUICK-START-GUIDE"
-type: "document"
-level: 1
-status: "active"
-tags: []
-created: "2026-01-04"
-updated: "2026-01-04"
-author: "kirillkravcov"
----
-
 # ⚡ БЫСТРЫЙ СТАРТ UCH-DOCS
 
 ## 🎯 ОСНОВНЫЕ КОМАНДЫ:

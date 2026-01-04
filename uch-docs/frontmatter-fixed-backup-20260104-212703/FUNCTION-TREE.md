@@ -1,15 +1,3 @@
----
-id: "XX"
-name: "FUNCTION-TREE"
-type: "document"
-level: 1
-status: "active"
-tags: []
-created: "2026-01-04"
-updated: "2026-01-04"
-author: "kirillkravcov"
----
-
 # 🏗️ ДЕРЕВО ФУНКЦИЙ UCH-DOCS СИСТЕМЫ
 
 **Дата генерации:** Sun Jan  4 21:11:48 MSK 2026

@@ -1,15 +1,3 @@
----
-id: "XX"
-name: "TECH-DEBT-CLEANUP-REPORT"
-type: "document"
-level: 1
-status: "active"
-tags: []
-created: "2026-01-04"
-updated: "2026-01-04"
-author: "kirillkravcov"
----
-
 # 📋 ОТЧЕТ ОБ ОЧИСТКЕ ТЕХНИЧЕСКОГО ДОЛГА UCH
 
 **Дата:** 4 января 2026  
