@@ -1,8 +1,8 @@
 #!/bin/bash
 # uch-frontmatter-tool.sh - объединенный инструмент для работы с frontmatter
-# Версия 1.2.0 - интеграция с fix_frontmatter.sh
+# Объединяет функциональность fix_frontmatter.sh и check_frontmatter.sh
 
-VERSION="1.2.0"
+VERSION="1.1.0"
 SCRIPT_NAME=$(basename "$0")
 
 # Цвета для вывода
@@ -17,24 +17,22 @@ print_help() {
     echo ""
     echo "Команды:"
     echo "  check     Проверить frontmatter (режим чтения)"
-    echo "  fix       Исправить frontmatter (запускает fix_frontmatter.sh)"
+    echo "  fix       Исправить frontmatter"
     echo "  stats     Статистика по frontmatter"
     echo ""
     echo "Опции:"
     echo "  -h, --help     Показать эту справку"
     echo "  -v, --version  Показать версию"
-    echo "  --dry-run      Показать что будет исправлено (для fix)"
     echo ""
     echo "Примеры:"
     echo "  $SCRIPT_NAME check          # Проверить все документы"
-    echo "  $SCRIPT_NAME fix            # Исправить frontmatter"
     echo "  $SCRIPT_NAME fix --dry-run  # Показать что будет исправлено"
     echo "  $SCRIPT_NAME stats          # Показать статистику"
 }
 
 print_version() {
     echo "$SCRIPT_NAME версия $VERSION"
-    echo "Объединяет check_frontmatter.sh и интегрирует fix_frontmatter.sh"
+    echo "Объединяет fix_frontmatter.sh и check_frontmatter.sh"
 }
 
 # ================================
@@ -92,22 +90,16 @@ check_frontmatter() {
 }
 
 # ================================
-# ФУНКЦИЯ FIX (интеграция с fix_frontmatter.sh)
+# ФУНКЦИЯ FIX (заглушка пока)
 # ================================
 fix_frontmatter() {
     echo "=== ИСПРАВЛЕНИЕ FRONTMATTER ==="
-    echo "Запуск fix_frontmatter.sh..."
+    echo "1. Добавление отсутствующего frontmatter"
+    echo "2. Исправление некорректного frontmatter"
+    echo "3. Добавление обязательных полей"
     echo ""
-    
-    if [ -f "fix_frontmatter.sh" ]; then
-        # Передаем аргументы дальше
-        ./fix_frontmatter.sh "$@"
-    else
-        echo "❌ Ошибка: fix_frontmatter.sh не найден!"
-        echo ""
-        echo "Содержимое fix_frontmatter.sh должно находиться в этой же директории."
-        exit 1
-    fi
+    echo "⚠️  Функция в разработке..."
+    echo "Используйте fix_frontmatter.sh пока"
 }
 
 # ================================
@@ -119,17 +111,16 @@ show_stats() {
 }
 
 # ================================
-# ОБРАБОТКА АРГУМЕНТОВ
+# ОСНОВНАЯ ЛОГИКА
 # ================================
 COMMAND="${1:-check}"
-shift  # Убираем команду из аргументов
 
 case "$COMMAND" in
     check)
         check_frontmatter
         ;;
     fix)
-        fix_frontmatter "$@"
+        fix_frontmatter
         ;;
     stats)
         show_stats
