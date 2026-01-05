@@ -1,7 +1,7 @@
 ---
 id: 02-10-01
 name: 02-10-01 - Базовая интеграция Strudel
-type: solution
+type: task
 level: 4
 status: active
 tags: []
