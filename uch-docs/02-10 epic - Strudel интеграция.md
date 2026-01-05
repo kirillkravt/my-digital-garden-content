@@ -2,7 +2,7 @@
 id: 02-01
 name: 02-01 - Strudel интеграция
 type: epic
-level: 3
+level: 2
 status: active
 tags: []
 created: 2026-01-02
