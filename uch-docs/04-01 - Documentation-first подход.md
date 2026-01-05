@@ -1,15 +1,16 @@
 ---
-id: "04-01-03"
-name: "Documentation-first подход"
-type: "task"
-level: 3
-status: "active"
-tags: ["@task"]
-parent: "00-04-01"
-parent_name: "Система нумерации документов UCH"
-created: "2025-12-27"
-updated: "2025-12-27"
-author: "kirillkravcov"
+id: 04-01
+name: Documentation-first подход
+type: document
+level: 2
+status: active
+tags:
+  - "@task"
+parent: "04"
+parent_name: Система нумерации документов UCH
+created: 2025-12-27
+updated: 2025-12-27
+author: kirillkravcov
 ---
 ### Documentation-first подход
 
