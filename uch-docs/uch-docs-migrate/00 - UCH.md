@@ -281,7 +281,7 @@ text
 ## 🔗 ВАЖНЫЕ ССЫЛКИ
 
 ### ТЕКУЩИЕ ОТЧЕТЫ:
-- [[01-01 - ТЕКУЩИЙ ПРОГРЕСС UCH - ЛИНИЯ А (БЛОГ)]]
+- [[uch-docs/uch-docs-migrate/01-01 - ТЕКУЩИЙ ПРОГРЕСС UCH - ЛИНИЯ А (БЛОГ)]]
 - [[uch-docs/uch-docs-migrate/01-02 - ТЕКУЩИЙ ПРОГРЕСС UCH - ЛИНИЯ Б (СТУДИЯ)]]
 - [[CURRENT]]
 
