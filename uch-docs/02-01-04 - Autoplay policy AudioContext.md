@@ -1,13 +1,13 @@
 ---
-id: "00-02-01-04"
-name: "00-02-01-04 - Autoplay policy AudioContext"
-type: "solution"
+id: 02-01-04
+name: 02-01-04 - Autoplay policy AudioContext
+type: solution
 level: 4
-status: "active"
+status: active
 tags: []
-created: "2026-01-02"
-updated: "2026-01-02"
-author: "kirillkravcov"
+created: 2026-01-02
+updated: 2026-01-02
+author: kirillkravcov
 ---
 
 
@@ -194,14 +194,14 @@ useEffect(() => {
 
 ### РОДИТЕЛЬСКИЕ:
 
-- [[00-02-01 - Strudel интеграция]]
+- [[02-01 - Strudel интеграция]]
     
-- [[00-02 - Линия Б. Студия]]
+- [[02 - Линия Б. Студия]]
     
 
 ### СМЕЖНЫЕ ПРОБЛЕМЫ:
 
-- [[00-02-01-03 - Проблема с семплами]]
+- [[02-01-03 - Проблема с семплами]]
     
 - [[00-02-04-01 - Глобальная аудио система]]
     

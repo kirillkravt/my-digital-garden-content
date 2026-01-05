@@ -1,16 +1,16 @@
 ---
-id: "00-02-01-01"
-name: "00-02-01-01 - Базовая интеграция Strudel"
-type: "solution"
+id: 02-01-01
+name: 02-01-01 - Базовая интеграция Strudel
+type: solution
 level: 4
-status: "active"
+status: active
 tags: []
-created: "2026-01-02"
-updated: "2026-01-02"
-author: "kirillkravcov"
+created: 2026-01-02
+updated: 2026-01-02
+author: kirillkravcov
 ---
 
-# 00-02-01-01 - Базовая интеграция Strudel
+# 02-01-01 - Базовая интеграция Strudel
 
 ## 🎯 ОПИСАНИЕ
 
