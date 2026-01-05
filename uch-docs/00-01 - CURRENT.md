@@ -1,13 +1,13 @@
 ---
 id: "50"
-name: "CURRENT"
-type: "line"
-level: 1
-status: "active"
+name: CURRENT
+type: snapshot
+level: 2
+status: active
 tags: []
-created: "2026-01-02"
-updated: "2026-01-02"
-author: "kirillkravcov"
+created: 2026-01-02
+updated: 2026-01-02
+author: kirillkravcov
 ---
 
 ## 🏗️ АКТИВНАЯ СТРУКТУРА UCH
