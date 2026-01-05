@@ -1,13 +1,13 @@
 ---
-id: "XX"
-name: "QUICK-START-GUIDE"
-type: "document"
+id: "56"
+name: QUICK-START-GUIDE
+type: document
 level: 1
-status: "active"
+status: active
 tags: []
-created: "2026-01-04"
-updated: "2026-01-04"
-author: "kirillkravcov"
+created: 2026-01-04
+updated: 2026-01-04
+author: kirillkravcov
 ---
 
 # ⚡ БЫСТРЫЙ СТАРТ UCH-DOCS

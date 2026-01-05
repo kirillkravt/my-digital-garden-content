@@ -1,13 +1,13 @@
 ---
-id: "XX"
-name: "TECH-DEBT-CLEANUP-REPORT"
-type: "document"
+id: 90-02
+name: TECH-DEBT-CLEANUP-REPORT
+type: document
 level: 1
-status: "active"
+status: active
 tags: []
-created: "2026-01-04"
-updated: "2026-01-04"
-author: "kirillkravcov"
+created: 2026-01-04
+updated: 2026-01-04
+author: kirillkravcov
 ---
 
 # 📋 ОТЧЕТ ОБ ОЧИСТКЕ ТЕХНИЧЕСКОГО ДОЛГА UCH
