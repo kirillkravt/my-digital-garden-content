@@ -1,6 +1,6 @@
 ---
-id: "50"
-name: CURRENT
+id: 00-04
+name: 00-04 - CURRENT
 type: snapshot
 level: 2
 status: active
