@@ -31,8 +31,8 @@ author: kirillkravcov
 @active @high-priority
 
 ### Strudel интеграция:
-- [[02-10-03 - Проблема с семплами]] @bug
-- [[02-10-04 - Autoplay policy AudioContext]] @bug
+- [[02-10-03 task - Проблема с семплами]] @bug
+- [[02-10-04 task - Autoplay policy AudioContext]] @bug
 
 ### Нодовая система:
 - [[00-02-02-01 - Рефакторинг CoreOrchestrator]] @arch
