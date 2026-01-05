@@ -1,15 +1,17 @@
 ---
-id: "04-0C"
-name: "Брендбук UCH - UniversalCreativeHub"
-type: "component"
+id: 00-03
+name: Брендбук UCH - UniversalCreativeHub
+type: document
 level: 2
-status: "active"
-tags: ["@component", "@uch"]
-parent: "00-04"
-parent_name: "Линия Г. Документация"
-created: "2025-12-27"
-updated: "2025-12-27"
-author: "kirillkravcov"
+status: active
+tags:
+  - "@component"
+  - "@uch"
+parent: "00"
+parent_name: Линия Г. Документация
+created: 2025-12-27
+updated: 2025-12-27
+author: kirillkravcov
 ---
 ### Брендбук UCH - UniversalCreativeHub
 
