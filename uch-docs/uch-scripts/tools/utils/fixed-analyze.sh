@@ -5,7 +5,7 @@ echo "=== ИСПРАВЛЕННЫЙ АНАЛИЗ ИМЕН ФАЙЛОВ ==="
 echo "Дата: $(date)"
 echo ""
 
-cd /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs || exit 1
+cd /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/test_rename || exit 1
 
 # 1. Общая статистика
 TOTAL_FILES=$(find . -maxdepth 1 -name "*.md" -type f | wc -l | tr -d ' ')
