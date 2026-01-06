@@ -1,0 +1,46 @@
+=== master-template.md ===
+🔍 АНАЛИЗ ДОКУМЕНТА UCH-DOCS
+=============================
+
+📄 Файл: master-template.md
+
+✅ YAML frontmatter присутствует
+
+📊 ОСНОВНЫЕ ПОЛЯ:
+---------------
+ID:     {id}
+Slug:   ❌ НЕТ
+Name:   {name}
+Type:   {type}
+Level:  {level}
+Parent: —
+
+🔎 ПРОВЕРКА ID:
+--------------
+❌ ОШИБКА: Неверный формат HEX ID
+
+🔎 ПРОВЕРКА SLUG:
+----------------
+❌ ОШИБКА: Отсутствует поле slug
+
+🔎 ПРОВЕРКА ТИПА:
+----------------
+✅ Поле type присутствует: {type}
+❌ ОШИБКА: Тип '{type}' недопустим для уровня {level}
+   Допустимые типы: 
+
+🔎 ПРОВЕРКА ИЕРАРХИИ:
+--------------------
+uch-scripts/analyzer/analyze-doc.sh: line 175: [: {level}: integer expression expected
+uch-scripts/analyzer/analyze-doc.sh: line 183: [: {level}: integer expression expected
+
+🔎 ПРОВЕРКА ОБЯЗАТЕЛЬНЫХ ПОЛЕЙ:
+-------------------------------
+✅ Поле name присутствует
+
+📊 ИТОГОВЫЙ ОТЧЕТ:
+=================
+Ошибок:          3
+Предупреждений:  0
+
+❌ ЕСТЬ КРИТИЧЕСКИЕ ОШИБКИ
