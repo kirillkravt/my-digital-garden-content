@@ -1,0 +1,19 @@
+---
+id: "T-MASTER-V3"
+name: "{name}"
+type: "{type}"
+level: {level}
+status: "planning"
+created: "{date}"
+updated: "{date}"
+author: "{author}"
+---
+
+### ОПИСАНИЕ
+{description}
+
+### ЗАДАЧИ
+- [ ] Добавить задачи
+
+### ДОЧЕРНИЕ ДОКУМЕНТЫ
+Пока нет дочерних документов.
