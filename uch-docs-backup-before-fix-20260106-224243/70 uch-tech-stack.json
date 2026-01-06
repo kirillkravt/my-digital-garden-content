@@ -1,0 +1,27 @@
+{
+  "report": {
+    "id": "90-02-tech",
+    "name": "Технологический стек UCH",
+    "version": "0.2.0",
+    "generated_at": "2026-01-03T12:16:27+03:00",
+    "type": "tech_stack"
+  },
+  "tech_stack": {
+    "python": "3.8.9",
+    "django": "не найден",
+    "nodejs": "v22.13.0",
+    "react": "^18.2.0",
+    "docker": "Docker version 27.5.1, build 9f9e405"
+  },
+  "checks": {
+    "python_available": "true",
+    "django_available": "false",
+    "nodejs_available": "true",
+    "docker_available": "true"
+  },
+  "paths": {
+    "uch_docs": "/Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs",
+    "uch_backend": "/Users/kirillkravcov/UniversalCreativeHub/uch-backend",
+    "react_package": "/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/studio/frontend/package.json"
+  }
+}
