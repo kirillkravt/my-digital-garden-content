@@ -1,0 +1,272 @@
+./Z-20251228113837 - Задача архивации.md
+  Старый: ID=Z-20251228113837, Type=idea, Level="N"
+  Новый:  ID=, Type=, Level=?
+  ---
+./00-04-09-01 - Исследование существующих решений.md
+  Старый: ID=00-04-09-01, Type=subtask, Level=4
+  Новый:  ID=04-09-01, Type=research, Level=3
+  ---
+./master-template.md
+  Старый: ID={id}, Type={type}, Level={level}
+  Новый:  ID=04-09-01, Type=research, Level=?
+  ---
+./00-04-02-09 - Задача. Добавить справочник типов документов в исполняемый скрипт.md
+  Старый: ID=00-04-02-09, Type=task, Level=4
+  Новый:  ID=04-09-01, Type=research, Level=?
+  ---
+./00-04-03 - Снапшот по итогу проработки задач 20251227.md
+  Старый: ID=00-04-03, Type=snapshot, Level=3
+  Новый:  ID=04-09-01, Type=research, Level=?
+  ---
+./changed-backup/20251228-125312-00-04-09 - Тест ручного создания.md
+  Старый: ID=00-04-09, Type=task, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=2
+  ---
+./changed-backup/20251228-142443-00-04-06 - Тест замены с созданием документа.md
+  Старый: ID=00-04-06, Type=task, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./changed-backup/20251229-131917-05-03 - Тестовый модуль 3.md
+  Старый: ID=05-03, Type=module, Level=2
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./changed-backup/20251228-132026-00-04-08-Тест правильных тегов.md
+  Старый: ID=00-04-08, Type=task, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-05 - UCH Music concept.md
+  Старый: ID=00-05, Type=component, Level=2
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./05-03 - Тестовый модуль 2.md
+  Старый: ID=05-03, Type=module, Level=2
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./Z-20251228113756 - Добавить смещение документов при ручном создании с существующим id.md
+  Старый: ID=Z-20251228113756, Type=idea, Level="N"
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./Z-20251228101109 - Доработка меню создания документов.md
+  Старый: ID=Z-20251228101109, Type=idea, Level="N"
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-02 - Снапшот системы документации 20251225.md
+  Старый: ID=00-04-02, Type=snapshot, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./_templates/00-master-template.md
+  Старый: ID=00, Type=project, Level=1
+  Новый:  ID=00, Type=hub, Level=1
+  ---
+./_templates/child-template.md
+  Старый: ID=00-00, Type=component, Level=2
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./00-03-01 - Система нумерации документов.md
+  Старый: ID=00-03-01, Type=component, Level=3
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./05-01 - Тест смещения.md
+  Старый: ID=05-01, Type=module, Level=2
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./05-FF - Тест граничного смещения.md
+  Старый: ID=05-FF, Type=epic, Level=2
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./00-04-02-02 - Задача. Создать шаблон для задач task.md
+  Старый: ID=00-04-02-02, Type=task, Level=4
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./00-04-08 - Брендбук UCH - UniversalCreativeHub.md
+  Старый: ID=00-04-08, Type=component, Level=3
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./00-04-02-0C - Задача. Доработка флоу для работы с тасками, иницдентами, сабтасками.md
+  Старый: ID=00-04-02-0C, Type=task, Level=4
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./child-template.md
+  Старый: ID={id}, Type={type}, Level={level}
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./00-04-06 - Снапшот по решению пулла задач 20251228.md
+  Старый: ID=00-04-06, Type=snapshot, Level=3
+  Новый:  ID=00, Type=hub, Level=?
+  ---
+./00-04 - Линия Г. Документация.md
+  Старый: ID=00-04, Type=component, Level=2
+  Новый:  ID=04, Type=line, Level=1
+  ---
+./00-04-02-03 - Задача. Добавить возможность создавать последовательно несколько документов.md
+  Старый: ID=00-04-02-03, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./00-04-02-0B - Инцидент. Не создался документ.md
+  Старый: ID=00-04-02-0B, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./00-04-09 - Снапшот модульной системы 20251228.md
+  Старый: ID=00-04-09, Type=snapshot, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=2
+  ---
+./00-04-02-06 - Задача. Создание документа с наивысшым id уровня.md
+  Старый: ID=00-04-02-06, Type=task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./Z-20251228090302 - Оптимизировать скрипт.md
+  Старый: ID=Z-20251228090302, Type=idea, Level="N"
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./05-04 - Тест замены.md
+  Старый: ID=05-04, Type=module, Level=2
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-01-02 - Оптимальное решение архитектуры uch-docs.md
+  Старый: ID=00-04-01-02, Type=task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-01-04 - Пример структуры документации.md
+  Старый: ID=00-04-01-04, Type=task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-02-05 - Задача. Исправить баг указания тегов при создании документов.md
+  Старый: ID=00-04-02-05, Type=task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-02-01 - Задача. Создание документа с указанием полного имени.md
+  Старый: ID=id: 00-04-02-01, Type=type: task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-0A - Тест ручной.md
+  Старый: ID=00-0A, Type=epic, Level=2
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-04 - Снапшот системы после исправления багов 20251228.md
+  Старый: ID=00-04-04, Type=snapshot, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-05 - Снапшот системы создания и нумерации документов.md
+  Старый: ID=00-04-05, Type=component, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-02-04 - Задача. Запуск скрипта из палетки команд Obsidian.md
+  Старый: ID=00-04-02-04, Type=task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-01 - Система нумерации документов UCH.md
+  Старый: ID=00-04-01, Type=component, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./Z-20251228113856 - Управление статусами.md
+  Старый: ID=Z-20251228113856, Type=idea, Level="N"
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-06-01 - Тестирование функционала uch-docs 20251228.md
+  Старый: ID=00-04-06-01, Type=subtask, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./00-04-07 - База данных файлов.md
+  Старый: ID=00-04-07, Type=component, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./uch-docs-migrate/00-05 - UCH Music concept.md
+  Старый: ID=00-05, Type=component, Level=2
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./uch-docs-migrate/00-04-02 - Снапшот системы создания и нумерации документов.md
+  Старый: ID=00-04-02, Type=component, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./uch-docs-migrate/00-03-01 - Система нумерации документов.md
+  Старый: ID=00-03-01, Type=component, Level=3
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./uch-docs-migrate/00-04-02-02 - Задача. Создать шаблон для задач task.md
+  Старый: ID=00-04-02-02, Type=task, Level=4
+  Новый:  ID=04-09, Type=snapshot, Level=?
+  ---
+./uch-docs-migrate/00-04 - Линия Г. Документация.md
+  Старый: ID=00-04, Type=component, Level=2
+  Новый:  ID=04, Type=line, Level=1
+  ---
+./uch-docs-migrate/00-04-04 - Брендбук UCH - UniversalCreativeHub.md
+  Старый: ID=00-04-04, Type=component, Level=3
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-03 - Задача. Добавить возможность создавать последовательно несколько документов.md
+  Старый: ID=00-04-02-03, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-06 - Задача. Создание документа с наивысшым id уровня.md
+  Старый: ID=00-04-02-06, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-05 - Задача. Исправить баг указания тегов при создании документов.md
+  Старый: ID=00-04-02-05, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-01 - Задача. Создание документа с указанием полного имени.md
+  Старый: ID=id: 00-04-02-01, Type=type: task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-04 - Задача. Запуск скрипта из палетки команд Obsidian.md
+  Старый: ID=00-04-02-04, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-01 - Система нумерации документов UCH.md
+  Старый: ID=00-04-01, Type=component, Level=3
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-08 - Снапшот системы по итогу проработки задач 20251227.md
+  Старый: ID=00-04-02-08, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-03 - База данных файлов.md
+  Старый: ID=00-04-03, Type=component, Level=3
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-01-01 - Архитектурная вилка Системы документации UCH Docs.md
+  Старый: ID=00-04-01-01, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./uch-docs-migrate/00-04-02-07 - Задача. Функциональность замены документа.md
+  Старый: ID=00-04-02-07, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./05 - Тест проект.md
+  Старый: ID=05, Type=project, Level=1
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./05-02 - Тестовый модуль.md
+  Старый: ID=05-02, Type=module, Level=2
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./00-04-01-03 - Documentation-first подход.md
+  Старый: ID=00-04-01-03, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./00-04-01-01 - Архитектурная вилка Системы документации UCH Docs.md
+  Старый: ID=00-04-01-01, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./Z-20251228113824 - Тест пакета.md
+  Старый: ID=Z-20251228113824, Type=idea, Level="N"
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./master-template-v3.md
+  Старый: ID={id}, Type={type}, Level={level}
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./child-template-v3.md
+  Старый: ID={id}, Type={type}, Level={level}
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./00-04-02-08 - Улучшение системы документации uch-docs.md
+  Старый: ID=00-04-02-08, Type=decision, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
+./00-04-02-07 - Задача. Функциональность замены документа.md
+  Старый: ID=00-04-02-07, Type=task, Level=4
+  Новый:  ID=04, Type=line, Level=?
+  ---
