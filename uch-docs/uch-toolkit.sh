@@ -2,7 +2,7 @@
 # uch-toolkit.sh - главный менеджер всех инструментов UCH (версия для macOS)
 # Централизованный доступ к инструментам в uch-scripts/tools/
 
-VERSION="1.2.0"
+VERSION="1.3.0"
 SCRIPT_NAME=$(basename "$0")
 TOOLS_DIR="uch-scripts/tools"
 
@@ -12,6 +12,7 @@ print_help() {
     echo "Категории и инструменты:"
     echo "  analytics    Аналитика: debt, docs, metrics, basic, project, report, full"
     echo "  docs         Документы: check, fix, migrate"
+    echo "  docs-names   Имена документов: analyze, fix"
     echo "  ids          ID: check, check-simple, fix-shift, fix-replace"
     echo "  cleanup      Очистка: remove"
     echo "  utils        Утилиты: rename, analyze"
@@ -22,6 +23,8 @@ print_help() {
     echo "  $SCRIPT_NAME list                    # Показать все"
     echo "  $SCRIPT_NAME analytics debt          # Анализ техдолга"
     echo "  $SCRIPT_NAME docs check              # Проверить frontmatter"
+    echo "  $SCRIPT_NAME docs-names analyze      # Анализ имен документов"
+    echo "  $SCRIPT_NAME docs-names fix          # Исправить имена документов"
     echo "  $SCRIPT_NAME ids check               # Проверить ID конфликты"
     echo "  $SCRIPT_NAME cleanup remove          # Удалить общую информацию"
     echo "  $SCRIPT_NAME run analytics uch-tech-debt-analyzer.sh  # Прямой запуск"
@@ -53,6 +56,10 @@ resolve_tool() {
         docs:fix) echo "fix_frontmatter.sh" ;;
         docs:migrate) echo "migrate_documents.sh" ;;
         
+        # Новые инструменты для имен документов
+        docs-names:analyze) echo "analyze-doc-names.sh" ;;
+        docs-names:fix) echo "fix-doc-names.sh" ;;
+        
         ids:check) echo "uch-id-tool.sh" ;;
         ids:check-simple) echo "check-conflicts-simple.sh" ;;
         ids:fix-shift) echo "fix-conflicts-with-shift.sh" ;;
@@ -71,7 +78,7 @@ list_tools() {
     echo "🛠️  ДОСТУПНЫЕ ИНСТРУМЕНТЫ:"
     echo ""
     
-    for category in analytics docs ids cleanup utils; do
+    for category in analytics docs docs-names ids cleanup utils; do
         if [ -d "$TOOLS_DIR/$category" ]; then
             echo "📁 $category:"
             # Перечисляем все файлы в категории
@@ -91,6 +98,8 @@ list_tools() {
                         "check:uch-frontmatter-tool.sh" \
                         "fix:fix_frontmatter.sh" \
                         "migrate:migrate_documents.sh" \
+                        "analyze:analyze-doc-names.sh" \
+                        "fix:fix-doc-names.sh" \
                         "check:uch-id-tool.sh" \
                         "check-simple:check-conflicts-simple.sh" \
                         "fix-shift:fix-conflicts-with-shift.sh" \
@@ -139,6 +148,7 @@ run_tool() {
     fi
     
     echo "🚀 Запуск: $category/$tool_name"
+    echo "📁 Рабочая директория: $(pwd)"
     echo "----------------------------------------"
     "$tool_path" "$@"
 }
@@ -158,6 +168,7 @@ run_direct() {
     fi
     
     echo "🚀 Прямой запуск: $category/$tool"
+    echo "📁 Рабочая директория: $(pwd)"
     echo "----------------------------------------"
     "$tool_path" "$@"
 }
@@ -175,7 +186,7 @@ case "$COMMAND" in
     list)
         list_tools
         ;;
-    analytics|docs|ids|cleanup|utils)
+    analytics|docs|docs-names|ids|cleanup|utils)
         if [ $# -lt 1 ]; then
             echo "❌ Не указан инструмент для категории '$COMMAND'"
             echo "   Использование: $SCRIPT_NAME $COMMAND <инструмент>"
