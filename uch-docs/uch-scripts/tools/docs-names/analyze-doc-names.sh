@@ -48,7 +48,7 @@ if [ ${#incorrect_list[@]} -gt 0 ]; then
     
     echo "🚀 РЕКОМЕНДАЦИИ:"
     echo "  Запустите fix-doc-names.sh для исправления:"
-    echo "  /Users/kirillkravcov/UniversalCreativeHub/utils/fix-doc-names.sh"
+    echo "  uch-toolkit.sh docs-names fix"
 else
     echo "🎉 Все файлы имеют правильный формат!"
 fi
