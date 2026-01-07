@@ -1,6 +1,6 @@
 ---
-id: 02-01
-name: 02-01 - Strudel интеграция
+id: 02-10
+name: Strudel интеграция
 type: epic
 level: 2
 status: active
