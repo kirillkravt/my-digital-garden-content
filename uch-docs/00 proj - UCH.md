@@ -4,7 +4,7 @@ name: UCH
 type: project
 level: 1
 status: active
-tags: []
+tags:
 created: 2026-01-02
 updated: 2026-01-02
 author: kirillkravcov
