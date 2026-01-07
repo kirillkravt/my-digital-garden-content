@@ -1,13 +1,13 @@
 ---
 id: "00"
-name: "UCH"
-type: "line"
+name: UCH
+type: project
 level: 1
-status: "active"
+status: active
 tags: []
-created: "2026-01-02"
-updated: "2026-01-02"
-author: "kirillkravcov"
+created: 2026-01-02
+updated: 2026-01-02
+author: kirillkravcov
 ---
 
 # 00 - UNIVERSAL CREATIVE HUB
