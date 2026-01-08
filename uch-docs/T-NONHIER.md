@@ -3,20 +3,14 @@ id: "{{id}}"
 name: "{{name}}"
 type: "{{type}}"
 level: "N"
-status: "planning"
+status: "{{status}}"
+tags: []
 created: "{{created}}"
-updated: "{{created}}"
+updated: "{{updated}}"
 author: "{{author}}"
 ---
 
 ### {{name}}
-
-#### ОБЩАЯ ИНФОРМАЦИЯ
-- **ID**: `{{id}}`
-- **Тип**: {{type}}
-- **Уровень**: N (неиерархический)
-- **Статус**: Планирование
-- **Создано**: `{{created}}`
 
 #### СОДЕРЖАНИЕ
 

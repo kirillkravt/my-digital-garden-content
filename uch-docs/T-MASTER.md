@@ -1,20 +1,22 @@
 ---
-id: "T-MASTER"
-name: "{name}"
-type: "{type}"
-level: {level}
-status: "planning"
-tags: {tags}
-created: "{date}"
-updated: "{date}"
-author: "{author}"
+id: "{{id}}"
+name: "{{name}}"
+type: "{{type}}"
+level: {{level}}
+status: "{{status}}"
+tags: []
+created: "{{created}}"
+updated: "{{updated}}"
+author: "{{author}}"
 ---
 
-### ОПИСАНИЕ
-{description}
+### {{name}}
 
-### ЗАДАЧИ
-- [ ] Добавить задачи
+#### ОПИСАНИЕ
+Добавьте описание здесь.
 
-### ДОЧЕРНИЕ ДОКУМЕНТЫ
+#### ДОЧЕРНИЕ ДОКУМЕНТЫ
 Пока нет дочерних документов.
+
+---
+Создано: {{created}}

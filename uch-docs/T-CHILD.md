@@ -1,23 +1,27 @@
 ---
-id: "T-CHILD"
-name: "{name}"
-type: "{type}"
-level: {level}
-status: "planning"
-tags: {tags}
-parent: "{parent}"
-parent_name: "{parent_name}"
-created: "{date}"
-updated: "{date}"
-author: "{author}"
+id: "{{id}}"
+name: "{{name}}"
+type: "{{type}}"
+level: {{level}}
+status: "{{status}}"
+tags: []
+created: "{{created}}"
+updated: "{{updated}}"
+author: "{{author}}"
 ---
 
-### ОПИСАНИЕ
+### {{name}}
+
+#### ОПИСАНИЕ
 Добавьте описание здесь.
 
-### ЗАДАЧИ
+#### ЗАДАЧИ
 - [ ] Задача 1
 - [ ] Задача 2
 
-### ДОЧЕРНИЕ ДОКУМЕНТЫ
+#### ДОЧЕРНИЕ ДОКУМЕНТЫ
 Пока нет дочерних документов.
+
+---
+Создано: {{created}}
+{{parent_footer}}
