@@ -28,13 +28,37 @@ get_name_from_frontmatter() {
         return 1
     fi
     
-    # Ищем поле name в frontmatter (первые 20 строк)
     head -20 "$file" | awk '/^name:[[:space:]]*"/ {
         gsub(/^name:[[:space:]]*"/, "", $0)
         gsub(/"$/, "", $0)
         print $0
         exit
     }'
+}
+
+# Получить сокращенный тип для имени файла
+get_short_type() {
+    local type="$1"
+    
+    case "$type" in
+        "project"|"proj") echo "proj" ;;
+        "line") echo "line" ;;
+        "component"|"comp") echo "comp" ;;
+        "module") echo "mod" ;;
+        "epic") echo "epic" ;;
+        "task") echo "task" ;;
+        "feature"|"feat") echo "feat" ;;
+        "bug") echo "bug" ;;
+        "snapshot"|"snap") echo "snap" ;;
+        "solution"|"sol") echo "sol" ;;
+        "subtask") echo "subtask" ;;
+        "code_block"|"code") echo "code" ;;
+        "decision"|"dec") echo "dec" ;;
+        "idea") echo "idea" ;;
+        "reference"|"ref") echo "ref" ;;
+        "meeting") echo "meet" ;;
+        *) echo "doc" ;;
+    esac
 }
 
 # Создать реальный документ
@@ -59,37 +83,43 @@ create_real_document() {
         if [ -z "$parent_id" ] || [ "$level" -eq 1 ]; then
             # Мастер-документ
             doc_id=$(find_free_master_id)
+            echo "🆔 Сгенерирован ID: $doc_id"
         else
             # Дочерний документ
-            # Ищем родителя по ID в frontmatter
             parent_file=$(find_document_by_id "$parent_id")
             if [ -z "$parent_file" ]; then
                 echo "❌ Ошибка: Родительский документ с ID '$parent_id' не найден!"
                 return 1
             fi
             
-            # Получаем имя родителя из frontmatter
             parent_name=$(get_name_from_frontmatter "$parent_file")
             if [ -z "$parent_name" ]; then
-                # Если не нашли в frontmatter, используем имя файла
                 parent_name=$(basename "$parent_file" .md | sed "s/^${parent_id} - //")
             fi
             
-            # Генерируем ID
+            # Генерируем свободный ID
             child_suffix=$(find_free_child_id "$parent_id")
             doc_id="${parent_id}-${child_suffix}"
+            echo "🆔 Сгенерирован ID: $doc_id (свободный: $child_suffix)"
+            
+            # Проверяем что файл с таким ID не существует
+            if ls -1 "${doc_id}"*.md 2>/dev/null | grep -q .; then
+                echo "⚠️  Предупреждение: Найден файл с ID $doc_id, но продолжаем..."
+            fi
         fi
     fi
     
     # 2. Форматируем теги
     local tags_yaml=$(format_tags_yaml "$tags" "$type")
     
-    # 3. Создаем имя файла
-    local filename="${doc_id} - ${name}.md"
+    # 3. Создаем имя файла в правильном формате
+    local short_type=$(get_short_type "$type")
+    local filename="${doc_id} ${short_type} - ${name}.md"
+    
+    echo "📄 Создаю документ: $filename"
+    echo "   🏷️  Тип: $type (сокращенно: $short_type)"
     
     # 4. Создаем документ
-    echo "Создаю документ: $filename"
-    
     if [ "$level" = "N" ]; then
         create_non_hierarchical_document "$filename" "$doc_id" "$name" "$type" "$tags_yaml" "$current_date"
     else
@@ -105,7 +135,7 @@ create_real_document() {
     return 0
 }
 
-# Создать иерархический документ - с поддержкой внешних шаблонов
+# Создать иерархический документ - УПРОЩЕННАЯ версия (без шаблонов)
 create_hierarchical_document() {
     local filename="$1"
     local doc_id="$2"
@@ -117,25 +147,9 @@ create_hierarchical_document() {
     local tags_yaml="$8"
     local current_date="$9"
     
-    # Пробуем использовать внешний шаблон
-    local template_file=""
+    # ИСПРАВЛЕНО: Используем упрощенный подход без шаблонов
+    echo "📝 Создаю документ без шаблона"
     
-    if [ "$level" -eq 1 ] && [ -f "T-MASTER.md" ]; then
-        template_file="T-MASTER.md"
-        echo "📋 Использую шаблон: $template_file"
-    elif [ "$level" -ge 2 ] && [ -f "T-CHILD.md" ]; then
-        template_file="T-CHILD.md"
-        echo "📋 Использую шаблон: $template_file"
-    fi
-    
-    if [ -n "$template_file" ] && [ -f "$template_file" ]; then
-        # Используем шаблон с подстановкой переменных
-        create_from_template "$filename" "$doc_id" "$name" "$level" "$type" \
-            "$parent_id" "$parent_name" "$tags_yaml" "$current_date" "$template_file"
-        return
-    fi
-    
-    # Если шаблона нет, используем стандартный код
     cat > "$filename" << DOC_EOF
 ---
 id: "$doc_id"
@@ -156,73 +170,13 @@ author: "$USER"
 - **Уровень**: $level
 DOC_EOF
     
-    # Добавляем родительскую информацию
     if [ -n "$parent_id" ] && [ -n "$parent_name" ]; then
         cat >> "$filename" << DOC_EOF
 - **Родитель**: [[$parent_id - $parent_name]]
 DOC_EOF
     fi
     
-    # Добавляем тип-специфичный контент
-    case $type in
-        "snapshot")
-            cat >> "$filename" << SNAPSHOT_EOF
-- **Статус**: Активный
-- **Создано**: \`$current_date\`
-- **Тип документа**: Снимок системы
-
-#### 📊 СТАТУС СИСТЕМЫ
-
-### ✅ РАБОТАЕТ:
-- 
-
-### ⚠️ ПРОБЛЕМЫ:
-- 
-
-### 🔧 ТЕХНИЧЕСКИЕ ДЕТАЛИ:
-- **Версия системы**: 
-- **Количество документов**: 
-- **Активные задачи**: 
-- **Завершенные задачи**: 
-
-#### 🎯 МЕТРИКИ
-- 
-
-#### 📈 ТЕНДЕНЦИИ
-- 
-
-#### 🔮 ПЛАНЫ
-- 
-SNAPSHOT_EOF
-            ;;
-            
-        "bug")
-            cat >> "$filename" << BUG_EOF
-- **Статус**: Открыт
-- **Создано**: \`$current_date\`
-- **Тип документа**: Ошибка/Баг
-
-#### 🐛 ОПИСАНИЕ ОШИБКИ
-
-#### 🔍 ШАГИ ВОСПРОИЗВЕДЕНИЯ
-1. 
-2. 
-3. 
-
-#### ✅ ОЖИДАЕМЫЙ РЕЗУЛЬТАТ
-- 
-
-#### ❌ ФАКТИЧЕСКИЙ РЕЗУЛЬТАТ
-- 
-
-#### 🖼 СКРИНШОТЫ/ЛОГИ
-- 
-BUG_EOF
-            ;;
-            
-        *)
-            # Стандартный шаблон
-            cat >> "$filename" << STANDARD_EOF
+    cat >> "$filename" << DOC_EOF
 - **Статус**: Планирование
 - **Создано**: \`$current_date\`
 
@@ -232,12 +186,6 @@ BUG_EOF
 #### ЗАДАЧИ
 - [ ] Задача 1
 - [ ] Задача 2
-STANDARD_EOF
-            ;;
-    esac
-    
-    # Общая завершающая часть
-    cat >> "$filename" << FOOTER_EOF
 
 #### ДОЧЕРНИЕ ДОКУМЕНТЫ
 Пока нет дочерних документов.
@@ -245,59 +193,14 @@ STANDARD_EOF
 ---
 Создано: $current_date
 Уровень: $level
-FOOTER_EOF
+DOC_EOF
     
-    # Добавляем родителя в конец для дочерних документов
     if [ -n "$parent_id" ]; then
         echo "Родитель: $parent_id" >> "$filename"
     fi
 }
 
-# Создать из шаблона
-create_from_template() {
-    local filename="$1"
-    local doc_id="$2"
-    local name="$3"
-    local level="$4"
-    local type="$5"
-    local parent_id="$6"
-    local parent_name="$7"
-    local tags_yaml="$8"
-    local current_date="$9"
-    local template_file="${10}"
-    
-    # Читаем шаблон и заменяем переменные
-    local template_content=$(cat "$template_file")
-    
-    # Заменяем переменные
-    template_content=${template_content//\{\{id\}\}/"$doc_id"}
-    template_content=${template_content//\{\{name\}\}/"$name"}
-    template_content=${template_content//\{\{type\}\}/"$type"}
-    template_content=${template_content//\{\{level\}\}/"$level"}
-    template_content=${template_content//\{\{status\}\}/"planning"}
-    template_content=${template_content//\{\{created\}\}/"$current_date"}
-    template_content=${template_content//\{\{updated\}\}/"$current_date"}
-    template_content=${template_content//\{\{author\}\}/"$USER"}
-    
-    # Заменяем теги
-    template_content=${template_content//\{\{tags_yaml\}\}/"$tags_yaml"}
-    
-    # Заменяем родителя если есть
-    if [ -n "$parent_id" ] && [ -n "$parent_name" ]; then
-        template_content=${template_content//\{\{parent_id\}\}/"$parent_id"}
-        template_content=${template_content//\{\{parent_name\}\}/"$parent_name"}
-        template_content=${template_content//\{\{parent_link\}\}/"[[$parent_id - $parent_name]]"}
-    else
-        template_content=${template_content//\{\{parent_id\}\}/}
-        template_content=${template_content//\{\{parent_name\}\}/}
-        template_content=${template_content//\{\{parent_link\}\}/}
-    fi
-    
-    # Записываем в файл
-    echo "$template_content" > "$filename"
-}
-
-# Создать неиерархический документ - с поддержкой внешних шаблонов
+# Создать неиерархический документ - УПРОЩЕННАЯ версия
 create_non_hierarchical_document() {
     local filename="$1"
     local doc_id="$2"
@@ -306,22 +209,13 @@ create_non_hierarchical_document() {
     local tags_yaml="$5"
     local current_date="$6"
     
-    # Пробуем использовать внешний шаблон
-    if [ -f "T-NONHIER.md" ]; then
-        echo "📋 Использую шаблон: T-NONHIER.md"
-        create_from_template "$filename" "$doc_id" "$name" "N" "$type" \
-            "" "" "$tags_yaml" "$current_date" "T-NONHIER.md"
-        return
-    fi
+    echo "📝 Создаю неиерархический документ без шаблона"
     
-    # Если шаблона нет, используем стандартный код
-    case $type in
-        "idea")
-            cat > "$filename" << IDEA_EOF
+    cat > "$filename" << DOC_EOF
 ---
 id: "$doc_id"
 name: "$name"
-type: "idea"
+type: "$type"
 level: "N"
 status: "planning"
 $(echo "$tags_yaml")
@@ -334,126 +228,15 @@ author: "$USER"
 
 #### ОБЩАЯ ИНФОРМАЦИЯ
 - **ID**: \`$doc_id\`
-- **Тип**: Идея/Концепция
+- **Тип**: $type
 - **Уровень**: N (неиерархический)
 - **Статус**: Планирование
 - **Создано**: \`$current_date\`
 
-#### 💡 ОПИСАНИЕ ИДЕИ
-
-#### 🎯 ЦЕЛЬ
-- 
-
-#### 🔍 ПРОБЛЕМА
-- 
-
-#### 🛠️ РЕШЕНИЕ
-- 
-
-#### 🔗 СВЯЗИ
-- Связанные документы: 
-
-#### 📝 ЗАМЕТКИ
-- 
+#### СОДЕРЖАНИЕ
 
 ---
+
 Создано: $current_date
-IDEA_EOF
-            ;;
-            
-        "reference")
-            cat > "$filename" << REFERENCE_EOF
----
-id: "$doc_id"
-name: "$name"
-type: "reference"
-level: "N"
-status: "planning"
-$(echo "$tags_yaml")
-created: "$current_date"
-updated: "$current_date"
-author: "$USER"
----
-
-### $name
-
-#### ОБЩАЯ ИНФОРМАЦИЯ
-- **ID**: \`$doc_id\`
-- **Тип**: Ссылка/Ресурс
-- **Уровень**: N (неиерархический)
-- **Статус**: Планирование
-- **Создано**: \`$current_date\`
-
-#### 🔗 ИСТОЧНИК
-- **URL**: 
-- **Автор**: 
-- **Дата публикации**: 
-- **Тип ресурса**: [Статья/Документация/Книга/Видео/Код/Другое]
-
-#### 📝 КРАТКОЕ ОПИСАНИЕ
-
-#### 💡 КЛЮЧЕВЫЕ МОМЕНТЫ
-- 
-
-#### 🔗 СВЯЗИ
-- Связанные документы: 
-
-#### 📎 ПРИЛОЖЕНИЯ
-- 
-
----
-Создано: $current_date
-REFERENCE_EOF
-            ;;
-            
-        "meeting")
-            cat > "$filename" << MEETING_EOF
----
-id: "$doc_id"
-name: "$name"
-type: "meeting"
-level: "N"
-status: "planning"
-$(echo "$tags_yaml")
-created: "$current_date"
-updated: "$current_date"
-author: "$USER"
----
-
-### $name
-
-#### ОБЩАЯ ИНФОРМАЦИЯ
-- **ID**: \`$doc_id\`
-- **Тип**: Встреча/Обсуждение
-- **Уровень**: N (неиерархический)
-- **Статус**: Планирование
-- **Создано**: \`$current_date\`
-
-#### 📅 ИНФОРМАЦИЯ О ВСТРЕЧЕ
-- **Дата**: 
-- **Время**: 
-- **Место/Платформа**: 
-- **Участники**: 
-
-#### 🎯 ЦЕЛИ ВСТРЕЧИ
-- 
-
-#### 📝 ПОВЕСТКА
-1. 
-2. 
-3. 
-
-#### ✅ РЕШЕНИЯ И ВЫВОДЫ
-- 
-
-#### 📋 ЗАДАЧИ
-- [ ] 
-- [ ] 
-- [ ] 
-
----
-Создано: $current_date
-MEETING_EOF
-            ;;
-    esac
+DOC_EOF
 }
