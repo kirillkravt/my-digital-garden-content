@@ -166,54 +166,60 @@ create_from_template() {
     
     echo "📋 Использую шаблон: $template_file"
     
-    # Создаем временный файл с шаблоном
-    local temp_template="/tmp/template_$(date +%s).md"
-    cp "$template_file" "$temp_template"
+    # Читаем шаблон
+    local template_content=$(cat "$template_file")
     
     # Заменяем все переменные {{var}} на значения
-    sed -i '' "s/{{id}}/$doc_id/g" "$temp_template"
-    sed -i '' "s/{{name}}/$name/g" "$temp_template"
-    sed -i '' "s/{{type}}/$type/g" "$temp_template"
-    sed -i '' "s/{{level}}/$level/g" "$temp_template"
-    sed -i '' "s/{{status}}/planning/g" "$temp_template"
-    sed -i '' "s/{{created}}/$current_date/g" "$temp_template"
-    sed -i '' "s/{{updated}}/$current_date/g" "$temp_template"
-    sed -i '' "s/{{author}}/$USER/g" "$temp_template"
+    template_content=${template_content//\{\{id\}\}/$doc_id}
+    template_content=${template_content//\{\{name\}\}/$name}
+    template_content=${template_content//\{\{type\}\}/$type}
+    template_content=${template_content//\{\{level\}\}/$level}
+    template_content=${template_content//\{\{status\}\}/planning}
+    template_content=${template_content//\{\{created\}\}/$current_date}
+    template_content=${template_content//\{\{updated\}\}/$current_date}
+    template_content=${template_content//\{\{author\}\}/$USER}
     
-    # Заменяем родителя если есть
-    if [ -n "$parent_id" ] && [ -n "$parent_name" ]; then
-        sed -i '' "s/{{parent_id}}/$parent_id/g" "$temp_template"
-        sed -i '' "s/{{parent_name}}/$parent_name/g" "$temp_template"
-        sed -i '' "s|{{parent_link}}|[[$parent_id - $parent_name]]|g" "$temp_template"
+    # Обрабатываем родительскую информацию (только для T-CHILD.md)
+    local parent_footer=""
+    if [ -n "$parent_id" ] && [ -n "$parent_name" ] && [ "$template_file" = "T-CHILD.md" ]; then
+        parent_footer="Родитель: ${parent_id}"
+    fi
+    template_content=${template_content//\{\{parent_footer\}\}/$parent_footer}
+    
+    # Вставляем теги YAML
+    local temp_file="/tmp/template_$(date +%s).md"
+    echo "$template_content" > "$temp_file"
+    
+    # Если есть теги, вставляем их после строки "tags:"
+    if [ -n "$tags_yaml" ] && [ "$tags_yaml" != "tags:" ]; then
+        # Создаем временный файл с тегами
+        local tags_temp="/tmp/tags_$(date +%s).txt"
+        echo "$tags_yaml" > "$tags_temp"
+        
+        # Используем awk для вставки тегов
+        awk -v tags_file="$tags_temp" '
+        /^tags:/ {
+            print $0
+            # Читаем теги из файла (пропускаем первую строку "tags:")
+            while ((getline line < tags_file) > 0) {
+                if (line != "tags:") {
+                    print line
+                }
+            }
+            close(tags_file)
+            next
+        }
+        { print $0 }
+        ' "$temp_file" > "$filename"
+        
+        rm -f "$tags_temp"
     else
-        # Удаляем строки с родительскими переменными если их нет
-        sed -i '' "/{{parent_id}}/d" "$temp_template"
-        sed -i '' "/{{parent_name}}/d" "$temp_template"
-        sed -i '' "/{{parent_link}}/d" "$temp_template"
+        # Если тегов нет, просто копируем
+        cp "$temp_file" "$filename"
     fi
     
-    # Вставляем теги YAML (специальная обработка)
-    local temp_yaml="/tmp/yaml_$(date +%s).txt"
-    echo "$tags_yaml" > "$temp_yaml"
-    
-    # Используем awk для правильной вставки тегов
-    awk -v yaml_file="$temp_yaml" '
-    /^tags:/ {
-        print $0
-        # Читаем и выводим теги из файла, пропуская первую строку "tags:"
-        while ((getline line < yaml_file) > 0) {
-            if (line != "tags:") {
-                print line
-            }
-        }
-        close(yaml_file)
-        next
-    }
-    { print $0 }
-    ' "$temp_template" > "$filename"
-    
-    # Очищаем временные файлы
-    rm -f "$temp_template" "$temp_yaml"
+    # Очищаем временный файл
+    rm -f "$temp_file"
     
     # Проверяем что файл создан
     if [ ! -f "$filename" ]; then
