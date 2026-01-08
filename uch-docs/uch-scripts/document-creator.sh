@@ -105,6 +105,8 @@ create_real_document() {
     
     # 2. Форматируем теги
     local tags_yaml=$(format_tags_yaml "$tags" "$type")
+    echo "🏷️  Сформированные теги:"
+    echo "$tags_yaml"
     
     # 3. Создаем имя файла в правильном формате
     local short_type=$(get_short_type "$type")
@@ -186,35 +188,30 @@ create_from_template() {
     fi
     template_content=${template_content//\{\{parent_footer\}\}/$parent_footer}
     
-    # Вставляем теги YAML
+    # Создаем временный файл с шаблоном
     local temp_file="/tmp/template_$(date +%s).md"
     echo "$template_content" > "$temp_file"
     
-    # Если есть теги, вставляем их после строки "tags:"
+    # Теперь вставляем теги в правильное место
+    # Ищем строку "tags:" и заменяем ее на наши теги
     if [ -n "$tags_yaml" ] && [ "$tags_yaml" != "tags:" ]; then
-        # Создаем временный файл с тегами
-        local tags_temp="/tmp/tags_$(date +%s).txt"
-        echo "$tags_yaml" > "$tags_temp"
+        # Создаем новый файл с правильными тегами
+        local new_file="/tmp/new_$(date +%s).md"
         
-        # Используем awk для вставки тегов
-        awk -v tags_file="$tags_temp" '
-        /^tags:/ {
-            print $0
-            # Читаем теги из файла (пропускаем первую строку "tags:")
-            while ((getline line < tags_file) > 0) {
-                if (line != "tags:") {
-                    print line
-                }
+        awk -v new_tags="$tags_yaml" '
+        {
+            if ($0 ~ /^tags:/) {
+                # Заменяем строку tags: на наши теги
+                print new_tags
+                next
             }
-            close(tags_file)
-            next
+            print $0
         }
-        { print $0 }
-        ' "$temp_file" > "$filename"
+        ' "$temp_file" > "$new_file"
         
-        rm -f "$tags_temp"
+        mv "$new_file" "$filename"
     else
-        # Если тегов нет, просто копируем
+        # Если тегов нет или только "tags:", просто копируем
         cp "$temp_file" "$filename"
     fi
     
