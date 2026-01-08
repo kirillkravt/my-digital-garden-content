@@ -105,8 +105,6 @@ create_real_document() {
     
     # 2. Форматируем теги
     local tags_yaml=$(format_tags_yaml "$tags" "$type")
-    echo "🏷️  Сформированные теги:"
-    echo "$tags_yaml"
     
     # 3. Создаем имя файла в правильном формате
     local short_type=$(get_short_type "$type")
@@ -153,7 +151,7 @@ create_real_document() {
     return 0
 }
 
-# Создать из шаблона (упрощенная версия)
+# Создать из шаблона - ПРОСТАЯ И РАБОЧАЯ версия
 create_from_template() {
     local filename="$1"
     local doc_id="$2"
@@ -171,7 +169,7 @@ create_from_template() {
     # Читаем шаблон
     local template_content=$(cat "$template_file")
     
-    # Заменяем все переменные {{var}} на значения
+    # Заменяем основные переменные
     template_content=${template_content//\{\{id\}\}/$doc_id}
     template_content=${template_content//\{\{name\}\}/$name}
     template_content=${template_content//\{\{type\}\}/$type}
@@ -181,42 +179,21 @@ create_from_template() {
     template_content=${template_content//\{\{updated\}\}/$current_date}
     template_content=${template_content//\{\{author\}\}/$USER}
     
-    # Обрабатываем родительскую информацию (только для T-CHILD.md)
+    # Обрабатываем родительскую информацию
     local parent_footer=""
     if [ -n "$parent_id" ] && [ -n "$parent_name" ] && [ "$template_file" = "T-CHILD.md" ]; then
         parent_footer="Родитель: ${parent_id}"
     fi
     template_content=${template_content//\{\{parent_footer\}\}/$parent_footer}
     
-    # Создаем временный файл с шаблоном
-    local temp_file="/tmp/template_$(date +%s).md"
-    echo "$template_content" > "$temp_file"
-    
-    # Теперь вставляем теги в правильное место
-    # Ищем строку "tags:" и заменяем ее на наши теги
-    if [ -n "$tags_yaml" ] && [ "$tags_yaml" != "tags:" ]; then
-        # Создаем новый файл с правильными тегами
-        local new_file="/tmp/new_$(date +%s).md"
-        
-        awk -v new_tags="$tags_yaml" '
-        {
-            if ($0 ~ /^tags:/) {
-                # Заменяем строку tags: на наши теги
-                print new_tags
-                next
-            }
-            print $0
-        }
-        ' "$temp_file" > "$new_file"
-        
-        mv "$new_file" "$filename"
-    else
-        # Если тегов нет или только "tags:", просто копируем
-        cp "$temp_file" "$filename"
+    # Вставляем теги - простая замена строки "tags:"
+    if [ -n "$tags_yaml" ]; then
+        # Заменяем строку "tags:" на наши теги
+        template_content=$(echo "$template_content" | sed "s/^tags:/$tags_yaml/")
     fi
     
-    # Очищаем временный файл
-    rm -f "$temp_file"
+    # Записываем в файл
+    echo "$template_content" > "$filename"
     
     # Проверяем что файл создан
     if [ ! -f "$filename" ]; then
