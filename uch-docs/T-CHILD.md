@@ -4,7 +4,6 @@ name: "{{name}}"
 type: "{{type}}"
 level: {{level}}
 status: "{{status}}"
-tags: []
 created: "{{created}}"
 updated: "{{updated}}"
 author: "{{author}}"
