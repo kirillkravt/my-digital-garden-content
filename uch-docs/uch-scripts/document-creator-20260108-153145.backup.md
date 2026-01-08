@@ -1,5 +1,5 @@
 #!/bin/bash
-# Модуль реального создания документов - ТОЛЬКО внешние шаблоны
+# Модуль реального создания документов - исправленная версия
 
 # Найти файл документа по ID в frontmatter
 find_document_by_id() {
@@ -10,6 +10,7 @@ find_document_by_id() {
             continue
         fi
         
+        # Ищем id: "target_id" в frontmatter
         if head -20 "$file" | grep -q '^id:[[:space:]]*"'"$target_id"'"'; then
             echo "$file"
             return 0
@@ -100,6 +101,11 @@ create_real_document() {
             child_suffix=$(find_free_child_id "$parent_id")
             doc_id="${parent_id}-${child_suffix}"
             echo "🆔 Сгенерирован ID: $doc_id (свободный: $child_suffix)"
+            
+            # Проверяем что файл с таким ID не существует
+            if ls -1 "${doc_id}"*.md 2>/dev/null | grep -q .; then
+                echo "⚠️  Предупреждение: Найден файл с ID $doc_id, но продолжаем..."
+            fi
         fi
     fi
     
@@ -113,33 +119,11 @@ create_real_document() {
     echo "📄 Создаю документ: $filename"
     echo "   🏷️  Тип: $type (сокращенно: $short_type)"
     
-    # 4. Создаем документ ТОЛЬКО из внешних шаблонов
+    # 4. Создаем документ
     if [ "$level" = "N" ]; then
-        # Неиерархический документ - проверяем шаблон
-        if [ ! -f "T-NONHIER.md" ]; then
-            echo "❌ Ошибка: Не найден шаблон для неиерархических документов T-NONHIER.md"
-            echo "   Создайте файл T-NONHIER.md в корневой директории"
-            return 1
-        fi
-        create_from_template "$filename" "$doc_id" "$name" "N" "$type" \
-            "" "" "$tags_yaml" "$current_date" "T-NONHIER.md"
+        create_non_hierarchical_document "$filename" "$doc_id" "$name" "$type" "$tags_yaml" "$current_date"
     else
-        # Иерархический документ - определяем шаблон
-        local template_file=""
-        if [ "$level" -eq 1 ]; then
-            template_file="T-MASTER.md"
-        else
-            template_file="T-CHILD.md"
-        fi
-        
-        if [ ! -f "$template_file" ]; then
-            echo "❌ Ошибка: Не найден шаблон $template_file"
-            echo "   Для уровня $level требуется файл: $template_file"
-            return 1
-        fi
-        
-        create_from_template "$filename" "$doc_id" "$name" "$level" "$type" \
-            "$parent_id" "$parent_name" "$tags_yaml" "$current_date" "$template_file"
+        create_hierarchical_document "$filename" "$doc_id" "$name" "$level" "$type" "$parent_id" "$parent_name" "$tags_yaml" "$current_date"
     fi
     
     # 5. Обновляем родительский документ (если есть)
@@ -151,8 +135,8 @@ create_real_document() {
     return 0
 }
 
-# Создать из шаблона (упрощенная версия)
-create_from_template() {
+# Создать иерархический документ - УПРОЩЕННАЯ версия (без шаблонов)
+create_hierarchical_document() {
     local filename="$1"
     local doc_id="$2"
     local name="$3"
@@ -162,64 +146,97 @@ create_from_template() {
     local parent_name="$7"
     local tags_yaml="$8"
     local current_date="$9"
-    local template_file="${10}"
     
-    echo "📋 Использую шаблон: $template_file"
+    # ИСПРАВЛЕНО: Используем упрощенный подход без шаблонов
+    echo "📝 Создаю документ без шаблона"
     
-    # Создаем временный файл с шаблоном
-    local temp_template="/tmp/template_$(date +%s).md"
-    cp "$template_file" "$temp_template"
+    cat > "$filename" << DOC_EOF
+---
+id: "$doc_id"
+name: "$name"
+type: "$type"
+level: $level
+status: "planning"
+$(echo "$tags_yaml")
+created: "$current_date"
+updated: "$current_date"
+author: "$USER"
+---
+
+### $name
+
+#### ОБЩАЯ ИНФОРМАЦИЯ
+- **ID**: \`$doc_id\`
+- **Уровень**: $level
+DOC_EOF
     
-    # Заменяем все переменные {{var}} на значения
-    sed -i '' "s/{{id}}/$doc_id/g" "$temp_template"
-    sed -i '' "s/{{name}}/$name/g" "$temp_template"
-    sed -i '' "s/{{type}}/$type/g" "$temp_template"
-    sed -i '' "s/{{level}}/$level/g" "$temp_template"
-    sed -i '' "s/{{status}}/planning/g" "$temp_template"
-    sed -i '' "s/{{created}}/$current_date/g" "$temp_template"
-    sed -i '' "s/{{updated}}/$current_date/g" "$temp_template"
-    sed -i '' "s/{{author}}/$USER/g" "$temp_template"
-    
-    # Заменяем родителя если есть
     if [ -n "$parent_id" ] && [ -n "$parent_name" ]; then
-        sed -i '' "s/{{parent_id}}/$parent_id/g" "$temp_template"
-        sed -i '' "s/{{parent_name}}/$parent_name/g" "$temp_template"
-        sed -i '' "s|{{parent_link}}|[[$parent_id - $parent_name]]|g" "$temp_template"
-    else
-        # Удаляем строки с родительскими переменными если их нет
-        sed -i '' "/{{parent_id}}/d" "$temp_template"
-        sed -i '' "/{{parent_name}}/d" "$temp_template"
-        sed -i '' "/{{parent_link}}/d" "$temp_template"
+        cat >> "$filename" << DOC_EOF
+- **Родитель**: [[$parent_id - $parent_name]]
+DOC_EOF
     fi
     
-    # Вставляем теги YAML (специальная обработка)
-    local temp_yaml="/tmp/yaml_$(date +%s).txt"
-    echo "$tags_yaml" > "$temp_yaml"
+    cat >> "$filename" << DOC_EOF
+- **Статус**: Планирование
+- **Создано**: \`$current_date\`
+
+#### ОПИСАНИЕ
+Добавьте описание здесь.
+
+#### ЗАДАЧИ
+- [ ] Задача 1
+- [ ] Задача 2
+
+#### ДОЧЕРНИЕ ДОКУМЕНТЫ
+Пока нет дочерних документов.
+
+---
+Создано: $current_date
+Уровень: $level
+DOC_EOF
     
-    # Используем awk для правильной вставки тегов
-    awk -v yaml_file="$temp_yaml" '
-    /^tags:/ {
-        print $0
-        # Читаем и выводим теги из файла, пропуская первую строку "tags:"
-        while ((getline line < yaml_file) > 0) {
-            if (line != "tags:") {
-                print line
-            }
-        }
-        close(yaml_file)
-        next
-    }
-    { print $0 }
-    ' "$temp_template" > "$filename"
-    
-    # Очищаем временные файлы
-    rm -f "$temp_template" "$temp_yaml"
-    
-    # Проверяем что файл создан
-    if [ ! -f "$filename" ]; then
-        echo "❌ Ошибка: Не удалось создать файл из шаблона"
-        return 1
+    if [ -n "$parent_id" ]; then
+        echo "Родитель: $parent_id" >> "$filename"
     fi
+}
+
+# Создать неиерархический документ - УПРОЩЕННАЯ версия
+create_non_hierarchical_document() {
+    local filename="$1"
+    local doc_id="$2"
+    local name="$3"
+    local type="$4"
+    local tags_yaml="$5"
+    local current_date="$6"
     
-    echo "   ✅ Документ создан из шаблона"
+    echo "📝 Создаю неиерархический документ без шаблона"
+    
+    cat > "$filename" << DOC_EOF
+---
+id: "$doc_id"
+name: "$name"
+type: "$type"
+level: "N"
+status: "planning"
+$(echo "$tags_yaml")
+created: "$current_date"
+updated: "$current_date"
+author: "$USER"
+---
+
+### $name
+
+#### ОБЩАЯ ИНФОРМАЦИЯ
+- **ID**: \`$doc_id\`
+- **Тип**: $type
+- **Уровень**: N (неиерархический)
+- **Статус**: Планирование
+- **Создано**: \`$current_date\`
+
+#### СОДЕРЖАНИЕ
+
+---
+
+Создано: $current_date
+DOC_EOF
 }
