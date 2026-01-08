@@ -82,7 +82,7 @@ create_real_document() {
         if [ -z "$parent_id" ] || [ "$level" -eq 1 ]; then
             # Мастер-документ
             doc_id=$(find_free_master_id)
-            echo "🆔 Сгенерирован ID: $doc_id"
+            echo "�� Сгенерирован ID: $doc_id"
         else
             # Дочерний документ
             parent_file=$(find_document_by_id "$parent_id")
@@ -105,12 +105,14 @@ create_real_document() {
     
     # 2. Форматируем теги
     local tags_yaml=$(format_tags_yaml "$tags" "$type")
+    echo "🏷️  Сформированные теги:"
+    echo "$tags_yaml"
     
     # 3. Создаем имя файла в правильном формате
     local short_type=$(get_short_type "$type")
     local filename="${doc_id} ${short_type} - ${name}.md"
     
-    echo "📄 Создаю документ: $filename"
+    echo "�� Создаю документ: $filename"
     echo "   🏷️  Тип: $type (сокращенно: $short_type)"
     
     # 4. Создаем документ ТОЛЬКО из внешних шаблонов
@@ -151,7 +153,7 @@ create_real_document() {
     return 0
 }
 
-# Создать из шаблона - ПРОСТАЯ И РАБОЧАЯ версия
+# Создать из шаблона - РАБОЧАЯ версия
 create_from_template() {
     local filename="$1"
     local doc_id="$2"
@@ -169,7 +171,7 @@ create_from_template() {
     # Читаем шаблон
     local template_content=$(cat "$template_file")
     
-    # Заменяем основные переменные
+    # Заменяем все переменные {{var}} на значения
     template_content=${template_content//\{\{id\}\}/$doc_id}
     template_content=${template_content//\{\{name\}\}/$name}
     template_content=${template_content//\{\{type\}\}/$type}
@@ -186,10 +188,32 @@ create_from_template() {
     fi
     template_content=${template_content//\{\{parent_footer\}\}/$parent_footer}
     
-    # Вставляем теги - простая замена строки "tags:"
+    # Вставляем теги в frontmatter - после строки author:
     if [ -n "$tags_yaml" ]; then
-        # Заменяем строку "tags:" на наши теги
-        template_content=$(echo "$template_content" | sed "s/^tags:/$tags_yaml/")
+        # Разбиваем на строки
+        IFS=$'\n' read -d '' -r -a lines <<< "$template_content" || true
+        
+        local output=""
+        local in_frontmatter=false
+        local author_found=false
+        
+        for line in "${lines[@]}"; do
+            output="$output$line"$'\n'
+            
+            if [ "$line" = "---" ]; then
+                if [ "$in_frontmatter" = false ]; then
+                    in_frontmatter=true
+                else
+                    in_frontmatter=false
+                fi
+            elif [ "$in_frontmatter" = true ] && [[ "$line" == author:* ]] && [ "$author_found" = false ]; then
+                # Нашли строку author:, добавляем теги после нее
+                output="$output$tags_yaml"$'\n'
+                author_found=true
+            fi
+        done
+        
+        template_content="$output"
     fi
     
     # Записываем в файл
