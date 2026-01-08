@@ -7,7 +7,6 @@ status: "{{status}}"
 created: "{{created}}"
 updated: "{{updated}}"
 author: "{{author}}"
-tags:
 ---
 
 ### {{name}}
