@@ -172,7 +172,7 @@ const batchCreate = async (templates: DocumentTemplate[]) => {
 };
 ```
 
-### Задача 00-04-02-06: Документ с наивысшим ID
+### Задача 04-02-06: Документ с наивысшим ID
 
 sql
 
