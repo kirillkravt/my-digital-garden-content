@@ -1,15 +1,16 @@
 ---
-id: "04-01-02"
-name: "Оптимальное решение архитектуры uch-docs"
-type: "task"
+id: 04-01-02
+name: Оптимальное решение архитектуры uch-docs
+type: solution
 level: 3
-status: "active"
-tags: ["@task"]
-parent: "00-04-01"
-parent_name: "Система нумерации документов UCH"
-created: "2025-12-27"
-updated: "2025-12-27"
-author: "kirillkravcov"
+status: active
+tags:
+  - subtask
+parent: 00-04-01
+parent_name: Система нумерации документов UCH
+created: 2025-12-27
+updated: 2025-12-27
+author: kirillkravcov
 ---
 ### Оптимальное решение архитектуры uch-docs
 
