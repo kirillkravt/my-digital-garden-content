@@ -1,8 +1,8 @@
 ---
-id: 04-01-02
+id: 04-01-01-01
 name: Оптимальное решение архитектуры uch-docs
 type: solution
-level: 3
+level: 4
 status: active
 tags:
   - subtask
