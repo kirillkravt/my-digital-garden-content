@@ -24,6 +24,7 @@ author: "kirillkravcov"
 - [[uch-docs/frontmatter-fixed-backup-20260104-212703/04-02 - Снапшот системы создания и нумерации документов]]
 - [[uch-docs/frontmatter-fixed-backup-20260104-212703/04-08 - Брендбук UCH - UniversalCreativeHub]]
 - [[uch-docs/frontmatter-fixed-backup-20260104-212703/04-0D - Автоматизация техдолга]]
+- [[04-0B - Реализация MVP системы документации uch-docs]]
 
 Создано: 2025-12-26
 Уровень: 1
