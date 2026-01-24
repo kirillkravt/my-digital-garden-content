@@ -147,7 +147,7 @@ returns: ""
 
 markdown
 
-[[04-01 doc - Documentation-first подход]]
+[[1-04-00-002 STRAT Documentation-first подход]]
 См. также: [[02-01 arc - Архитектура]]
 
 ### 4. **Группировка и модульность**
