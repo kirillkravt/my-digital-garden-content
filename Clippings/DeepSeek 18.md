@@ -147,7 +147,7 @@ returns: ""
 
 markdown
 
-[[2-01-04-03-00.2 ARCH Documentation-first подход]]
+[[2-010403-2_ARCH_Documentation-first_подход]]
 См. также: [[02-01 arc - Архитектура]]
 
 ### 4. **Группировка и модульность**
