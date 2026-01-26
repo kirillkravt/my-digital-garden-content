@@ -1,6 +1,6 @@
 ---
-id: "00"
-name: UCH
+id: 1-010000-1
+name: universal_creative_hub
 type: project
 level: 1
 status: active
