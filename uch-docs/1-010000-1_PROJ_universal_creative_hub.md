@@ -315,36 +315,36 @@ text
 
 ### **УРОВЕНЬ 4: ЗАДАЧИ & РАБОТА**
 
-|     | Тип        | Название    | Описание           | Пример slug                |
+| №   | Тип        | Название    | Описание           | Пример slug                |
 | --- | ---------- | ----------- | ------------------ | -------------------------- |
-|     | **TASK**   | Task        | Задача разработки  | `create-decimal-generator` |
-|     | **FEAT**   | Feature     | Функциональность   | `add-hex-support`          |
-|     | **BUG**    | Bug         | Исправление ошибки | `fix-sorting-issue`        |
-|     | **IMPROV** | Improvement | Улучшение          | `optimize-search`          |
-|     | **REF**    | Refactoring | Рефакторинг        | `refactor-generator`       |
-|     | **TEST**   | Test        | Тестирование       | `test-id-uniqueness`       |
+| 1   | **TASK**   | Task        | Задача разработки  | `create-decimal-generator` |
+| 2   | **FEAT**   | Feature     | Функциональность   | `add-hex-support`          |
+| 3   | **BUG**    | Bug         | Исправление ошибки | `fix-sorting-issue`        |
+| 4   | **IMPROV** | Improvement | Улучшение          | `optimize-search`          |
+| 5   | **REF**    | Refactoring | Рефакторинг        | `refactor-generator`       |
+| 6   | **TEST**   | Test        | Тестирование       | `test-id-uniqueness`       |
 
 ### **УРОВЕНЬ 5: РЕШЕНИЯ & КОД**
 
-|Тип|Название|Описание|Пример slug|
-|---|---|---|---|
-|**SOL**|Solution|Техническое решение|`decimal-algorithm`|
-|**CODE**|Code|Код, реализация|`generator-implementation`|
-|**ALG**|Algorithm|Алгоритм|`id-generation-algorithm`|
-|**CONF**|Configuration|Конфигурация|`plugin-settings`|
-|**SCRIPT**|Script|Скрипт, автоматизация|`batch-generation-script`|
-|**MIG**|Migration|Миграция данных|`data-migration-v1-v2`|
+| №   | Тип        | Название      | Описание              | Пример slug                |
+| --- | ---------- | ------------- | --------------------- | -------------------------- |
+| 1   | **SOL**    | Solution      | Техническое решение   | `decimal-algorithm`        |
+| 2   | **CODE**   | Code          | Код, реализация       | `generator-implementation` |
+| 3   | **ALG**    | Algorithm     | Алгоритм              | `id-generation-algorithm`  |
+| 4   | **CONF**   | Configuration | Конфигурация          | `plugin-settings`          |
+| 5   | **SCRIPT** | Script        | Скрипт, автоматизация | `batch-generation-script`  |
+| 6   | **MIG**    | Migration     | Миграция данных       | `data-migration-v1-v2`     |
 
 ### **УРОВЕНЬ 6: ОПЕРАЦИИ & МОНИТОРИНГ**
 
-|Тип|Название|Описание|Формат даты|
-|---|---|---|---|
-|**REPORT**|Report|Отчет, метрики|`20250129`|
-|**METRIC**|Metric|Метрики, KPI|`20250129`|
-|**ANALYT**|Analytics|Аналитика|`20250129`|
-|**LOG**|Log|Лог, журнал|`20250129`|
-|**BACKUP**|Backup|Резервная копия|`20250129`|
-|**AUDIT**|Audit|Аудит, проверка|`20250129`|
+| Тип        | Название  | Описание        | Формат даты |
+| ---------- | --------- | --------------- | ----------- |
+| **REPORT** | Report    | Отчет, метрики  | `20250129`  |
+| **METRIC** | Metric    | Метрики, KPI    | `20250129`  |
+| **ANALYT** | Analytics | Аналитика       | `20250129`  |
+| **LOG**    | Log       | Лог, журнал     | `20250129`  |
+| **BACKUP** | Backup    | Резервная копия | `20250129`  |
+| **AUDIT**  | Audit     | Аудит, проверка | `20250129`  |
 
 ### **УРОВЕНЬ Z: ИДЕИ & ЗЕТТЕЛЬ**
 
