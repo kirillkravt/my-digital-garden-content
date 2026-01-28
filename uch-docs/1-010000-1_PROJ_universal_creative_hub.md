@@ -1,8 +1,8 @@
 ---
-id: 1-010000-1
-name: universal_creative_hub
-type: project
-level: 1
+id: "1-010000-1"
+name: "universal creative hub"
+type: "PROJ"
+level: 6
 status: active
 tags:
 created: 2026-01-02

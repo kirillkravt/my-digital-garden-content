@@ -1,8 +1,8 @@
 ---
 id: "2-010200-7"
-name: АРХИТЕКТУРА
-type: document
-level: 2
+name: "uch-studio"
+type: "ARCH"
+level: 6
 status: active
 tags: []
 created: 2026-01-02

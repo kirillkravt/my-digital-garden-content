@@ -1,8 +1,8 @@
 ---
 id: "2-010200-1"
-name: Линия Б. Студия
-type: line
-level: 2
+name: "studio"
+type: "LINE"
+level: 6
 status: active
 tags: []
 created: 2026-01-02

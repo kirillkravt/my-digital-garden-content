@@ -1,8 +1,8 @@
 ---
 id: "2-010400-1"
-name: "Линия Г. Документация"
-type: "line"
-level: 1
+name: "docs system"
+type: "LINE"
+level: 6
 status: "active"
 tags: ["@component", "@doc", "@active"]
 parent: "00"

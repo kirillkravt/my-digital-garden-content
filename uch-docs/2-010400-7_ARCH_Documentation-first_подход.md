@@ -1,8 +1,8 @@
 ---
 id: "2-010400-7"
-name: Documentation-first подход
-type: document
-level: 2
+name: "Documentation-first подход"
+type: "ARCH"
+level: 6
 status: active
 tags:
   - "@task"

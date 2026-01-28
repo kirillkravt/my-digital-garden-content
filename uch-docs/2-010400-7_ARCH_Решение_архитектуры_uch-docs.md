@@ -1,8 +1,8 @@
 ---
 id: "2-010400-7"
-name: Оптимальное решение архитектуры uch-docs
-type: solution
-level: 4
+name: "Решение архитектуры uch-docs"
+type: "ARCH"
+level: 6
 status: active
 tags:
   - subtask

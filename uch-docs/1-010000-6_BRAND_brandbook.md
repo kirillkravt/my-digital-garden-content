@@ -1,8 +1,8 @@
 ---
 id: "1-010000-6"
-name: Брендбук UCH - UniversalCreativeHub
-type: document
-level: 2
+name: "brandbook"
+type: "BRAND"
+level: 6
 status: active
 tags:
   - "@component"
