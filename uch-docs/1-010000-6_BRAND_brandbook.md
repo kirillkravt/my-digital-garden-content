@@ -2,7 +2,7 @@
 id: "1-010000-6"
 name: "brandbook"
 type: "BRAND"
-level: 6
+level: 1
 status: active
 tags:
   - "@component"

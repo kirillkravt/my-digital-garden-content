@@ -2,7 +2,7 @@
 id: "2-010400-1"
 name: "docs system"
 type: "LINE"
-level: 6
+level: 2
 status: "active"
 tags: ["@component", "@doc", "@active"]
 parent: "00"

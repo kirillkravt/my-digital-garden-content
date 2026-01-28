@@ -2,7 +2,7 @@
 id: "1-010000-1"
 name: "universal creative hub"
 type: "PROJ"
-level: 6
+level: 1
 status: active
 tags:
 created: 2026-01-02

@@ -2,7 +2,7 @@
 id: "3-010401-1"
 name: "Реализация MVP системы документации uch-docs"
 type: "epic"
-level: 2
+level: 3
 status: "planning"
 created: "2026-01-12"
 updated: "2026-01-12"

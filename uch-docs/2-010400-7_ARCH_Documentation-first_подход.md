@@ -2,7 +2,7 @@
 id: "2-010400-7"
 name: "Documentation-first подход"
 type: "ARCH"
-level: 6
+level: 2
 status: active
 tags:
   - "@task"
@@ -571,7 +571,7 @@ yaml
 ```
 id: "2-010400-7"
 type: "feature"  # обязательное поле
-level: 3         # вычисляется автоматически
+level: 2
 status: "active" # или planning, in_progress, done, archived
 tags: ["@docs", "@core"]
 parent: "04-01"
@@ -606,7 +606,7 @@ yaml
 id: "2-010400-7"
 name: "HEX нумерация документов"
 type: "feature"
-level: 3
+level: 2
 status: "active"
 tags: ["@docs", "@core", "@automation"]
 parent: "04-01"
@@ -786,7 +786,7 @@ yaml
 id: "2-010400-7"
 name: "{name}"
 type: "project"
-level: 1
+level: 2
 status: "planning"
 tags: [{tags}]
 created: "{date}"
@@ -811,7 +811,7 @@ yaml
 id: "2-010400-7"
 name: "{name}"
 type: "component"  # или task, feature, module
-level: {level}
+level: 2
 status: "planning"
 tags: [{tags}]
 parent: "{parent}"
@@ -834,7 +834,7 @@ bash
 # --status [planning|active|in_progress|review|done|archived]
 # --id XX-YY-ZZ (опционально, для ручного указания)
 
-# Автоматическое определение type по level:
+# Автоматическое определение type по level: 2
 # level=1 → project/line
 # level=2 → component/module  
 # level=3 → task/feature

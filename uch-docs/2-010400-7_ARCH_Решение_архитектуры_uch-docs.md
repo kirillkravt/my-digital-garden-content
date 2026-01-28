@@ -2,7 +2,7 @@
 id: "2-010400-7"
 name: "Решение архитектуры uch-docs"
 type: "ARCH"
-level: 6
+level: 2
 status: active
 tags:
   - subtask

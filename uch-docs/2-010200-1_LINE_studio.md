@@ -2,7 +2,7 @@
 id: "2-010200-1"
 name: "studio"
 type: "LINE"
-level: 6
+level: 2
 status: active
 tags: []
 created: 2026-01-02

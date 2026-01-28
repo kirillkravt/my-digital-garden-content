@@ -2,7 +2,7 @@
 id: "2-010400-15"
 name: "QUICK-START-GUIDE"
 type: "GUIDE"
-level: 6
+level: 2
 status: active
 tags: []
 created: 2026-01-04
