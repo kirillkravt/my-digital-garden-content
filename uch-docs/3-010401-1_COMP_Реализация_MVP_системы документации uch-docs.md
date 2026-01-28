@@ -1,8 +1,7 @@
 ---
 id: "3-010401-1"
 name: "Реализация MVP системы документации uch-docs"
-type: "COMP
-MVP"
+type: "COMP"
 level: 3
 status: "planning"
 tags: []
@@ -11,20 +10,7 @@ updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "3-010401-1_COMP_Реализация_MVP_системы документации uch-docs"
 ---
-id: "3-010401-1"
-name: "Реализация MVP системы документации uch-docs"
-type: "epic"
-level: 3
-status: "planning"
-created: "2026-01-12"
-updated: "2026-01-12"
-author: "kirillkravcov"
-tags:
-  - "epic"
-  - "mvp"
-  - "req"
-  - "uch-docs"
----
+
 ### Реализация MVP системы документации uch-docs
 #### ОПИСАНИЕ
 

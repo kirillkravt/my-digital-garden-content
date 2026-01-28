@@ -9,6 +9,7 @@ created: "2026-01-02"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "5-010201-0003-1_SOL_Autoplay_policy_AudioContext"
+---
 
 
 ## 🎯 ОПИСАНИЕ ПРОБЛЕМЫ

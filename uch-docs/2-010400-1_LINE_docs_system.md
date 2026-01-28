@@ -1,14 +1,14 @@
 ---
-id: "2-010400-1"
-name: "docs system"
-type: "LINE"
+id: 2-010400-1
+name: docs system
+type: LINE
 level: 2
-status: "active"
-tags: ["@component", "@doc", "@active"]
-created: "2025-12-26"
-updated: "2026-01-28"
-author: "kirillkravcov"
-slug: "2-010400-1_LINE_docs_system"
+status: active
+tags:
+created: 2025-12-26
+updated: 2026-01-28
+author: kirillkravcov
+slug: 2-010400-1_LINE_docs_system
 ---
 ### Линия Г. Документация
 

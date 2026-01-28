@@ -9,7 +9,7 @@ created: "2026-01-02"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "3-010201-1_COMP_Strudel"
-
+---
 
 ## 🎯 ОПИСАНИЕ КОМПОНЕНТА
 

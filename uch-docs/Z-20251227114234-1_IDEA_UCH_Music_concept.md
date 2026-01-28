@@ -1,14 +1,14 @@
 ---
-id: "Z-20251227114234"
-name: "Z-20251227114234-1 IDEA UCH Music concept"
-type: "IDEA"
+id: Z-20251227114234
+name: Z-20251227114234-1 IDEA UCH Music concept
+type: IDEA
 level: 0
-status: "active"
-tags: ["@component", "@edu", "@learn"]
-created: "2025-12-27"
-updated: "2026-01-28"
-author: "kirillkravcov"
-slug: "Z-20251227114234-1_IDEA_UCH_Music_concept"
+status: active
+tags:
+created: 2025-12-27
+updated: 2026-01-28
+author: kirillkravcov
+slug: Z-20251227114234-1_IDEA_UCH_Music_concept
 ---
 ### UCH Music concept
 
