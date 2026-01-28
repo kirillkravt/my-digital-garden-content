@@ -9,17 +9,6 @@ created: "2026-01-02"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "3-010201-1_COMP_Strudel"
----
-id: "3-010201-1"
-name: "Strudel"
-type: "COMP"
-level: 3
-status: active
-tags: []
-created: 2026-01-02
-updated: 2026-01-02
-author: kirillkravcov
----
 
 
 ## 🎯 ОПИСАНИЕ КОМПОНЕНТА
