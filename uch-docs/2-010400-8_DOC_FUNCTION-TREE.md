@@ -9,7 +9,7 @@ created: "2026-01-04"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "2-010400-8_DOC_FUNCTION-TREE"
-
+---
 # 🏗️ ДЕРЕВО ФУНКЦИЙ UCH-DOCS СИСТЕМЫ
 
 **Дата генерации:** Sun Jan  4 21:11:48 MSK 2026

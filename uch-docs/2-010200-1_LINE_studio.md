@@ -9,6 +9,7 @@ created: "2026-01-02"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "2-010200-1_LINE_studio"
+---
 
 # 00-02 - Линия Б: Студия
 
