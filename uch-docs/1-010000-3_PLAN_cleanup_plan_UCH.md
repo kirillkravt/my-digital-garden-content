@@ -1,6 +1,6 @@
 ---
 id: "1-010000-3"
-name: "ucleanup plan UCH"
+name: "cleanup plan UCH"
 type: "PLAN"
 level: 1
 status: "active"

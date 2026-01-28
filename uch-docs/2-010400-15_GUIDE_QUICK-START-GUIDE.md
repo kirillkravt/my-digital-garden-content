@@ -1,6 +1,6 @@
 ---
 id: "2-010400-15"
-name: "uQUICK - START - GUIDE"
+name: "QUICK-START-GUIDE"
 type: "GUIDE"
 level: 2
 status: "active"

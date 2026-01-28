@@ -1,6 +1,6 @@
 ---
 id: "3-010201-17"
-name: "uTECH - DEBT"
+name: "TECH-DEBT"
 type: "DEBT"
 level: 3
 status: "active"

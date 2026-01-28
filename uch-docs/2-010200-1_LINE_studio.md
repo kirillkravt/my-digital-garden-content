@@ -1,6 +1,6 @@
 ---
 id: "2-010200-1"
-name: "ustudio"
+name: "studio"
 type: "LINE"
 level: 2
 status: "active"
