@@ -1,0 +1,56 @@
+{
+  "report": {
+    "id": "90-03-metrics",
+    "name": "Полные метрики проекта UCH",
+    "version": "0.4.0",
+    "generated_at": "2026-01-11T00:59:35+03:00",
+    "type": "full_metrics"
+  },
+  "project_structure": {
+    "base_path": "/Users/kirillkravcov/UniversalCreativeHub",
+    "backend_path": "/Users/kirillkravcov/UniversalCreativeHub/uch-backend",
+    "docs_path": "/Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs",
+    "line_a_path": "/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog",
+    "line_b_path": "/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/studio"
+  },
+  "metrics": {
+    "uch_docs": {
+      "md_files": 191,
+      "shell_scripts": 44,
+      "templates": 0,
+      "uch_scripts": 35,
+      "size": "8.7M"
+    },
+    "uch_backend": {
+      "python_files": 3207,
+      "html_templates": 257,
+      "md_files": 112,
+      "sql_files": 0,
+      "size": "213M"
+    },
+    "line_a": {
+      "python_files": 24,
+      "html_templates": 7,
+      "md_files": 0,
+      "exists": "true"
+    },
+    "line_b": {
+      "python_files": 8,
+      "js_files": 2721,
+      "ts_files": 2444,
+      "html_files": 10,
+      "exists": "true"
+    },
+    "totals": {
+      "total_size": "1.1G",
+      "total_md_files": 303,
+      "total_python_files": 3239
+    }
+  },
+  "directory_checks": {
+    "uch_docs_exists": "true",
+    "uch_backend_exists": "true",
+    "line_a_exists": "true",
+    "line_b_exists": "true"
+  }
+}

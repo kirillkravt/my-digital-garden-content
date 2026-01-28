@@ -1,5 +1,5 @@
 ---
-id: 02-01
+id: "2-010200-7"
 name: АРХИТЕКТУРА
 type: document
 level: 2
