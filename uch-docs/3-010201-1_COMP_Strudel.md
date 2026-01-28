@@ -1,8 +1,8 @@
 ---
 id: "3-010201-1"
-name: Strudel интеграция
-type: epic
-level: 2
+name: "Strudel"
+type: "COMP"
+level: 6
 status: active
 tags: []
 created: 2026-01-02

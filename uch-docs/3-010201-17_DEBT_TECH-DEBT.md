@@ -1,8 +1,8 @@
 ---
 id: "3-010201-17"
 name: "TECH-DEBT"
-type: "line"
-level: 1
+type: "DEBT"
+level: 6
 status: "active"
 tags: []
 created: "2026-01-02"

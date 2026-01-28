@@ -1,8 +1,8 @@
 ---
 id: "2-010300-1"
-name: Линия В. Процессы
-type: line
-level: 1
+name: "processes"
+type: "LINE"
+level: 6
 status: active
 tags: []
 created: 2026-01-02
