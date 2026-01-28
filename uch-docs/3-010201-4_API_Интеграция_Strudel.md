@@ -2,7 +2,7 @@
 id: "3-010201-4"
 name: 02-10-01 - Базовая интеграция Strudel
 type: task
-level: 4
+level: 3
 status: active
 tags: []
 created: 2026-01-02

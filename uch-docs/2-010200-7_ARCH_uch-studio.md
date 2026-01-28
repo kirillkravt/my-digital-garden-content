@@ -2,7 +2,7 @@
 id: "2-010200-7"
 name: "uch-studio"
 type: "ARCH"
-level: 6
+level: 2
 status: active
 tags: []
 created: 2026-01-02

@@ -2,7 +2,7 @@
 id: "3-010201-1"
 name: "Strudel"
 type: "COMP"
-level: 6
+level: 3
 status: active
 tags: []
 created: 2026-01-02
