@@ -1,6 +1,6 @@
 ---
 id: "2-010400-7"
-name: "uDocumentation-first подход"
+name: "uDocumentation - first подход"
 type: "ARCH"
 level: 2
 status: "active"
@@ -602,7 +602,7 @@ yaml
 
 ```
 id: "2-010400-7"
-name: "uDocumentation-first подход"
+name: "uDocumentation - first подход"
 type: "feature"
 level: 2
 status: "active"
@@ -782,7 +782,7 @@ yaml
 
 ```
 id: "2-010400-7"
-name: "uDocumentation-first подход"
+name: "uDocumentation - first подход"
 type: "project"
 level: 2
 status: "planning"
@@ -807,7 +807,7 @@ yaml
 
 ```
 id: "2-010400-7"
-name: "uDocumentation-first подход"
+name: "uDocumentation - first подход"
 type: "component"  # или task, feature, module
 level: 2
 status: "planning"

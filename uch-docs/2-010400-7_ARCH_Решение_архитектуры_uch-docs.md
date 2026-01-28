@@ -1,6 +1,6 @@
 ---
 id: "2-010400-7"
-name: "uРешение архитектуры uch-docs"
+name: "uРешение архитектуры uch - docs"
 type: "ARCH"
 level: 2
 status: "active"
