@@ -1,6 +1,6 @@
 ---
 id: "1-010000-6"
-name: "ubrandbook"
+name: "brandbook"
 type: "BRAND"
 level: 1
 status: "active"

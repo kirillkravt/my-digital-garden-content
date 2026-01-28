@@ -1,6 +1,6 @@
 ---
 id: "Z-20251227114234"
-name: "uZ-20251227114234-1 IDEA UCH Music concept"
+name: "Z-20251227114234-1 IDEA UCH Music concept"
 type: "IDEA"
 level: 0
 status: "active"
