@@ -10,19 +10,6 @@ updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "2-010400-7_ARCH_Решение_архитектуры_uch-docs"
 ---
-id: "2-010400-7"
-name: "Решение архитектуры uch-docs"
-type: "ARCH"
-level: 2
-status: active
-tags:
-  - subtask
-parent: 00-04-01
-parent_name: Система нумерации документов UCH
-created: 2025-12-27
-updated: 2025-12-27
-author: kirillkravcov
----
 ### Оптимальное решение архитектуры uch-docs
 
 #### ОПИСАНИЕ

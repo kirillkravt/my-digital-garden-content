@@ -10,18 +10,6 @@ updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "2-010400-1_LINE_docs_system"
 ---
-id: "2-010400-1"
-name: "docs system"
-type: "LINE"
-level: 2
-status: "active"
-tags: ["@component", "@doc", "@active"]
-parent: "00"
-parent_name: "UCH"
-created: "2025-12-26"
-updated: "2025-12-26"
-author: "kirillkravcov"
----
 ### Линия Г. Документация
 
 #### ОПИСАНИЕ
