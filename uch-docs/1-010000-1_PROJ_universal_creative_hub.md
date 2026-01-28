@@ -3,6 +3,17 @@ id: "1-010000-1"
 name: "universal creative hub"
 type: "PROJ"
 level: 1
+status: "active"
+tags: []
+created: "2026-01-02"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "1-010000-1_PROJ_universal_creative_hub"
+---
+id: "1-010000-1"
+name: "universal creative hub"
+type: "PROJ"
+level: 1
 status: active
 tags:
 created: 2026-01-02

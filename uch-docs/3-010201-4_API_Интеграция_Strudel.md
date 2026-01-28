@@ -1,5 +1,16 @@
 ---
 id: "3-010201-4"
+name: "02-10-01 - Базовая интеграция Strudel"
+type: "API"
+level: 3
+status: "active"
+tags: []
+created: "2026-01-02"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "3-010201-4_API_Интеграция_Strudel"
+---
+id: "3-010201-4"
 name: 02-10-01 - Базовая интеграция Strudel
 type: task
 level: 3
