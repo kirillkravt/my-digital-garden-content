@@ -1,6 +1,6 @@
 ---
 id: "5-010201-0003"
-name: "5 - 010201 - 0003 - 1 SOL Autoplay policy AudioContext"
+name: "uAutoplay policy AudioContext"
 type: "SOL"
 level: 5
 status: "active"

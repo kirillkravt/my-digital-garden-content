@@ -1,6 +1,6 @@
 ---
 id: "2-010300-1"
-name: "processes"
+name: "uprocesses"
 type: "LINE"
 level: 2
 status: "active"
@@ -11,7 +11,7 @@ author: "kirillkravcov"
 slug: "2-010300-1_LINE_processes"
 ---
 id: "2-010300-1"
-name: "processes"
+name: "uprocesses"
 type: "LINE"
 level: 2
 status: active

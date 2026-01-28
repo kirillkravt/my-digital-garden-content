@@ -1,6 +1,6 @@
 ---
 id: "2-010400-7"
-name: "Documentation-first подход"
+name: "uDocumentation-first подход"
 type: "ARCH"
 level: 2
 status: "active"
@@ -602,13 +602,13 @@ yaml
 
 ```
 id: "2-010400-7"
-name: "HEX нумерация документов"
+name: "uDocumentation-first подход"
 type: "feature"
 level: 2
 status: "active"
 tags: ["@docs", "@core", "@automation"]
 parent: "04-01"
-parent_name: "Система документов"
+parent_name: "uDocumentation-first подход"
 created: "2025-12-27"
 updated: "2025-12-27"
 author: "kirillkravcov"
@@ -782,7 +782,7 @@ yaml
 
 ```
 id: "2-010400-7"
-name: "{name}"
+name: "uDocumentation-first подход"
 type: "project"
 level: 2
 status: "planning"
@@ -807,13 +807,13 @@ yaml
 
 ```
 id: "2-010400-7"
-name: "{name}"
+name: "uDocumentation-first подход"
 type: "component"  # или task, feature, module
 level: 2
 status: "planning"
 tags: [{tags}]
 parent: "{parent}"
-parent_name: "{parent_name}"
+parent_name: "uDocumentation-first подход"
 created: "{date}"
 updated: "{date}"
 author: "{author}"
@@ -995,21 +995,21 @@ export default class UCHHybridPlugin extends Plugin {
     // 1. Команда создания документа с выбором типа
     this.addCommand({
       id: "2-010400-7"
-      name: 'UCH: Create Hybrid Document',
+      name: "uDocumentation-first подход"
       callback: () => this.createHybridDocument()
     });
     
     // 2. Команда синхронизации с SQLite
     this.addCommand({
       id: "2-010400-7"
-      name: 'UCH: Sync Metadata to SQLite',
+      name: "uDocumentation-first подход"
       callback: () => this.syncMetadata()
     });
     
     // 3. Быстрый поиск документов
     this.addCommand({
       id: "2-010400-7"
-      name: 'UCH: Find Active Tasks',
+      name: "uDocumentation-first подход"
       callback: () => this.showActiveTasks()
     });
   }
