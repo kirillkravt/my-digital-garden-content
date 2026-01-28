@@ -1,6 +1,6 @@
 ---
 id: "3-010201-1"
-name: "Strudel"
+name: "uStrudel"
 type: "COMP"
 level: 3
 status: "active"

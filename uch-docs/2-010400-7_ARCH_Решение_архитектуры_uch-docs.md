@@ -1,6 +1,6 @@
 ---
 id: "2-010400-7"
-name: "Решение архитектуры uch-docs"
+name: "uРешение архитектуры uch-docs"
 type: "ARCH"
 level: 2
 status: "active"
@@ -132,7 +132,7 @@ interface CreateOptions {
   mode: 'auto' | 'manual';
   customId?: string;  // "00-FF" для специфических ID
   parentId?: string;
-  name: string;
+  name: "uРешение архитектуры uch-docs"
   tags: string[];
 }
 ```

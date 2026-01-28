@@ -1,6 +1,6 @@
 ---
 id: "3-010201-4"
-name: "Интеграция Strudel"
+name: "uИнтеграция Strudel"
 type: "API"
 level: 3
 status: "active"

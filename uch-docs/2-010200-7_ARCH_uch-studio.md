@@ -1,6 +1,6 @@
 ---
 id: "2-010200-7"
-name: "uch-studio"
+name: "uuch-studio"
 type: "ARCH"
 level: 2
 status: "active"
@@ -11,7 +11,7 @@ author: "kirillkravcov"
 slug: "2-010200-7_ARCH_uch-studio"
 ---
 id: "2-010200-7"
-name: "uch-studio"
+name: "uuch-studio"
 type: "ARCH"
 level: 2
 status: active
