@@ -1,5 +1,5 @@
 ---
-id: 04-01
+id: "2-010400-7"
 name: Documentation-first подход
 type: document
 level: 2
@@ -569,7 +569,7 @@ text
 yaml
 
 ```
-id: "04-01-01"
+id: "2-010400-7"
 type: "feature"  # обязательное поле
 level: 3         # вычисляется автоматически
 status: "active" # или planning, in_progress, done, archived
@@ -603,7 +603,7 @@ Z-202512271230 ссылается на:
 yaml
 
 ```
-id: "04-01-01"
+id: "2-010400-7"
 name: "HEX нумерация документов"
 type: "feature"
 level: 3
@@ -783,7 +783,7 @@ bash
 yaml
 
 ```
-id: "{id}"
+id: "2-010400-7"
 name: "{name}"
 type: "project"
 level: 1
@@ -808,7 +808,7 @@ author: "{author}"
 yaml
 
 ```
-id: "{id}"
+id: "2-010400-7"
 name: "{name}"
 type: "component"  # или task, feature, module
 level: {level}
@@ -996,21 +996,21 @@ export default class UCHHybridPlugin extends Plugin {
   async onload() {
     // 1. Команда создания документа с выбором типа
     this.addCommand({
-      id: 'create-hybrid-doc',
+      id: "2-010400-7"
       name: 'UCH: Create Hybrid Document',
       callback: () => this.createHybridDocument()
     });
     
     // 2. Команда синхронизации с SQLite
     this.addCommand({
-      id: 'sync-metadata',
+      id: "2-010400-7"
       name: 'UCH: Sync Metadata to SQLite',
       callback: () => this.syncMetadata()
     });
     
     // 3. Быстрый поиск документов
     this.addCommand({
-      id: 'find-tasks',
+      id: "2-010400-7"
       name: 'UCH: Find Active Tasks',
       callback: () => this.showActiveTasks()
     });

@@ -1,5 +1,5 @@
 ---
-id: 04-01-01-01
+id: "2-010400-7"
 name: Оптимальное решение архитектуры uch-docs
 type: solution
 level: 4
@@ -277,7 +277,7 @@ class SyncService {
   async onFileCreate(file: TFile) {
     const metadata = parseFrontmatter(file);
     await db.insertDocument({
-      id: metadata.id,
+      id: "2-010400-7"
       file_path: file.path,
       ...metadata
     });

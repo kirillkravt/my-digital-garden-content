@@ -1,0 +1,33 @@
+{
+  "analysis": {
+    "date": "2026-01-10T16:12:22+03:00",
+    "version": "1.0.0",
+    "total_files": 72
+  },
+  "file_names": {
+    "correct_format": 0,
+    "incorrect_format": 72,
+    "correct_percentage": 0
+  },
+  "hex_levels": {
+    "level_1": 0,
+    "level_2": 0,
+    "level_3": 0,
+    "level_4": 0
+  },
+  "frontmatter": {
+    "with_frontmatter": 72,
+    "without_frontmatter": 0,
+    "percentage_with_frontmatter": 100
+  },
+  "tasks": {
+    "rename_files": 72,
+    "add_frontmatter": 0,
+    "standardize_frontmatter": 72
+  },
+  "recommendations": [
+    "Добавить ID в начало имен 72 файлов",
+    "Добавить стандартный frontmatter к 0 файлам",
+    "Проверить соответствие ID в именах и frontmatter"
+  ]
+}
