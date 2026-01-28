@@ -9,17 +9,6 @@ created: "2026-01-02"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "2-010200-1_LINE_studio"
----
-id: "2-010200-1"
-name: "studio"
-type: "LINE"
-level: 2
-status: active
-tags: []
-created: 2026-01-02
-updated: 2026-01-02
-author: kirillkravcov
----
 
 # 00-02 - Линия Б: Студия
 

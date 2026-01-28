@@ -9,17 +9,6 @@ created: "2026-01-02"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "5-010201-0003-1_SOL_Autoplay_policy_AudioContext"
----
-id: "5-010201-0003"
-name: 02-10-04 - Autoplay policy AudioContext
-type: solution
-level: 5
-status: active
-tags: []
-created: 2026-01-02
-updated: 2026-01-02
-author: kirillkravcov
----
 
 
 ## 🎯 ОПИСАНИЕ ПРОБЛЕМЫ

@@ -9,17 +9,6 @@ created: "2026-01-04"
 updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "2-010400-8_DOC_FUNCTION-TREE"
----
-id: "2-010400-8"
-name: "FUNCTION-TREE"
-type: "DOC"
-level: 2
-status: "active"
-tags: []
-created: "2026-01-04"
-updated: "2026-01-04"
-author: "kirillkravcov"
----
 
 # 🏗️ ДЕРЕВО ФУНКЦИЙ UCH-DOCS СИСТЕМЫ
 
