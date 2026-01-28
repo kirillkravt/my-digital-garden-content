@@ -1,4 +1,15 @@
-# 📋 ПЛАН ОЧИСТКИ ТЕХНИЧЕСКОГО ДОЛГА UCH
+---
+id: "1-010000-3"
+name: "cleanup plan UCH"
+type: "PLAN"
+level: 1
+status: "active"
+tags: []
+created: "2025-12-27"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "1-010000-3_PLAN_cleanup_plan_UCH"
+---
 
 **Сгенерировано:** Sat Jan 10 16:05:37 MSK 2026  
 **Всего скриптов:** 6  

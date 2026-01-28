@@ -3,6 +3,17 @@ id: "2-010400-7"
 name: "Documentation-first подход"
 type: "ARCH"
 level: 2
+status: "active"
+tags: []
+created: "2025-12-27"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "2-010400-7_ARCH_Documentation-first_подход"
+---
+id: "2-010400-7"
+name: "Documentation-first подход"
+type: "ARCH"
+level: 2
 status: active
 tags:
   - "@task"

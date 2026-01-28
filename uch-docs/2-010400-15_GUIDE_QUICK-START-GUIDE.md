@@ -3,6 +3,17 @@ id: "2-010400-15"
 name: "QUICK-START-GUIDE"
 type: "GUIDE"
 level: 2
+status: "active"
+tags: []
+created: "2026-01-04"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "2-010400-15_GUIDE_QUICK-START-GUIDE"
+---
+id: "2-010400-15"
+name: "QUICK-START-GUIDE"
+type: "GUIDE"
+level: 2
 status: active
 tags: []
 created: 2026-01-04
