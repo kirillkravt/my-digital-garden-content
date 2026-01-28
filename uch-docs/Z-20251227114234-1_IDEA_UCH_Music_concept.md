@@ -10,18 +10,6 @@ updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "Z-20251227114234-1_IDEA_UCH_Music_concept"
 ---
-id: "Z-20251227114234-1"
-name: "UCH Music concept"
-type: "line"
-level: 0
-status: "active"
-tags: ["@component", "@edu", "@learn"]
-parent: "00"
-parent_name: "UCH"
-created: "2025-12-27"
-updated: "2025-12-27"
-author: "kirillkravcov"
----
 ### UCH Music concept
 
 #### ОПИСАНИЕ

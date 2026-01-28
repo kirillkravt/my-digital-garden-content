@@ -10,16 +10,6 @@ updated: "2026-01-28"
 author: "kirillkravcov"
 slug: "3-010201-17_DEBT_TECH-DEBT"
 ---
-id: "3-010201-17"
-name: "TECH-DEBT"
-type: "DEBT"
-level: 3
-status: "active"
-tags: []
-created: "2026-01-02"
-updated: "2026-01-02"
-author: "kirillkravcov"
----
 
 ## 🚨 ВЫСОКИЙ ПРИОРИТЕТ (блокирует использование)
 
