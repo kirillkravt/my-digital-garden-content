@@ -1,0 +1,702 @@
+❌ НЕСООТВЕТСТВИЕ #1:
+   Файл: T-MASTER.md
+   ID в имени:    'T-MASTER.md'
+   ID в frontmatter: '{{id}}'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/T-MASTER.md
+---
+❌ НЕСООТВЕТСТВИЕ #2:
+   Файл: 4-010400-1400-1_TASK_Указание_тегов_при_создании_документов.md
+   ID в имени:    '4-010400-1400-1'
+   ID в frontmatter: '4-010400-1400'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1400-1_TASK_Указание_тегов_при_создании_документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #3:
+   Файл: 6-010200-001-1_SNAP_20251221.md
+   ID в имени:    '6-010200-001-1'
+   ID в frontmatter: '6-010200-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010200-001-1_SNAP_20251221.md
+---
+❌ НЕСООТВЕТСТВИЕ #4:
+   Файл: 6-010400-007-1_SNAP_20251228.md
+   ID в имени:    '6-010400-007-1'
+   ID в frontmatter: '6-010400-007'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-007-1_SNAP_20251228.md
+---
+❌ НЕСООТВЕТСТВИЕ #5:
+   Файл: 4-010400-1300-1_TASK_Доработка_флоу_для_работы_с_тасками_иницдентами_сабтасками.md
+   ID в имени:    '4-010400-1300-1'
+   ID в frontmatter: '4-010400-1300'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1300-1_TASK_Доработка_флоу_для_работы_с_тасками_иницдентами_сабтасками.md
+---
+❌ НЕСООТВЕТСТВИЕ #6:
+   Файл: 6-010400-002-1_SNAP_20251226.md
+   ID в имени:    '6-010400-002-1'
+   ID в frontmatter: '6-010400-002'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-002-1_SNAP_20251226.md
+---
+❌ НЕСООТВЕТСТВИЕ #7:
+   Файл: 4-010400-0200-1_TASK_Архитектурная_вилка_UCH-Docs.md
+   ID в имени:    '4-010400-0200-1'
+   ID в frontmatter: '4-010400-0200'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0200-1_TASK_Архитектурная_вилка_UCH-Docs.md
+---
+❌ НЕСООТВЕТСТВИЕ #8:
+   Файл: 4-010400-0400-1_TASK_Анализ_состояния_проекта.md
+   ID в имени:    '4-010400-0400-1'
+   ID в frontmatter: '4-010400-0400'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0400-1_TASK_Анализ_состояния_проекта.md
+---
+❌ НЕСООТВЕТСТВИЕ #9:
+   Файл: 5-010400-0101-3_RES_Расширенная_типология_документов.md
+   ID в имени:    '5-010400-0101-3'
+   ID в frontmatter: '5-010400-0101'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010400-0101-3_RES_Расширенная_типология_документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #10:
+   Файл: Z-20260129165049-1_IDEA_Система_создания_BA_документации.md
+   ID в имени:    'Z-20260129165049-1'
+   ID в frontmatter: 'Z-20260129165049'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20260129165049-1_IDEA_Система_создания_BA_документации.md
+---
+❌ НЕСООТВЕТСТВИЕ #11:
+   Файл: Z-20260112135949-1_IDEA_Расширенная типология документации.md
+   ID в имени:    'Z-20260112135949-1'
+   ID в frontmatter: 'Z-20260112135949'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20260112135949-1_IDEA_Расширенная типология документации.md
+---
+❌ НЕСООТВЕТСТВИЕ #12:
+   Файл: Z-20260105171510-1_IDEA_База данных файлов.md
+   ID в имени:    'Z-20260105171510-1'
+   ID в frontmatter: 'Z-20260105171510'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20260105171510-1_IDEA_База данных файлов.md
+---
+❌ НЕСООТВЕТСТВИЕ #13:
+   Файл: 4-010400-0300-1_TASK_Автоматизация_техдолга.md
+   ID в имени:    '4-010400-0300-1'
+   ID в frontmatter: '4-010400-0300'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0300-1_TASK_Автоматизация_техдолга.md
+---
+❌ НЕСООТВЕТСТВИЕ #14:
+   Файл: 6-010000-002-2_AUTO-REP_20260104.md
+   ID в имени:    '6-010000-002-2'
+   ID в frontmatter: '6-010000-002'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010000-002-2_AUTO-REP_20260104.md
+---
+❌ НЕСООТВЕТСТВИЕ #15:
+   Файл: 4-010400-0100-1_TASK_Улучшение_док_системы.md
+   ID в имени:    '4-010400-0100-1'
+   ID в frontmatter: '4-010400-0100'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0100-1_TASK_Улучшение_док_системы.md
+---
+❌ НЕСООТВЕТСТВИЕ #16:
+   Файл: 6-010000-001-1_SNAP_20251219.md
+   ID в имени:    '6-010000-001-1'
+   ID в frontmatter: '6-010000-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010000-001-1_SNAP_20251219.md
+---
+❌ НЕСООТВЕТСТВИЕ #17:
+   Файл: 6-010400-004-1_SNAP_20251227.md
+   ID в имени:    '6-010400-004-1'
+   ID в frontmatter: '6-010400-004'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-004-1_SNAP_20251227.md
+---
+❌ НЕСООТВЕТСТВИЕ #18:
+   Файл: Z-20260108192136-1_IDEA_Управление задачами.md
+   ID в имени:    'Z-20260108192136-1'
+   ID в frontmatter: 'Z-20260108192136'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20260108192136-1_IDEA_Управление задачами.md
+---
+❌ НЕСООТВЕТСТВИЕ #19:
+   Файл: Z-20260104214521-1_IDEA_Требования к системе автоматической документации.md
+   ID в имени:    'Z-20260104214521-1'
+   ID в frontmatter: 'Z-20260104214521'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20260104214521-1_IDEA_Требования к системе автоматической документации.md
+---
+❌ НЕСООТВЕТСТВИЕ #20:
+   Файл: 4-010400-1200-1_TASK_Проверка_создания_из_исправленных_шаблонов.md
+   ID в имени:    '4-010400-1200-1'
+   ID в frontmatter: '4-010400-1200'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1200-1_TASK_Проверка_создания_из_исправленных_шаблонов.md
+---
+❌ НЕСООТВЕТСТВИЕ #21:
+   Файл: 4-010400-0600-1_TASK_последовательное_создание_ нескольких_документов.md
+   ID в имени:    '4-010400-0600-1'
+   ID в frontmatter: '4-010400-0600'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0600-1_TASK_последовательное_создание_ нескольких_документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #22:
+   Файл: 5-010201-0002-1_SOL_Проблема_с_семплами.md
+   ID в имени:    '5-010201-0002-1'
+   ID в frontmatter: '5-010201-0002'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010201-0002-1_SOL_Проблема_с_семплами.md
+---
+❌ НЕСООТВЕТСТВИЕ #23:
+   Файл: 6-010402-001-1_SNAP_20251225.md
+   ID в имени:    '6-010402-001-1'
+   ID в frontmatter: '6-010402-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010402-001-1_SNAP_20251225.md
+---
+❌ НЕСООТВЕТСТВИЕ #24:
+   Файл: 5-010201-0004-1_SOL_Глобальные_функции_s()_sound().md
+   ID в имени:    '5-010201-0004-1'
+   ID в frontmatter: '5-010201-0004'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010201-0004-1_SOL_Глобальные_функции_s()_sound().md
+---
+❌ НЕСООТВЕТСТВИЕ #25:
+   Файл: 4-010400-0900-1_TASK_Функциональность_замены_документа.md
+   ID в имени:    '4-010400-0900-1'
+   ID в frontmatter: '4-010400-0900'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0900-1_TASK_Функциональность_замены_документа.md
+---
+❌ НЕСООТВЕТСТВИЕ #26:
+   Файл: 6-010000-001-2_AUTO-REP_20260103.md
+   ID в имени:    '6-010000-001-2'
+   ID в frontmatter: '6-010000-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010000-001-2_AUTO-REP_20260103.md
+---
+❌ НЕСООТВЕТСТВИЕ #27:
+   Файл: 5-010400-0001-3_RES_Исследование_существующих_решений.md
+   ID в имени:    '5-010400-0001-3'
+   ID в frontmatter: '5-010400-0001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010400-0001-3_RES_Исследование_существующих_решений.md
+---
+❌ НЕСООТВЕТСТВИЕ #28:
+   Файл: 4-010400-0800-1_TASK_Создание_документа_с_наивысшым_id.md
+   ID в имени:    '4-010400-0800-1'
+   ID в frontmatter: '4-010400-0800'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0800-1_TASK_Создание_документа_с_наивысшым_id.md
+---
+❌ НЕСООТВЕТСТВИЕ #29:
+   Файл: 4-010400-1100-1_TASK_Переименование_с_добавлением_id.md
+   ID в имени:    '4-010400-1100-1'
+   ID в frontmatter: '4-010400-1100'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1100-1_TASK_Переименование_с_добавлением_id.md
+---
+❌ НЕСООТВЕТСТВИЕ #30:
+   Файл: 4-010400-0500-1_TASK_Создать_шаблон_для_задач.md
+   ID в имени:    '4-010400-0500-1'
+   ID в frontmatter: '4-010400-0500'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-0500-1_TASK_Создать_шаблон_для_задач.md
+---
+❌ НЕСООТВЕТСТВИЕ #31:
+   Файл: 6-010402-001-1_REPORT_20260128.md
+   ID в имени:    '6-010402-001-1'
+   ID в frontmatter: '6-010402-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010402-001-1_REPORT_20260128.md
+---
+❌ НЕСООТВЕТСТВИЕ #32:
+   Файл: Z-20251228101109-1_IDEA_Доработка меню создания документов.md
+   ID в имени:    'Z-20251228101109-1'
+   ID в frontmatter: 'Z-20251228101109'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20251228101109-1_IDEA_Доработка меню создания документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #33:
+   Файл: 6-010200-002-1_SNAP_20251219.md
+   ID в имени:    '6-010200-002-1'
+   ID в frontmatter: '6-010200-002'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010200-002-1_SNAP_20251219.md
+---
+❌ НЕСООТВЕТСТВИЕ #34:
+   Файл: Z-20251228113856-1_IDEA_Управление статусами.md
+   ID в имени:    'Z-20251228113856-1'
+   ID в frontmatter: 'Z-20251228113856'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20251228113856-1_IDEA_Управление статусами.md
+---
+❌ НЕСООТВЕТСТВИЕ #35:
+   Файл: 6-010400-001-1_SNAP_20251225.md
+   ID в имени:    '6-010400-001-1'
+   ID в frontmatter: '6-010400-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-001-1_SNAP_20251225.md
+---
+❌ НЕСООТВЕТСТВИЕ #36:
+   Файл: 5-010201-0003-1_SOL_Autoplay_policy_AudioContext.md
+   ID в имени:    '5-010201-0003-1'
+   ID в frontmatter: '5-010201-0003'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010201-0003-1_SOL_Autoplay_policy_AudioContext.md
+---
+❌ НЕСООТВЕТСТВИЕ #37:
+   Файл: 6-010400-003-1_SNAP_20251227.md
+   ID в имени:    '6-010400-003-1'
+   ID в frontmatter: '6-010400-003'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-003-1_SNAP_20251227.md
+---
+❌ НЕСООТВЕТСТВИЕ #38:
+   Файл: Z-20251228113824-1_IDEA_Тест пакета.md
+   ID в имени:    'Z-20251228113824-1'
+   ID в frontmatter: 'Z-20251228113824'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20251228113824-1_IDEA_Тест пакета.md
+---
+❌ НЕСООТВЕТСТВИЕ #39:
+   Файл: Z-20251228113756-1_IDEA_Смещение документов при ручном создании с существующим id.md
+   ID в имени:    'Z-20251228113756-1'
+   ID в frontmatter: 'Z-20251228113756'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20251228113756-1_IDEA_Смещение документов при ручном создании с существующим id.md
+---
+❌ НЕСООТВЕТСТВИЕ #40:
+   Файл: 5-010201-0001-1_SOL_MIDI_поддержка.md
+   ID в имени:    '5-010201-0001-1'
+   ID в frontmatter: '5-010201-0001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010201-0001-1_SOL_MIDI_поддержка.md
+---
+❌ НЕСООТВЕТСТВИЕ #41:
+   Файл: 5-010400-0001-4_TEST_Тестирование_функционала_uch-docs.md
+   ID в имени:    '5-010400-0001-4'
+   ID в frontmatter: '5-010400-0001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/5-010400-0001-4_TEST_Тестирование_функционала_uch-docs.md
+---
+❌ НЕСООТВЕТСТВИЕ #42:
+   Файл: 6-010400-005-1_SNAP_20251228.md
+   ID в имени:    '6-010400-005-1'
+   ID в frontmatter: '6-010400-005'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-005-1_SNAP_20251228.md
+---
+❌ НЕСООТВЕТСТВИЕ #43:
+   Файл: 6-010400-006-1_SNAP_20251228.md
+   ID в имени:    '6-010400-006-1'
+   ID в frontmatter: '6-010400-006'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010400-006-1_SNAP_20251228.md
+---
+❌ НЕСООТВЕТСТВИЕ #44:
+   Файл: 4-010400-1000-1_TASK_Добавить_справочник_типов_документов_в_исполняемый_скрипт.md
+   ID в имени:    '4-010400-1000-1'
+   ID в frontmatter: '4-010400-1000'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1000-1_TASK_Добавить_справочник_типов_документов_в_исполняемый_скрипт.md
+---
+❌ НЕСООТВЕТСТВИЕ #45:
+   Файл: 4-010400-1500-1_TASK_Создание_документа_с_указанием_полного_имени.md
+   ID в имени:    '4-010400-1500-1'
+   ID в frontmatter: '4-010400-1500'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1500-1_TASK_Создание_документа_с_указанием_полного_имени.md
+---
+❌ НЕСООТВЕТСТВИЕ #46:
+   Файл: 4-010400-1600-1_TASK_Запуск скрипта из палетки команд Obsidian.md
+   ID в имени:    '4-010400-1600-1'
+   ID в frontmatter: '4-010400-1600'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/4-010400-1600-1_TASK_Запуск скрипта из палетки команд Obsidian.md
+---
+❌ НЕСООТВЕТСТВИЕ #47:
+   Файл: Z-20251227114234-1_IDEA_UCH_Music_concept.md
+   ID в имени:    'Z-20251227114234-1'
+   ID в frontmatter: 'Z-20251227114234'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/Z-20251227114234-1_IDEA_UCH_Music_concept.md
+---
+❌ НЕСООТВЕТСТВИЕ #48:
+   Файл: 6-010000-002-1_SNAP_20251225.md
+   ID в имени:    '6-010000-002-1'
+   ID в frontmatter: '6-010000-002'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-id-fix-20260203_210637/6-010000-002-1_SNAP_20251225.md
+---
+❌ НЕСООТВЕТСТВИЕ #49:
+   Файл: 4-123 Прогресс реализации Фаза 2.md
+   ID в имени:    '4-123 Прогресс реализации Фаза 2.md'
+   ID в frontmatter: ''
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/archive/uch-old_docs/4-123 Прогресс реализации Фаза 2.md
+---
+❌ НЕСООТВЕТСТВИЕ #50:
+   Файл: 3-301 Техдолг Фаза 2.md
+   ID в имени:    '3-301 Техдолг Фаза 2.md'
+   ID в frontmatter: ''
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/archive/uch-old_docs/3-301 Техдолг Фаза 2.md
+---
+❌ НЕСООТВЕТСТВИЕ #51:
+   Файл: T-CHILD.md
+   ID в имени:    'T-CHILD.md'
+   ID в frontmatter: '{{id}}'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/T-CHILD.md
+---
+❌ НЕСООТВЕТСТВИЕ #52:
+   Файл: document-creator-20260108-145835.backup.md
+   ID в имени:    'document-creator-20260108-145835.backup.md'
+   ID в frontmatter: '$doc_id'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/uch-scripts/scripts-backup/document-creator-20260108-145835.backup.md
+---
+❌ НЕСООТВЕТСТВИЕ #53:
+   Файл: document-creator-20260108-153145.backup.md
+   ID в имени:    'document-creator-20260108-153145.backup.md'
+   ID в frontmatter: '$doc_id'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/uch-scripts/scripts-backup/document-creator-20260108-153145.backup.md
+---
+❌ НЕСООТВЕТСТВИЕ #54:
+   Файл: T-NONHIER.md
+   ID в имени:    'T-NONHIER.md'
+   ID в frontmatter: '{{id}}'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/T-NONHIER.md
+---
+❌ НЕСООТВЕТСТВИЕ #55:
+   Файл: 2-010400-7_ARCH_Documentation-first_подход.md
+   ID в имени:    '2-010400-7'
+   ID в frontmatter: '04-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010400-7_ARCH_Documentation-first_подход.md
+---
+❌ НЕСООТВЕТСТВИЕ #56:
+   Файл: 4-010400-1400-1_TASK_Указание_тегов_при_создании_документов.md
+   ID в имени:    '4-010400-1400-1'
+   ID в frontmatter: '04-02-05'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-1400-1_TASK_Указание_тегов_при_создании_документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #57:
+   Файл: 6-010200-001-1_SNAP_20251221.md
+   ID в имени:    '6-010200-001-1'
+   ID в frontmatter: '02-02'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010200-001-1_SNAP_20251221.md
+---
+❌ НЕСООТВЕТСТВИЕ #58:
+   Файл: 6-010400-007-1_SNAP_20251228.md
+   ID в имени:    '6-010400-007-1'
+   ID в frontmatter: '04-04'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-007-1_SNAP_20251228.md
+---
+❌ НЕСООТВЕТСТВИЕ #59:
+   Файл: 4-010400-1300-1_TASK_Доработка_флоу_для_работы_с_тасками_иницдентами_сабтасками.md
+   ID в имени:    '4-010400-1300-1'
+   ID в frontmatter: '04-02-0C'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-1300-1_TASK_Доработка_флоу_для_работы_с_тасками_иницдентами_сабтасками.md
+---
+❌ НЕСООТВЕТСТВИЕ #60:
+   Файл: 2-010400-8_DOC_FUNCTION-TREE.md
+   ID в имени:    '2-010400-8'
+   ID в frontmatter: '54'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010400-8_DOC_FUNCTION-TREE.md
+---
+❌ НЕСООТВЕТСТВИЕ #61:
+   Файл: 6-010400-002-1_SNAP_20251226.md
+   ID в имени:    '6-010400-002-1'
+   ID в frontmatter: '04-05'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-002-1_SNAP_20251226.md
+---
+❌ НЕСООТВЕТСТВИЕ #62:
+   Файл: T-MASTER.md
+   ID в имени:    'T-MASTER.md'
+   ID в frontmatter: '{{id}}'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/T-MASTER.md
+---
+❌ НЕСООТВЕТСТВИЕ #63:
+   Файл: 4-010400-0200-1_TASK_Архитектурная_вилка_UCH-Docs.md
+   ID в имени:    '4-010400-0200-1'
+   ID в frontmatter: '04-01-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0200-1_TASK_Архитектурная_вилка_UCH-Docs.md
+---
+❌ НЕСООТВЕТСТВИЕ #64:
+   Файл: 4-010400-0400-1_TASK_Анализ_состояния_проекта.md
+   ID в имени:    '4-010400-0400-1'
+   ID в frontmatter: '04-02-0A'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0400-1_TASK_Анализ_состояния_проекта.md
+---
+❌ НЕСООТВЕТСТВИЕ #65:
+   Файл: 5-010400-0101-3_RES_Расширенная_типология_документов.md
+   ID в имени:    '5-010400-0101-3'
+   ID в frontmatter: '04-02-10'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010400-0101-3_RES_Расширенная_типология_документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #66:
+   Файл: 2-010400-1_LINE_docs_system.md
+   ID в имени:    '2-010400-1'
+   ID в frontmatter: '04'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010400-1_LINE_docs_system.md
+---
+❌ НЕСООТВЕТСТВИЕ #67:
+   Файл: 2-010200-1_LINE_studio.md
+   ID в имени:    '2-010200-1'
+   ID в frontmatter: '2-02-00-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010200-1_LINE_studio.md
+---
+❌ НЕСООТВЕТСТВИЕ #68:
+   Файл: 4-123 Прогресс реализации Фаза 2.md
+   ID в имени:    '4-123 Прогресс реализации Фаза 2.md'
+   ID в frontmatter: ''
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/archive/uch-old_docs/4-123 Прогресс реализации Фаза 2.md
+---
+❌ НЕСООТВЕТСТВИЕ #69:
+   Файл: 3-301 Техдолг Фаза 2.md
+   ID в имени:    '3-301 Техдолг Фаза 2.md'
+   ID в frontmatter: ''
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/archive/uch-old_docs/3-301 Техдолг Фаза 2.md
+---
+❌ НЕСООТВЕТСТВИЕ #70:
+   Файл: 2-010400-15_GUIDE_QUICK-START-GUIDE.md
+   ID в имени:    '2-010400-15'
+   ID в frontmatter: '56'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010400-15_GUIDE_QUICK-START-GUIDE.md
+---
+❌ НЕСООТВЕТСТВИЕ #71:
+   Файл: 4-010400-0300-1_TASK_Автоматизация_техдолга.md
+   ID в имени:    '4-010400-0300-1'
+   ID в frontmatter: '04-0D'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0300-1_TASK_Автоматизация_техдолга.md
+---
+❌ НЕСООТВЕТСТВИЕ #72:
+   Файл: 1-010000-6_BRAND_brandbook.md
+   ID в имени:    '1-010000-6'
+   ID в frontmatter: '00-03'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/1-010000-6_BRAND_brandbook.md
+---
+❌ НЕСООТВЕТСТВИЕ #73:
+   Файл: 2-010200-7_ARCH_uch-studio.md
+   ID в имени:    '2-010200-7'
+   ID в frontmatter: '02-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010200-7_ARCH_uch-studio.md
+---
+❌ НЕСООТВЕТСТВИЕ #74:
+   Файл: 3-010403-1_COMP_База_данных_файлов.md
+   ID в имени:    '3-010403-1'
+   ID в frontmatter: '04-07'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/3-010403-1_COMP_База_данных_файлов.md
+---
+❌ НЕСООТВЕТСТВИЕ #75:
+   Файл: T-CHILD.md
+   ID в имени:    'T-CHILD.md'
+   ID в frontmatter: '{{id}}'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/T-CHILD.md
+---
+❌ НЕСООТВЕТСТВИЕ #76:
+   Файл: 3-010001-1_COMP_Отчеты_и_аналитика_UCH.md
+   ID в имени:    '3-010001-1'
+   ID в frontmatter: '90'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/3-010001-1_COMP_Отчеты_и_аналитика_UCH.md
+---
+❌ НЕСООТВЕТСТВИЕ #77:
+   Файл: 6-010000-002-2_AUTO-REP_20260104.md
+   ID в имени:    '6-010000-002-2'
+   ID в frontmatter: '90-02'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010000-002-2_AUTO-REP_20260104.md
+---
+❌ НЕСООТВЕТСТВИЕ #78:
+   Файл: document-creator-20260108-145835.backup.md
+   ID в имени:    'document-creator-20260108-145835.backup.md'
+   ID в frontmatter: '$doc_id'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/uch-scripts/scripts-backup/document-creator-20260108-145835.backup.md
+---
+❌ НЕСООТВЕТСТВИЕ #79:
+   Файл: document-creator-20260108-153145.backup.md
+   ID в имени:    'document-creator-20260108-153145.backup.md'
+   ID в frontmatter: '$doc_id'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/uch-scripts/scripts-backup/document-creator-20260108-153145.backup.md
+---
+❌ НЕСООТВЕТСТВИЕ #80:
+   Файл: 4-010400-0100-1_TASK_Улучшение_док_системы.md
+   ID в имени:    '4-010400-0100-1'
+   ID в frontmatter: '04-02-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0100-1_TASK_Улучшение_док_системы.md
+---
+❌ НЕСООТВЕТСТВИЕ #81:
+   Файл: 6-010000-001-1_SNAP_20251219.md
+   ID в имени:    '6-010000-001-1'
+   ID в frontmatter: '6-00-00-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010000-001-1_SNAP_20251219.md
+---
+❌ НЕСООТВЕТСТВИЕ #82:
+   Файл: 6-010400-004-1_SNAP_20251227.md
+   ID в имени:    '6-010400-004-1'
+   ID в frontmatter: '04-02-08'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-004-1_SNAP_20251227.md
+---
+❌ НЕСООТВЕТСТВИЕ #83:
+   Файл: 2-010400-7_ARCH_Решение_архитектуры_uch-docs.md
+   ID в имени:    '2-010400-7'
+   ID в frontmatter: '04-01-01-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010400-7_ARCH_Решение_архитектуры_uch-docs.md
+---
+❌ НЕСООТВЕТСТВИЕ #84:
+   Файл: 4-010400-1200-1_TASK_Проверка_создания_из_исправленных_шаблонов.md
+   ID в имени:    '4-010400-1200-1'
+   ID в frontmatter: '04-02-0F'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-1200-1_TASK_Проверка_создания_из_исправленных_шаблонов.md
+---
+❌ НЕСООТВЕТСТВИЕ #85:
+   Файл: 2-010100-1_LINE_blog.md
+   ID в имени:    '2-010100-1'
+   ID в frontmatter: '01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010100-1_LINE_blog.md
+---
+❌ НЕСООТВЕТСТВИЕ #86:
+   Файл: 4-010400-0600-1_TASK_последовательное_создание_ нескольких_документов.md
+   ID в имени:    '4-010400-0600-1'
+   ID в frontmatter: '04-02-03'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0600-1_TASK_последовательное_создание_ нескольких_документов.md
+---
+❌ НЕСООТВЕТСТВИЕ #87:
+   Файл: 4-010400-0700-1_TASK_Запуск скрипта из палетки команд Obsidian.md
+   ID в имени:    '4-010400-0700-1'
+   ID в frontmatter: '04-02-04'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0700-1_TASK_Запуск скрипта из палетки команд Obsidian.md
+---
+❌ НЕСООТВЕТСТВИЕ #88:
+   Файл: 5-010201-0002-1_SOL_Проблема_с_семплами.md
+   ID в имени:    '5-010201-0002-1'
+   ID в frontmatter: '02-10-03'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010201-0002-1_SOL_Проблема_с_семплами.md
+---
+❌ НЕСООТВЕТСТВИЕ #89:
+   Файл: T-NONHIER.md
+   ID в имени:    'T-NONHIER.md'
+   ID в frontmatter: '{{id}}'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/T-NONHIER.md
+---
+❌ НЕСООТВЕТСТВИЕ #90:
+   Файл: 3-010201-1_COMP_Strudel.md
+   ID в имени:    '3-010201-1'
+   ID в frontmatter: '02-10'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/3-010201-1_COMP_Strudel.md
+---
+❌ НЕСООТВЕТСТВИЕ #91:
+   Файл: 5-010201-0004-1_SOL_Глобальные_функции_s()_sound().md
+   ID в имени:    '5-010201-0004-1'
+   ID в frontmatter: '02-10-05'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010201-0004-1_SOL_Глобальные_функции_s()_sound().md
+---
+❌ НЕСООТВЕТСТВИЕ #92:
+   Файл: 4-010400-0900-1_TASK_Функциональность_замены_документа.md
+   ID в имени:    '4-010400-0900-1'
+   ID в frontmatter: '04-02-07'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0900-1_TASK_Функциональность_замены_документа.md
+---
+❌ НЕСООТВЕТСТВИЕ #93:
+   Файл: 1-010000-16_KANBAN_Задачи_проект_UCH.md
+   ID в имени:    '1-010000-16'
+   ID в frontmatter: '51'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/1-010000-16_KANBAN_Задачи_проект_UCH.md
+---
+❌ НЕСООТВЕТСТВИЕ #94:
+   Файл: RESEARCH_SUMMARY_play().md
+   ID в имени:    'RESEARCH'
+   ID в frontmatter: ''
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/ИССЛЕДОВАНИЯ/StrudelResearch/22122025 Strudel ESM play() issue/RESEARCH_SUMMARY_play().md
+---
+❌ НЕСООТВЕТСТВИЕ #95:
+   Файл: 2-010300-1_LINE_processes.md
+   ID в имени:    '2-010300-1'
+   ID в frontmatter: '03'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010300-1_LINE_processes.md
+---
+❌ НЕСООТВЕТСТВИЕ #96:
+   Файл: 6-010000-001-2_AUTO-REP_20260103.md
+   ID в имени:    '6-010000-001-2'
+   ID в frontmatter: '90-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010000-001-2_AUTO-REP_20260103.md
+---
+❌ НЕСООТВЕТСТВИЕ #97:
+   Файл: 5-010400-0001-3_RES_Исследование_существующих_решений.md
+   ID в имени:    '5-010400-0001-3'
+   ID в frontmatter: '04-09-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010400-0001-3_RES_Исследование_существующих_решений.md
+---
+❌ НЕСООТВЕТСТВИЕ #98:
+   Файл: 4-010400-0800-1_TASK_Создание_документа_с_наивысшым_id.md
+   ID в имени:    '4-010400-0800-1'
+   ID в frontmatter: '04-02-06'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0800-1_TASK_Создание_документа_с_наивысшым_id.md
+---
+❌ НЕСООТВЕТСТВИЕ #99:
+   Файл: 4-010400-1100-1_TASK_Переименование_с_добавлением_id.md
+   ID в имени:    '4-010400-1100-1'
+   ID в frontmatter: '04-02-0E'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-1100-1_TASK_Переименование_с_добавлением_id.md
+---
+❌ НЕСООТВЕТСТВИЕ #100:
+   Файл: 3-010201-17_DEBT_TECH-DEBT.md
+   ID в имени:    '3-010201-17'
+   ID в frontmatter: '53'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/3-010201-17_DEBT_TECH-DEBT.md
+---
+❌ НЕСООТВЕТСТВИЕ #101:
+   Файл: 4-010400-0500-1_TASK_Создать_шаблон_для_задач.md
+   ID в имени:    '4-010400-0500-1'
+   ID в frontmatter: '04-02-02'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-0500-1_TASK_Создать_шаблон_для_задач.md
+---
+❌ НЕСООТВЕТСТВИЕ #102:
+   Файл: 6-010200-002-1_SNAP_20251219.md
+   ID в имени:    '6-010200-002-1'
+   ID в frontmatter: '00-05'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010200-002-1_SNAP_20251219.md
+---
+❌ НЕСООТВЕТСТВИЕ #103:
+   Файл: 3-010401-1_COMP_Реализация_MVP_системы документации uch-docs.md
+   ID в имени:    '3-010401-1'
+   ID в frontmatter: '04-0B'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/3-010401-1_COMP_Реализация_MVP_системы документации uch-docs.md
+---
+❌ НЕСООТВЕТСТВИЕ #104:
+   Файл: 3-010201-4_API_Интеграция_Strudel.md
+   ID в имени:    '3-010201-4'
+   ID в frontmatter: '02-10-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/3-010201-4_API_Интеграция_Strudel.md
+---
+❌ НЕСООТВЕТСТВИЕ #105:
+   Файл: 2-010400-7_ARCH_Пример_структуры_документации.md
+   ID в имени:    '2-010400-7'
+   ID в frontmatter: '04-01-04'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/2-010400-7_ARCH_Пример_структуры_документации.md
+---
+❌ НЕСООТВЕТСТВИЕ #106:
+   Файл: 6-010400-001-1_SNAP_20251225.md
+   ID в имени:    '6-010400-001-1'
+   ID в frontmatter: '04-0A'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-001-1_SNAP_20251225.md
+---
+❌ НЕСООТВЕТСТВИЕ #107:
+   Файл: 5-010201-0003-1_SOL_Autoplay_policy_AudioContext.md
+   ID в имени:    '5-010201-0003-1'
+   ID в frontmatter: '02-10-04'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010201-0003-1_SOL_Autoplay_policy_AudioContext.md
+---
+❌ НЕСООТВЕТСТВИЕ #108:
+   Файл: 6-010400-003-1_SNAP_20251227.md
+   ID в имени:    '6-010400-003-1'
+   ID в frontmatter: '04-03'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-003-1_SNAP_20251227.md
+---
+❌ НЕСООТВЕТСТВИЕ #109:
+   Файл: 5-010201-0001-1_SOL_MIDI_поддержка.md
+   ID в имени:    '5-010201-0001-1'
+   ID в frontmatter: '02-10-02'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010201-0001-1_SOL_MIDI_поддержка.md
+---
+❌ НЕСООТВЕТСТВИЕ #110:
+   Файл: 5-010400-0001-4_TEST_Тестирование_функционала_uch-docs.md
+   ID в имени:    '5-010400-0001-4'
+   ID в frontmatter: '04-06-01'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/5-010400-0001-4_TEST_Тестирование_функционала_uch-docs.md
+---
+❌ НЕСООТВЕТСТВИЕ #111:
+   Файл: 6-010400-005-1_SNAP_20251228.md
+   ID в имени:    '6-010400-005-1'
+   ID в frontmatter: '04-06'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-005-1_SNAP_20251228.md
+---
+❌ НЕСООТВЕТСТВИЕ #112:
+   Файл: 6-010400-006-1_SNAP_20251228.md
+   ID в имени:    '6-010400-006-1'
+   ID в frontmatter: '04-09'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010400-006-1_SNAP_20251228.md
+---
+❌ НЕСООТВЕТСТВИЕ #113:
+   Файл: 4-010400-1000-1_TASK_Добавить_справочник_типов_документов_в_исполняемый_скрипт.md
+   ID в имени:    '4-010400-1000-1'
+   ID в frontmatter: '04-02-09'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-1000-1_TASK_Добавить_справочник_типов_документов_в_исполняемый_скрипт.md
+---
+❌ НЕСООТВЕТСТВИЕ #114:
+   Файл: 4-010400-1500-1_TASK_Создание_документа_с_указанием_полного_имени.md
+   ID в имени:    '4-010400-1500-1'
+   ID в frontmatter: '04-02-0D'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/4-010400-1500-1_TASK_Создание_документа_с_указанием_полного_имени.md
+---
+❌ НЕСООТВЕТСТВИЕ #115:
+   Файл: Z-20251227114234-1_IDEA_UCH_Music_concept.md
+   ID в имени:    'Z-20251227114234-1'
+   ID в frontmatter: '05'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/Z-20251227114234-1_IDEA_UCH_Music_concept.md
+---
+❌ НЕСООТВЕТСТВИЕ #116:
+   Файл: 6-010000-002-1_SNAP_20251225.md
+   ID в имени:    '6-010000-002-1'
+   ID в frontmatter: '6-00-00-001'
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/backup-before-fixes-20260128_092856/6-010000-002-1_SNAP_20251225.md
+---
+❌ НЕСООТВЕТСТВИЕ #117:
+   Файл: RESEARCH_SUMMARY_play().md
+   ID в имени:    'RESEARCH'
+   ID в frontmatter: ''
+   Путь: /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/ИССЛЕДОВАНИЯ/StrudelResearch/22122025 Strudel ESM play() issue/RESEARCH_SUMMARY_play().md
+---
