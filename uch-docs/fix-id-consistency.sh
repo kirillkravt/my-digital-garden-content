@@ -45,7 +45,7 @@ LOG_FILE="./id-fix-log-$(date +%Y%m%d_%H%M%S).txt"
 
 # Функция для извлечения ID из frontmatter
 extract_frontmatter_id() {
-    grep -m1 "^id:" "$1" | sed -e "s/^id: *//" -e "s/[\"'"'\''[:space:]]//g"
+    grep -m1 "^id:" "$1" | sed -e "s/^id: *//" -e "s/[\"']//g" -e "s/^[[:space:]]*//" -e "s/[[:space:]]*$//"
 }
 
 # Функция для обновления ID в frontmatter
@@ -108,10 +108,10 @@ main() {
         
         # Проверяем несоответствие
         if [ "$full_id" != "$current_id" ]; then
-            echo "🔍 Найдено несоответствие #$total_fixed:" | tee -a "$LOG_FILE"
-            echo "   Файл: $filename" | tee -a "$LOG_FILE"
-            echo "   Текущий ID: '$current_id'" | tee -a "$LOG_FILE"
-            echo "   Ожидаемый ID: '$full_id'" | tee -a "$LOG_FILE"
+            echo "🔍 Найдено несоответствие #$((total_fixed + total_errors + 1)):"
+            echo "   Файл: $filename"
+            echo "   Текущий ID: '$current_id'"
+            echo "   Ожидаемый ID: '$full_id'"
             
             # Проверяем валидность нового ID
             if [[ "$full_id" =~ ^${current_id}-[0-9]+$ ]]; then
@@ -123,31 +123,31 @@ main() {
                 
                 # Обновляем frontmatter
                 if update_frontmatter_id "$file" "$full_id"; then
-                    echo "   ✅ Исправлено" | tee -a "$LOG_FILE"
+                    echo "   ✅ Исправлено"
                     total_fixed=$((total_fixed + 1))
                 else
-                    echo "   ❌ Ошибка при обновлении" | tee -a "$LOG_FILE"
+                    echo "   ❌ Ошибка при обновлении"
                     total_errors=$((total_errors + 1))
                 fi
             else
-                echo "   ⚠️  Странное несоответствие, пропускаем" | tee -a "$LOG_FILE"
+                echo "   ⚠️  Странное несоответствие, пропускаем"
                 total_errors=$((total_errors + 1))
             fi
-            echo "---" | tee -a "$LOG_FILE"
+            echo "---"
         fi
     done
     
     # Итоговый отчет
-    echo "========================================" | tee -a "$LOG_FILE"
-    echo "📊 ИТОГИ ИСПРАВЛЕНИЯ:" | tee -a "$LOG_FILE"
-    echo "   Обработано файлов: $total_processed" | tee -a "$LOG_FILE"
-    echo "   Найдено несоответствий: $((total_fixed + total_errors))" | tee -a "$LOG_FILE"
-    echo "   Исправлено файлов: $total_fixed" | tee -a "$LOG_FILE"
-    echo "   Ошибок: $total_errors" | tee -a "$LOG_FILE"
+    echo "========================================"
+    echo "📊 ИТОГИ ИСПРАВЛЕНИЯ:"
+    echo "   Обработано файлов: $total_processed"
+    echo "   Найдено несоответствий: $((total_fixed + total_errors))"
+    echo "   Исправлено файлов: $total_fixed"
+    echo "   Ошибок: $total_errors"
     
     if [ "$DRY_RUN" = false ]; then
-        echo "   Backup создан в: $BACKUP_DIR" | tee -a "$LOG_FILE"
-        echo "   Лог сохранен в: $LOG_FILE" | tee -a "$LOG_FILE"
+        echo "   Backup создан в: $BACKUP_DIR"
+        echo "   Лог сохранен в: $LOG_FILE"
     fi
 }
 
