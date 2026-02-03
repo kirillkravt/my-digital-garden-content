@@ -1,5 +1,5 @@
 #!/bin/bash
-# fix-id-consistency.sh - Исправление несоответствий ID в frontmatter
+# fix-id-consistency-v2.sh - Исправление несоответствий ID в frontmatter
 
 set -e
 
@@ -92,8 +92,11 @@ main() {
     total_fixed=0
     total_errors=0
     
-    # Находим все .md файлы с frontmatter
-    find "$VAULT_PATH" -name "*.md" -type f -exec grep -l "id:" {} \; | while read file; do
+    # Временный файл для списка файлов
+    file_list=$(mktemp)
+    find "$VAULT_PATH" -name "*.md" -type f -exec grep -l "id:" {} \; > "$file_list"
+    
+    while IFS= read -r file; do
         # Проверяем лимит для тестового режима
         if [ $LIMIT -gt 0 ] && [ $total_processed -ge $LIMIT ]; then
             echo "Достигнут лимит в $LIMIT файлов, останавливаемся..."
@@ -108,7 +111,8 @@ main() {
         
         # Проверяем несоответствие
         if [ "$full_id" != "$current_id" ]; then
-            echo "🔍 Найдено несоответствие #$((total_fixed + total_errors + 1)):"
+            mismatch_num=$((total_fixed + total_errors + 1))
+            echo "🔍 Найдено несоответствие #${mismatch_num}:"
             echo "   Файл: $filename"
             echo "   Текущий ID: '$current_id'"
             echo "   Ожидаемый ID: '$full_id'"
@@ -135,7 +139,10 @@ main() {
             fi
             echo "---"
         fi
-    done
+    done < "$file_list"
+    
+    # Удаляем временный файл
+    rm -f "$file_list"
     
     # Итоговый отчет
     echo "========================================"
