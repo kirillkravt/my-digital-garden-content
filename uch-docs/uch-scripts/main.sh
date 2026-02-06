@@ -44,6 +44,20 @@ if [ -f "$SCRIPT_DIR/replace-shift.sh" ]; then
     MODULES_LOADED=$((MODULES_LOADED + 1))
 fi
 
+# Добавляем загрузку нового генератора в main.sh
+if ! grep -q "id-generator-v2.sh" ./uch-scripts/main.sh; then
+    # Добавляем после загрузки других модулей
+    sed -i '' '/source.*utils.sh/a\
+if [ -f "$SCRIPT_DIR/id-generator-v2.sh" ]; then\
+    source "$SCRIPT_DIR/id-generator-v2.sh"\
+    MODULES_LOADED=$((MODULES_LOADED + 1))\
+fi' ./uch-scripts/main.sh
+    
+    echo "✅ Обновлен main.sh для загрузки id-generator-v2.sh"
+else
+    echo "⚠️  main.sh уже загружает id-generator-v2.sh"
+fi
+
 echo "✅ Загружено модулей: $MODULES_LOADED"
 echo ""
 
