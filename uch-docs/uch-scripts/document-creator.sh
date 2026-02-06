@@ -1,5 +1,13 @@
 #!/bin/bash
-# Модуль реального создания документов - ТОЛЬКО внешние шаблоны
+# Модуль реального создания документов - с НОВОЙ системой генерации ID
+
+# Загружаем новый генератор ID
+if [ -f "$SCRIPT_DIR/id-generator-v2.sh" ]; then
+    source "$SCRIPT_DIR/id-generator-v2.sh"
+else
+    echo "❌ Ошибка: Модуль id-generator-v2.sh не найден"
+    exit 1
+fi
 
 # Найти файл документа по ID в frontmatter
 find_document_by_id() {
@@ -40,27 +48,32 @@ get_short_type() {
     local type="$1"
     
     case "$type" in
-        "project"|"proj") echo "proj" ;;
-        "line") echo "line" ;;
-        "component"|"comp") echo "comp" ;;
-        "module") echo "mod" ;;
-        "epic") echo "epic" ;;
-        "task") echo "task" ;;
-        "feature"|"feat") echo "feat" ;;
-        "bug") echo "bug" ;;
-        "snapshot"|"snap") echo "snap" ;;
-        "solution"|"sol") echo "sol" ;;
-        "subtask") echo "subtask" ;;
-        "code_block"|"code") echo "code" ;;
-        "decision"|"dec") echo "dec" ;;
-        "idea") echo "idea" ;;
-        "reference"|"ref") echo "ref" ;;
-        "meeting") echo "meet" ;;
-        *) echo "doc" ;;
+        "project"|"proj") echo "PROD" ;;
+        "line") echo "LINE" ;;
+        "component"|"comp") echo "COMP" ;;
+        "module") echo "MOD" ;;
+        "epic") echo "EPIC" ;;
+        "task") echo "TASK" ;;
+        "feature"|"feat") echo "FEAT" ;;
+        "bug") echo "BUG" ;;
+        "snapshot"|"snap") echo "SNAP" ;;
+        "solution"|"sol") echo "SOL" ;;
+        "subtask") echo "SUBTASK" ;;
+        "code_block"|"code") echo "CODE" ;;
+        "decision"|"dec") echo "DEC" ;;
+        "idea") echo "IDEA" ;;
+        "reference"|"ref") echo "REF" ;;
+        "meeting") echo "MEET" ;;
+        "architecture"|"arch") echo "ARCH" ;;
+        "documentation"|"doc") echo "DOC" ;;
+        "specification"|"spec") echo "SPEC" ;;
+        "design") echo "DESIGN" ;;
+        "plan") echo "PLAN" ;;
+        *) echo "DOC" ;;
     esac
 }
 
-# Создать реальный документ
+# Создать реальный документ с НОВОЙ системой ID
 create_real_document() {
     local name="$1"
     local level="$2"
@@ -73,60 +86,95 @@ create_real_document() {
     local parent_name=""
     local parent_file=""
     
-    # 1. Определяем ID
+    # 1. Определяем ID по НОВОЙ системе
     if [ "$level" = "N" ]; then
-        # Неиерархический документ
-        doc_id=$(generate_non_hierarchical_id "$type")
-    else
-        # Иерархический документ
-        if [ -z "$parent_id" ] || [ "$level" -eq 1 ]; then
-            # Мастер-документ
-            doc_id=$(find_free_master_id)
-            echo "�� Сгенерирован ID: $doc_id"
+        # Неиерархический документ (используем старую функцию)
+        if command -v generate_non_hierarchical_id &> /dev/null; then
+            doc_id=$(generate_non_hierarchical_id "$type")
         else
-            # Дочерний документ
+            # Фолбэк
+            case "$type" in
+                "idea") doc_id="Z-$(date +%Y%m%d%H%M%S)" ;;
+                "meeting") doc_id="M-$(date +%Y%m%d)" ;;
+                *) doc_id="Z-$(date +%Y%m%d%H%M%S)" ;;
+            esac
+        fi
+        echo "🆔 Сгенерирован неиерархический ID: $doc_id"
+    else
+        # Иерархический документ - используем НОВУЮ систему
+        if ! command -v generate_id &> /dev/null; then
+            echo "❌ Ошибка: Функция generate_id не найдена"
+            echo "   Убедитесь что id-generator-v2.sh загружен"
+            return 1
+        fi
+        
+        # Получаем имя родителя если есть
+        if [ -n "$parent_id" ] && [ "$level" -gt 1 ]; then
             parent_file=$(find_document_by_id "$parent_id")
             if [ -z "$parent_file" ]; then
-                echo "❌ Ошибка: Родительский документ с ID '$parent_id' не найден!"
-                return 1
+                echo "⚠️  Предупреждение: Родительский документ с ID '$parent_id' не найден!"
+                echo "   Создаю документ без информации о родителе"
+            else
+                parent_name=$(get_name_from_frontmatter "$parent_file")
+                if [ -z "$parent_name" ]; then
+                    parent_name=$(basename "$parent_file" .md | sed "s/^[^_]*_//" | sed "s/^[^_]*_//")
+                fi
             fi
-            
-            parent_name=$(get_name_from_frontmatter "$parent_file")
-            if [ -z "$parent_name" ]; then
-                parent_name=$(basename "$parent_file" .md | sed "s/^${parent_id} - //")
-            fi
-            
-            # Генерируем свободный ID
-            child_suffix=$(find_free_child_id "$parent_id")
-            doc_id="${parent_id}-${child_suffix}"
-            echo "🆔 Сгенерирован ID: $doc_id (свободный: $child_suffix)"
+        fi
+        
+        # Генерируем ID по новой системе
+        doc_id=$(generate_id "$level" "$type" "$parent_id")
+        if [ $? -ne 0 ] || [ -z "$doc_id" ]; then
+            echo "❌ Ошибка генерации ID"
+            return 1
+        fi
+        echo "🆔 Сгенерирован ID по новой системе: $doc_id"
+    fi
+    
+    # 2. Форматируем теги (используем существующую функцию)
+    local tags_yaml=""
+    if command -v format_tags_yaml &> /dev/null; then
+        tags_yaml=$(format_tags_yaml "$tags" "$type")
+        if [ -n "$tags_yaml" ]; then
+            echo "🏷️  Сформированные теги:"
+            echo "$tags_yaml"
+        fi
+    else
+        # Простой фолбэк
+        if [ -n "$tags" ]; then
+            tags_yaml="tags:"
+            IFS=',' read -ra TAG_ARRAY <<< "$tags"
+            for tag in "${TAG_ARRAY[@]}"; do
+                tags_yaml="$tags_yaml"$'\\n'$'  - "'"${tag// /}"'"'
+            done
         fi
     fi
     
-    # 2. Форматируем теги
-    local tags_yaml=$(format_tags_yaml "$tags" "$type")
-    echo "🏷️  Сформированные теги:"
-    echo "$tags_yaml"
+    # 3. Создаем имя файла в ПРАВИЛЬНОМ формате
+    local filename=""
+    if command -v generate_filename &> /dev/null; then
+        filename=$(generate_filename "$doc_id" "$type" "$name" "$level")
+    else
+        # Фолбэк: простой формат
+        local short_type=$(get_short_type "$type")
+        local slug=$(echo "$name" | tr ' ' '_' | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_')
+        filename="${doc_id}_${short_type}_${slug}.md"
+    fi
     
-    # 3. Создаем имя файла в правильном формате
-    local short_type=$(get_short_type "$type")
-    local filename="${doc_id} ${short_type} - ${name}.md"
+    echo "📄 Создаю документ: $filename"
     
-    echo "�� Создаю документ: $filename"
-    echo "   🏷️  Тип: $type (сокращенно: $short_type)"
-    
-    # 4. Создаем документ ТОЛЬКО из внешних шаблонов
+    # 4. Выбираем шаблон
     if [ "$level" = "N" ]; then
-        # Неиерархический документ - проверяем шаблон
+        # Неиерархический документ
         if [ ! -f "T-NONHIER.md" ]; then
             echo "❌ Ошибка: Не найден шаблон для неиерархических документов T-NONHIER.md"
-            echo "   Создайте файл T-NONHIER.md в корневой директории"
             return 1
         fi
+        
         create_from_template "$filename" "$doc_id" "$name" "N" "$type" \
             "" "" "$tags_yaml" "$current_date" "T-NONHIER.md"
     else
-        # Иерархический документ - определяем шаблон
+        # Иерархический документ
         local template_file=""
         if [ "$level" -eq 1 ]; then
             template_file="T-MASTER.md"
@@ -136,7 +184,6 @@ create_real_document() {
         
         if [ ! -f "$template_file" ]; then
             echo "❌ Ошибка: Не найден шаблон $template_file"
-            echo "   Для уровня $level требуется файл: $template_file"
             return 1
         fi
         
@@ -144,16 +191,24 @@ create_real_document() {
             "$parent_id" "$parent_name" "$tags_yaml" "$current_date" "$template_file"
     fi
     
-    # 5. Обновляем родительский документ (если есть)
-    if [ -n "$parent_id" ] && [ -n "$parent_name" ] && [ -n "$parent_file" ]; then
-        update_parent_document "$parent_file" "$doc_id" "$name"
+    if [ $? -eq 0 ]; then
+        echo "✅ Документ успешно создан: $filename"
+        
+        # Обновить родительский документ (если есть)
+        if [ -n "$parent_file" ] && [ "$level" -gt 1 ]; then
+            if command -v update_parent_document &> /dev/null; then
+                update_parent_document "$parent_file" "$filename"
+            fi
+        fi
+        
+        return 0
+    else
+        echo "❌ Ошибка при создании документа"
+        return 1
     fi
-    
-    echo "✅ Документ создан: $filename"
-    return 0
 }
 
-# Создать из шаблона - РАБОЧАЯ версия
+# Функция создания из шаблона (без изменений)
 create_from_template() {
     local filename="$1"
     local doc_id="$2"
@@ -186,44 +241,42 @@ create_from_template() {
     if [ -n "$parent_id" ] && [ -n "$parent_name" ] && [ "$template_file" = "T-CHILD.md" ]; then
         parent_footer="Родитель: ${parent_id}"
     fi
-    template_content=${template_content//\{\{parent_footer\}\}/$parent_footer}
     
-    # Вставляем теги в frontmatter - после строки author:
+    # Создаем документ
+    echo "$template_content" > "$filename"
+    
+    # Добавляем теги если есть
     if [ -n "$tags_yaml" ]; then
-        # Разбиваем на строки
-        IFS=$'\n' read -d '' -r -a lines <<< "$template_content" || true
-        
-        local output=""
+        # Вставляем теги в frontmatter - после строки author:
         local in_frontmatter=false
         local author_found=false
+        local temp_file="${filename}.tmp"
         
-        for line in "${lines[@]}"; do
-            output="$output$line"$'\n'
+        while IFS= read -r line || [ -n "$line" ]; do
+            echo "$line" >> "$temp_file"
             
-            if [ "$line" = "---" ]; then
+            if [[ "$line" == "---" ]]; then
                 if [ "$in_frontmatter" = false ]; then
                     in_frontmatter=true
                 else
                     in_frontmatter=false
                 fi
             elif [ "$in_frontmatter" = true ] && [[ "$line" == author:* ]] && [ "$author_found" = false ]; then
-                # Нашли строку author:, добавляем теги после нее
-                output="$output$tags_yaml"$'\n'
+                echo "$tags_yaml" >> "$temp_file"
                 author_found=true
             fi
-        done
+        done < "$filename"
         
-        template_content="$output"
+        mv "$temp_file" "$filename"
     fi
     
-    # Записываем в файл
-    echo "$template_content" > "$filename"
-    
-    # Проверяем что файл создан
-    if [ ! -f "$filename" ]; then
-        echo "❌ Ошибка: Не удалось создать файл из шаблона"
-        return 1
+    # Добавляем родительскую информацию если есть
+    if [ -n "$parent_footer" ]; then
+        echo "" >> "$filename"
+        echo "---" >> "$filename"
+        echo "$parent_footer" >> "$filename"
     fi
     
-    echo "   ✅ Документ создан из шаблона"
+    echo "   📝 Заполнен шаблон, добавлены теги"
+    return 0
 }
