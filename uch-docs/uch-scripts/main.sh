@@ -56,7 +56,7 @@ fi' ./uch-scripts/main.sh
     echo "✅ Обновлен main.sh для загрузки id-generator-v2.sh"
 else
     echo "⚠️  main.sh уже загружает id-generator-v2.sh"
-fi
+
 
 echo "✅ Загружено модулей: $MODULES_LOADED"
 echo ""
