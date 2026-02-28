@@ -6,3 +6,8 @@ processed: false
 ---
 
 test
+
+
+// В консоли браузера (работает внутри скрипта)
+unsafeWindow._stopBulkSave = true;
+location.reload();
