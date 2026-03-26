@@ -43,4 +43,3 @@ def example():
 ---
 
 _Создано в Obsidian Digital Garden, импортировано в UCH Blog_  
-EOF
