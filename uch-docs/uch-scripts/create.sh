@@ -1,0 +1,202 @@
+#!/bin/bash
+# Модуль создания документов - обновленный для новой системы ID
+
+# Загружаем модуль создания документов если есть
+if [ -f "$SCRIPT_DIR/document-creator.sh" ]; then
+    source "$SCRIPT_DIR/document-creator.sh"
+fi
+
+# Загружаем новый генератор ID
+if [ -f "$SCRIPT_DIR/id-generator-v2.sh" ]; then
+    source "$SCRIPT_DIR/id-generator-v2.sh"
+fi
+
+# Улучшенная функция создания документа (с новыми подсказками)
+create_document_improved() {
+    echo ""
+    echo "📝 СОЗДАНИЕ ДОКУМЕНТА (НОВАЯ СИСТЕМА ID)"
+    echo ""
+    
+    # 1. Выбор уровня
+    echo "=== ВЫБОР УРОВНЯ ДОКУМЕНТА ==="
+    echo "1 - Проект (уровень 1, корневой) - например: 1-010000-1"
+    echo "2 - Линия/Компонент (уровень 2-3) - например: 2-010400-1, 3-010401-1"
+    echo "3 - Задача/Решение (уровень 4-5) - например: 4-010400-0100-1, 5-010400-010001-1"
+    echo "4 - Отчет (уровень 6) - например: 6-010400-001-1"
+    echo "5 - Неиерархический документ (идеи, встречи, ссылки)"
+    echo ""
+    read -p "Ваш выбор (1-5): " level_choice
+    
+    local level=""
+    local parent_id=""
+    local level_name=""
+    
+    case $level_choice in
+        1)
+            level=1
+            level_name="Проект (уровень 1)"
+            echo "Выбран: $level_name"
+            echo "Пример ID: 1-010000-1 (PROD), 1-010000-7 (ARCH)"
+            ;;
+        2)
+            # Уровень 2 или 3
+            echo ""
+            echo "=== ВЫБОР КОНКРЕТНОГО УРОВНЯ ==="
+            echo "1 - Линия развития (уровень 2) - например: 2-010400-1"
+            echo "2 - Компонент системы (уровень 3) - например: 3-010401-1"
+            read -p "Ваш выбор (1-2): " sub_choice
+            
+            case $sub_choice in
+                1) level=2; level_name="Линия (уровень 2)" ;;
+                2) level=3; level_name="Компонент (уровень 3)" ;;
+                *) 
+                    echo "❌ Неверный выбор"
+                    return 1
+                    ;;
+            esac
+            
+            echo ""
+            echo "Выбран: $level_name"
+            read -p "Введите ID родительского документа (например: 1-010000-1 для уровня 2, 2-010400-1 для уровня 3): " parent_id
+            
+            if [ -z "$parent_id" ]; then
+                echo "⚠️  ID родителя не указан. Будет создан документ без родителя."
+            else
+                echo "Родительский документ: $parent_id"
+            fi
+            ;;
+        3)
+            # Уровень 4 или 5
+            echo ""
+            echo "=== ВЫБОР КОНКРЕТНОГО УРОВНЯ ==="
+            echo "1 - Задача (уровень 4) - например: 4-010400-0100-1"
+            echo "2 - Решение (уровень 5) - например: 5-010400-010001-1"
+            read -p "Ваш выбор (1-2): " sub_choice
+            
+            case $sub_choice in
+                1) level=4; level_name="Задача (уровень 4)" ;;
+                2) level=5; level_name="Решение (уровень 5)" ;;
+                *) 
+                    echo "❌ Неверный выбор"
+                    return 1
+                    ;;
+            esac
+            
+            echo ""
+            echo "Выбран: $level_name"
+            read -p "Введите ID родительского документа (например: 3-010401-1 для задачи, 4-010400-0100-1 для решения): " parent_id
+            
+            if [ -z "$parent_id" ]; then
+                echo "⚠️  Внимание: Для уровня $level рекомендуется указать родительский ID."
+                read -p "Продолжить без родителя? (y/n): " confirm
+                if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+                    return 1
+                fi
+            else
+                echo "Родительский документ: $parent_id"
+            fi
+            ;;
+        4)
+            level=6
+            level_name="Отчет (уровень 6)"
+            echo "Выбран: $level_name"
+            echo "Пример ID: 6-010400-001-1 (REPORT)"
+            
+            echo ""
+            read -p "Введите ID родительского документа (опционально, например: 2-010400-1): " parent_id
+            ;;
+        5)
+            level="N"
+            level_name="Неиерархический документ"
+            echo "Выбран: $level_name"
+            echo "Пример ID: Z-20260204123000 (IDEA), M-20260204 (MEETING)"
+            ;;
+        *)
+            echo "❌ Неверный выбор"
+            return 1
+            ;;
+    esac
+    
+    # 2. Название документа
+    echo ""
+    read -p "Введите название документа: " name
+    if [ -z "$name" ]; then
+        echo "❌ Название не может быть пустым"
+        return 1
+    fi
+    
+    # 3. Выбор типа
+    echo ""
+    echo "=== ВЫБОР ТИПА ДОКУМЕНТА ==="
+    
+    if [ -f "$SCRIPT_DIR/types.sh" ]; then
+        source "$SCRIPT_DIR/types.sh"
+        
+        if [ "$level" = "N" ]; then
+            echo "Типы для неиерархических документов:"
+            echo "1 - idea (Идея/концепция)"
+            echo "2 - reference (Ссылка/ресурс)"
+            echo "3 - meeting (Встреча/обсуждение)"
+            echo "4 - note (Заметка)"
+            echo ""
+            read -p "Выберите тип (1-4): " type_choice
+            
+            case $type_choice in
+                1) type="idea" ;;
+                2) type="reference" ;;
+                3) type="meeting" ;;
+                4) type="note" ;;
+                *) type="idea" ;;
+            esac
+        else
+            show_type_menu_for_level "$level"
+            type=$(select_type_by_number "$level")
+        fi
+    else
+        # Фолбэк
+        type=$(get_default_type_for_level "$level")
+    fi
+    
+    echo "Выбран тип: $type"
+    
+    # 4. Теги
+    echo ""
+    read -p "Введите теги через запятую (необязательно): " tags
+    
+    # 5. Сводка
+    echo ""
+    echo "📋 СВОДКА:"
+    echo "  Уровень: $level ($level_name)"
+    echo "  Название: $name"
+    echo "  Тип: $type"
+    if [ -n "$parent_id" ]; then
+        echo "  Родитель: $parent_id"
+    fi
+    if [ -n "$tags" ]; then
+        echo "  Теги: $tags"
+    fi
+    
+    # 6. Подтверждение
+    echo ""
+    read -p "Создать документ? (y/n): " confirm
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        echo "❌ Отменено"
+        return 1
+    fi
+    
+    # 7. Создание
+    echo ""
+    if create_real_document "$name" "$level" "$type" "$parent_id" "$tags"; then
+        echo "✅ Документ успешно создан!"
+    else
+        echo "❌ Ошибка при создании документа"
+        return 1
+    fi
+}
+
+# Функция для совместимости
+create_batch_documents() {
+    echo "Пакетное создание временно недоступно в новой системе"
+    echo "Используйте обычное создание документов"
+    read -p "Нажмите Enter чтобы вернуться в меню..."
+}

@@ -1,0 +1,310 @@
+---
+id: "2-010100-15"
+name: "Blog_restore_guide"
+type: "GUIDE"
+level: 2
+status: "active"
+tags: []
+created: "2026-02-03"
+updated: "2026-02-03"
+author: "kirillkravcov"
+slug: "2-010100-15_GUIDE_Blog_restore_guide"
+---
+
+# 🚀 Гайд: Восстановление работоспособности UCH Blog
+
+## 📋 Симптомы проблемы
+- Блог не отвечает по адресу http://127.0.0.1:8000/
+- Django не запускается
+- Ошибка "No module named 'django'"
+
+## 🛠️ Пошаговая процедура восстановления
+
+### 1. Проверка текущего состояния
+```bash
+# Проверяем запущенные процессы
+ps aux | grep python
+
+# Проверяем структуру проекта
+ls -la
+```
+### 2. Работа с виртуальным окружением
+
+Если venv не активирован или сломан:bashCopyDownload```
+# Деактивируем текущее окружение (если активно)
+deactivate
+
+# Удаляем старое окружение
+rm -rf venv
+
+# Создаем новое
+python3 -m venv venv
+
+# Активируем
+source venv/bin/activate
+
+# Проверяем, что используем python из venv
+which python
+# Должно быть: /path/to/project/venv/bin/python
+```
+**Важно!** Если есть алиас:
+
+bashCopyDownload```
+# Проверяем алиасы
+alias python
+
+# Если есть алиас python -> /usr/bin/python3:
+# Вариант 1: Использовать прямой путь
+./venv/bin/python manage.py [команда]
+
+# Вариант 2: Временно удалить алиас
+unalias python
+```
+### 3. Установка зависимостей
+
+bashCopyDownload```
+# Обновляем pip
+pip install --upgrade pip
+pip install wheel
+
+# Устанавливаем Pillow (часто требует особого подхода)
+pip install Pillow
+
+# Устанавливаем остальные зависимости
+pip install -r requirements.txt
+```
+**Если Pillow не устанавливается:**
+
+bashCopyDownload```
+# Пропускаем зависимости Pillow
+pip install --no-deps -r requirements.txt
+# Затем устанавливаем Pillow отдельно
+pip install Pillow --no-binary :all:
+# Или с бинарной версией
+pip install Pillow
+```
+### 4. Проверка Django
+
+bashCopyDownload```
+# Проверяем установку Django
+./venv/bin/python -c "import django; print(f'Django {django.__version__}')"
+
+# Проверяем настройки проекта
+./venv/bin/python manage.py check
+
+# Проверяем миграции
+./venv/bin/python manage.py showmigrations
+```
+### 5. Работа с базой данных
+
+bashCopyDownload```
+# Проверяем существование базы
+ls -la db.sqlite3
+
+# Если нужно создать миграции
+./venv/bin/python manage.py makemigrations
+
+# Применяем миграции
+./venv/bin/python manage.py migrate
+
+# Проверяем статьи в базе
+./venv/bin/python manage.py shell -c "
+from uch.apps.blog.models import Article
+print(f'Статей в базе: {Article.objects.count()}')
+"
+```
+### 6. Запуск сервера
+
+bashCopyDownload```
+# Останавливаем все Django процессы
+lsof -ti:8000 | xargs kill -9 2>/dev/null || true
+pkill -f "python manage.py runserver" 2>/dev/null || true
+
+# Запускаем сервер
+./venv/bin/python manage.py runserver &
+
+# Проверяем доступность
+curl -I http://127.0.0.1:8000/
+```
+### 7. Тестирование функциональности
+
+bashCopyDownload```
+# Проверяем главную страницу (должна вернуть 200)
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/
+
+# Проверяем админку (должна вернуть 302 redirect на login)
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/admin/
+
+# Проверяем API если есть
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/api/
+```
+## 🔧 Быстрые команды для восстановления
+
+### Полный скрипт восстановления:
+
+bashCopyDownload```
+#!/bin/bash
+# restore_blog.sh
+
+echo "🔧 Восстановление UCH Blog..."
+
+# 1. Останавливаем сервер
+pkill -f "python manage.py runserver"
+
+# 2. Обновляем venv
+deactivate 2>/dev/null
+rm -rf venv
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Устанавливаем зависимости
+pip install --upgrade pip wheel
+pip install Pillow
+pip install -r requirements.txt
+
+# 4. Проверяем миграции
+./venv/bin/python manage.py migrate
+
+# 5. Запускаем сервер
+./venv/bin/python manage.py runserver &
+echo "✅ Сервер запущен: http://127.0.0.1:8000/"
+```
+### Минимальный скрипт (когда venv работает):
+
+bashCopyDownload```
+#!/bin/bash
+# quick_restart.sh
+
+source venv/bin/activate
+pkill -f "python manage.py runserver"
+./venv/bin/python manage.py runserver &
+echo "✅ Перезапущен: http://127.0.0.1:8000/"
+```
+## 🚨 Типичные проблемы и решения
+
+### Проблема 1: "ModuleNotFoundError: No module named 'django'"
+
+**Решение:**
+
+bashCopyDownload```
+# Убедиться что venv активирован
+which python
+# Если показывает /usr/bin/python, то:
+source venv/bin/activate
+# Или использовать прямой путь:
+./venv/bin/python manage.py [команда]
+```
+### Проблема 2: "Error: That port is already in use"
+
+**Решение:**
+
+bashCopyDownload```
+# Найти и убить процесс
+lsof -ti:8000 | xargs kill -9
+# Или
+pkill -f "python manage.py runserver"
+```
+### Проблема 3: "Could not build wheels for Pillow"
+
+**Решение:**
+
+bashCopyDownload```
+# Установить системные зависимости (macOS)
+brew install jpeg libtiff little-cms2 openjpeg webp
+
+# Или использовать бинарную версию
+pip install Pillow --only-binary=:all:
+```
+### Проблема 4: База данных повреждена
+
+**Решение:**
+
+bashCopyDownload```
+# Создать backup
+cp db.sqlite3 db.sqlite3.backup_$(date +%Y%m%d)
+
+# Пересоздать из миграций
+rm db.sqlite3
+./venv/bin/python manage.py migrate
+```
+## 📊 Мониторинг работоспособности
+
+### Проверочный скрипт:
+
+bashCopyDownload```
+#!/bin/bash
+# health_check.sh
+
+echo "🩺 Проверка здоровья UCH Blog..."
+
+# 1. Проверяем процесс
+if pgrep -f "python manage.py runserver" > /dev/null; then
+    echo "✅ Сервер запущен"
+else
+    echo "❌ Сервер не запущен"
+fi
+
+# 2. Проверяем доступность
+STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/)
+if [ "$STATUS" = "200" ]; then
+    echo "✅ Веб-интерфейс доступен"
+else
+    echo "❌ Веб-интерфейс не доступен (статус: $STATUS)"
+fi
+
+# 3. Проверяем базу данных
+DB_SIZE=$(stat -f%z db.sqlite3 2>/dev/null || echo "0")
+if [ "$DB_SIZE" -gt 1000 ]; then
+    echo "✅ База данных существует ($DB_SIZE байт)"
+else
+    echo "⚠️  База данных маленькая или отсутствует"
+fi
+
+# 4. Проверяем статьи
+ARTICLE_COUNT=$(./venv/bin/python manage.py shell -c "
+from uch.apps.blog.models import Article
+print(Article.objects.count())
+" 2>/dev/null || echo "0")
+
+echo "📊 Статей в базе: $ARTICLE_COUNT"
+```
+## 🎯 Чеклист восстановления
+
+- Виртуальное окружение активировано
+- Python из venv (не системный)
+- Все зависимости установлены
+- Django импортируется без ошибок
+- Миграции применены
+- База данных существует
+- Порт 8000 свободен
+- Сервер запускается без ошибок
+- Главная страница возвращает 200
+- Статьи отображаются
+
+## 💾 Резервное копирование
+
+Рекомендуемые backup-файлы:
+
+bashCopyDownload```
+# Перед изменениями
+cp db.sqlite3 db.sqlite3.backup
+cp requirements.txt requirements.txt.backup
+cp uch/settings.py uch/settings.py.backup
+```
+## 🔗 Полезные команды
+
+bashCopyDownload```
+# Просмотр логов сервера
+tail -f nohup.out  # если запущен через nohup
+
+# Проверка использования портов
+lsof -i :8000
+
+# Перезагрузка сервера при изменении кода
+touch uch/wsgi.py  # заставляет сервер перезагрузиться
+```
+*Документ создан: $(date)*
+*Проект: Universal Creative Hub*
+
+---
+Создано: 2026-02-03

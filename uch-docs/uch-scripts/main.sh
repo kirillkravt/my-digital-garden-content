@@ -1,0 +1,155 @@
+#!/bin/bash
+# Главный скрипт UCH Document System - исправленная версия
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+echo "=== UCH CREATE: МОДУЛЬНАЯ СИСТЕМА ==="
+echo "Версия: 1.1.0 (НОВАЯ СИСТЕМА ID)"
+echo ""
+
+# Подключаем модули
+MODULES_LOADED=0
+
+# Базовые утилиты
+if [ -f "$SCRIPT_DIR/utils.sh" ]; then
+    source "$SCRIPT_DIR/utils.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+# Типы документов
+if [ -f "$SCRIPT_DIR/types.sh" ]; then
+    source "$SCRIPT_DIR/types.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+# Новый генератор ID (приоритетный)
+if [ -f "$SCRIPT_DIR/id-generator-v2.sh" ]; then
+    source "$SCRIPT_DIR/id-generator-v2.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+    echo "✅ Загружен новый генератор ID (v2)"
+fi
+
+# Создание документов
+if [ -f "$SCRIPT_DIR/create.sh" ]; then
+    source "$SCRIPT_DIR/create.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+if [ -f "$SCRIPT_DIR/document-creator.sh" ]; then
+    source "$SCRIPT_DIR/document-creator.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+# Режимы работы
+if [ -f "$SCRIPT_DIR/manual-mode.sh" ]; then
+    source "$SCRIPT_DIR/manual-mode.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+if [ -f "$SCRIPT_DIR/batch-mode.sh" ]; then
+    source "$SCRIPT_DIR/batch-mode.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+# Операции с документами
+if [ -f "$SCRIPT_DIR/replace-shift.sh" ]; then
+    source "$SCRIPT_DIR/replace-shift.sh"
+    MODULES_LOADED=$((MODULES_LOADED + 1))
+fi
+
+echo "✅ Загружено модулей: $MODULES_LOADED"
+echo ""
+
+# Главное меню
+show_main_menu() {
+    echo "=== ГЛАВНОЕ МЕНЮ (НОВАЯ СИСТЕМА ID) ==="
+    echo "1 - Создать документ (авто-ID по новой системе)"
+    echo "2 - Создать по имени (ручной ID - новый формат)"
+    echo "3 - Пакетное создание"
+    echo "4 - Операции с документами (замена/смещение)"
+    echo "5 - Проверить систему"
+    echo "6 - Протестировать утилиты"
+    echo "q - Выход"
+    echo ""
+    read -p "Ваш выбор (1-6/q): " choice
+    
+    case $choice in
+        1) 
+            create_document_improved
+            echo ""
+            show_main_menu 
+            ;;
+        2)
+            create_document_manual
+            echo ""
+            show_main_menu
+            ;;
+        3)
+            create_batch_documents
+            echo ""
+            show_main_menu
+            ;;
+        4)
+            if command -v show_simple_operations_menu &> /dev/null; then
+                show_simple_operations_menu
+            elif command -v show_document_operations_menu &> /dev/null; then
+                show_document_operations_menu
+            else
+                echo "❌ Функция операций с документами не найдена"
+            fi
+            echo ""
+            show_main_menu
+            ;;
+        5)
+            echo "✅ СИСТЕМА:"
+            echo "📁 Директория: $SCRIPT_DIR"
+            echo "📅 Дата: $(get_current_date 2>/dev/null || echo 'N/A')"
+            echo "📦 Модулей: $MODULES_LOADED"
+            echo "🆔 Система ID: НОВАЯ (3-010402-1)"
+            
+            # Проверяем новый генератор
+            if command -v generate_id &> /dev/null; then
+                echo "   Генератор ID: ✅ Загружен"
+                echo "   Пример ID: $(generate_id 1 "project" "" 2>/dev/null || echo 'Ошибка')"
+            else
+                echo "   Генератор ID: ❌ Не загружен"
+            fi
+            
+            echo ""
+            show_main_menu
+            ;;
+        6)
+            echo "🧪 ТЕСТ УТИЛИТ:"
+            echo "- Текущая дата: $(get_current_date 2>/dev/null || echo 'Ошибка')"
+            
+            if command -v find_free_master_id &> /dev/null; then
+                echo "- Старый master ID: $(find_free_master_id 2>/dev/null || echo 'N/A')"
+            fi
+            
+            if command -v generate_id &> /dev/null; then
+                echo "- Новый ID для проекта: $(generate_id 1 "project" "" 2>/dev/null || echo 'Ошибка')"
+                echo "- Новый ID для задачи: $(generate_id 4 "task" "3-010401-1" 2>/dev/null || echo 'Ошибка')"
+            fi
+            
+            echo "- Тип по умолчанию для уровня 3: $(get_default_type_for_level 3 2>/dev/null || echo 'N/A')"
+            echo ""
+            show_main_menu
+            ;;
+        q|Q) 
+            echo "Выход" 
+            exit 0 
+            ;;
+        *) 
+            echo "❌ Неверный выбор" 
+            show_main_menu 
+            ;;
+    esac
+}
+
+# Проверяем аргументы
+if [ $# -eq 0 ]; then
+    show_main_menu
+else
+    echo "⚠️  Командный режим пока не поддерживается"
+    show_main_menu
+fi

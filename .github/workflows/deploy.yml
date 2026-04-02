@@ -1,0 +1,143 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Create site structure
+        run: |
+          # Создаем директорию для сайта
+          mkdir -p _site
+          
+          # Создаем главную страницу
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>My Digital Garden</title>
+              <style>
+                  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; color: #333; }
+                  a { color: #2c5aa0; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+                  .note-list { list-style: none; padding: 0; }
+                  .note-item { margin: 15px 0; padding: 15px; border-left: 4px solid #2c5aa0; background: #f8f9fa; border-radius: 0 8px 8px 0; }
+                  footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #666; }
+              </style>
+          </head>
+          <body>
+              <h1>🌿 My Digital Garden</h1>
+              <p>Welcome to my digital garden! This is a collection of my notes, thoughts, and ideas.</p>
+              
+              <h2>📚 Content</h2>
+              <ul class="note-list">
+                  <li class="note-item"><a href="notes/">Browse Notes</a> - Daily thoughts and observations</li>
+                  <li class="note-item"><a href="posts/">Browse Posts</a> - Longer form writings</li>
+                  <li class="note-item"><a href="documents/">Documents</a> - Project documentation</li>
+              </ul>
+              
+              <footer>
+                  <p><em>This digital garden is always growing.</em></p>
+              </footer>
+          </body>
+          </html>
+          EOF
+          
+          # Копируем все markdown файлы
+          echo "🌱 Copying markdown files..."
+          find . -name "*.md" -not -path "./.git/*" -not -path "./_site/*" -exec sh -c '
+            dest="_site/$(dirname "$1")"
+            mkdir -p "$dest"
+            cp "$1" "$dest/"
+            echo "✅ Copied: $1"
+          ' _ {} \;
+          
+          # Создаем простые индексные файлы для папок
+          create_index() {
+            local folder=$1
+            local title=$2
+            local description=$3
+            
+            if [ -d "_site/$folder" ] && [ "$(ls -A _site/$folder/*.md 2>/dev/null)" ]; then
+              echo "📁 Creating index for $folder..."
+              
+              # Начало HTML
+              echo "<!DOCTYPE html>" > "_site/$folder/index.html"
+              echo "<html>" >> "_site/$folder/index.html"
+              echo "<head>" >> "_site/$folder/index.html"
+              echo "    <meta charset=\"UTF-8\">" >> "_site/$folder/index.html"
+              echo "    <title>$title - My Digital Garden</title>" >> "_site/$folder/index.html"
+              echo "    <style>" >> "_site/$folder/index.html"
+              echo "        body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; }" >> "_site/$folder/index.html"
+              echo "        a { color: #2c5aa0; text-decoration: none; }" >> "_site/$folder/index.html"
+              echo "        a:hover { text-decoration: underline; }" >> "_site/$folder/index.html"
+              echo "        .back-link { display: inline-block; margin-bottom: 20px; }" >> "_site/$folder/index.html"
+              echo "        .file-list { list-style: none; padding: 0; }" >> "_site/$folder/index.html"
+              echo "        .file-item { margin: 10px 0; padding: 15px; border: 1px solid #e1e4e8; border-radius: 6px; }" >> "_site/$folder/index.html"
+              echo "    </style>" >> "_site/$folder/index.html"
+              echo "</head>" >> "_site/$folder/index.html"
+              echo "<body>" >> "_site/$folder/index.html"
+              echo "    <a href=\"../\" class=\"back-link\">← Back to Garden</a>" >> "_site/$folder/index.html"
+              echo "    <h1>$title</h1>" >> "_site/$folder/index.html"
+              echo "    <p>$description</p>" >> "_site/$folder/index.html"
+              echo "    <ul class=\"file-list\">" >> "_site/$folder/index.html"
+              
+              # Добавляем файлы
+              for file in _site/$folder/*.md; do
+                if [ -f "$file" ]; then
+                  filename=$(basename "$file" .md)
+                  echo "        <li class=\"file-item\"><a href=\"${filename}.md\">${filename}</a></li>" >> "_site/$folder/index.html"
+                fi
+              done
+              
+              # Конец HTML
+              echo "    </ul>" >> "_site/$folder/index.html"
+              echo "</body>" >> "_site/$folder/index.html"
+              echo "</html>" >> "_site/$folder/index.html"
+            fi
+          }
+          
+          # Создаем индексные файлы для всех папок
+          create_index "notes" "📝 Notes" "Collection of my thoughts and observations"
+          create_index "posts" "📄 Posts" "Longer form writings and articles"
+          create_index "documents" "📋 Documents" "Project documentation and notes"
+          
+          echo "=== Final site structure ==="
+          find _site -type f -name "*.html" -o -name "*.md" | sort
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

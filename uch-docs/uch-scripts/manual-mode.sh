@@ -1,0 +1,142 @@
+#!/bin/bash
+# Режим создания по имени (ручной ID) - обновленный для новой системы
+
+# Создание документа с ручным указанием ID
+create_document_manual() {
+    echo "📝 СОЗДАНИЕ ПО ИМЕНИ (РУЧНОЙ ID - НОВЫЙ ФОРМАТ)"
+    echo ""
+    
+    # 1. Ручной ID
+    echo "=== ВВОД ID ДОКУМЕНТА ==="
+    echo "Примеры правильных ID:"
+    echo "  • 1-010000-1      (Проект, уровень 1)"
+    echo "  • 2-010400-7      (Архитектура линии, уровень 2)"
+    echo "  • 3-010401-1      (Компонент, уровень 3)"
+    echo "  • 4-010400-0100-1 (Задача, уровень 4)"
+    echo "  • 5-010400-010001-1 (Решение, уровень 5)"
+    echo "  • Z-20260204120000 (Идея, неиерархический)"
+    echo ""
+    read -p "Введите ID документа: " manual_id
+    
+    if [ -z "$manual_id" ]; then
+        echo "❌ ID не может быть пустым"
+        return 1
+    fi
+    
+    # Проверяем формат ID (новая система)
+    if ! echo "$manual_id" | grep -qE '^([1-6]-[0-9]{6}-[0-9]+(-[0-9]+)?|Z-[0-9]{14}|M-[0-9]{8}|R-[0-9A-F]{6})$'; then
+        echo "⚠️  Предупреждение: ID не соответствует стандартному формату"
+        echo "   Форматы: X-XXXXXX-X, X-XXXXXX-XXXX-X, Z-YYYYMMDDHHMMSS, M-YYYYMMDD, R-HEXCODE"
+        read -p "Продолжить? (y/n): " confirm
+        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+            return 1
+        fi
+    fi
+    
+    # Проверяем не занят ли ID
+    if find . -maxdepth 1 -name "${manual_id}_*.md" -type f | grep -q .; then
+        echo "❌ Ошибка: Документ с ID '$manual_id' уже существует!"
+        echo "   Существующие файлы:"
+        find . -maxdepth 1 -name "${manual_id}_*.md" -type f | head -3
+        return 1
+    fi
+    
+    # 2. Определяем уровень из ID
+    local level=""
+    if [[ "$manual_id" =~ ^[1-6]- ]]; then
+        level=$(echo "$manual_id" | cut -d'-' -f1)
+        echo "Определен уровень: $level"
+    elif [[ "$manual_id" =~ ^Z- ]]; then
+        level="N"
+        echo "Определен уровень: N (неиерархический, идея)"
+    elif [[ "$manual_id" =~ ^M- ]]; then
+        level="N"
+        echo "Определен уровень: N (неиерархический, встреча)"
+    elif [[ "$manual_id" =~ ^R- ]]; then
+        level="N"
+        echo "Определен уровень: N (неиерархический, ссылка)"
+    else
+        echo "⚠️  Не удалось определить уровень из ID"
+        read -p "Введите уровень вручную (1-6 или N): " level
+    fi
+    
+    # 3. Название документа
+    echo ""
+    read -p "Введите название документа: " name
+    if [ -z "$name" ]; then
+        echo "❌ Название не может быть пустым"
+        return 1
+    fi
+    
+    # 4. Выбор типа
+    echo ""
+    if [ -f "$SCRIPT_DIR/types.sh" ]; then
+        source "$SCRIPT_DIR/types.sh"
+        show_type_menu_for_level "$level"
+        type=$(select_type_by_number "$level")
+    else
+        type=$(get_default_type_for_level "$level")
+    fi
+    
+    # 5. Теги
+    echo ""
+    read -p "Введите теги через запятую (необязательно): " tags
+    
+    # 6. Родитель (если есть в ID и уровень > 1)
+    local parent_id=""
+    if [[ "$manual_id" =~ ^[2-6]- ]] && [[ "$level" =~ ^[2-6]$ ]]; then
+        echo ""
+        read -p "Введите ID родительского документа (если есть): " parent_id
+    fi
+    
+    # 7. Сводка
+    echo ""
+    echo "📋 СВОДКА:"
+    echo "  ID: $manual_id"
+    echo "  Уровень: $level"
+    echo "  Название: $name"
+    echo "  Тип: $type"
+    if [ -n "$parent_id" ]; then
+        echo "  Родитель: $parent_id"
+    fi
+    if [ -n "$tags" ]; then
+        echo "  Теги: $tags"
+    fi
+    
+    # 8. Подтверждение
+    echo ""
+    read -p "Создать документ? (y/n): " confirm
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        echo "❌ Отменено"
+        return 1
+    fi
+    
+    # 9. Создание с ручным ID
+    echo ""
+    if create_real_document "$name" "$level" "$type" "$parent_id" "$tags"; then
+        # Переименовываем файл чтобы использовать ручной ID
+        # Находим созданный файл (последний созданный)
+        latest_file=$(ls -t *.md | head -1)
+        if [ -f "$latest_file" ]; then
+            # Генерируем правильное имя файла с ручным ID
+            short_type=$(get_short_type "$type")
+            slug=$(echo "$name" | tr ' ' '_' | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]_')
+            correct_name="${manual_id}_${short_type}_${slug}.md"
+            
+            if [ "$latest_file" != "$correct_name" ]; then
+                mv "$latest_file" "$correct_name"
+                echo "✅ Переименован в: $correct_name"
+                
+                # Обновляем ID в frontmatter если нужно
+                sed -i '' "s/^id:.*/id: \"$manual_id\"/" "$correct_name"
+            fi
+            
+            echo "✅ Документ создан с ручным ID: $manual_id"
+        else
+            echo "✅ Документ создан"
+        fi
+    else
+        echo "❌ Ошибка при создании документа"
+        return 1
+    fi
+}

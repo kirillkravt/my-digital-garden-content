@@ -1,0 +1,142 @@
+---
+id: "2-010400-8"
+name: "FUNCTION-TREE"
+type: "DOC"
+level: 2
+status: "active"
+tags: []
+created: "2026-01-04"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "2-010400-8_DOC_FUNCTION-TREE"
+---
+# 🏗️ ДЕРЕВО ФУНКЦИЙ UCH-DOCS СИСТЕМЫ
+
+**Дата генерации:** Sun Jan  4 21:11:48 MSK 2026
+**Всего инструментов:**       20
+
+## 📁 СТРУКТУРА СИСТЕМЫ
+
+### 🎯 ГЛАВНЫЕ ТОЧКИ ВХОДА:
+
+| Скрипт | Назначение | Команда для запуска |
+|---------|------------|---------------------|
+| `uch-toolkit.sh` | Центральный менеджер всех инструментов | `./uch-toolkit.sh <категория> <инструмент>` |
+| `uch-create-modular.sh` | Меню создания документов | `./uch-create-modular.sh` |
+| `uch-cron-manager.sh` | Управление автоматическими задачами | `./uch-cron-manager.sh` |
+
+## 🔧 КАТАЛОГ ИНСТРУМЕНТОВ
+
+### 📊 АНАЛИТИКА
+
+| Инструмент | Описание | Команды | Размер |
+|------------|----------|---------|--------|
+| `uch-basic-collector.sh` | uch-basic-collector.sh - минимальный сборщик метрик для UCH | запуск напрямую |       55 строк |
+| `uch-docs-analyzer.sh` | uch-docs-analyzer.sh - анализ состояния документов uch-docs | запуск напрямую |      181 строк |
+| `uch-generate-full-report.sh` | uch-generate-full-report.sh - полный цикл генерации отчета UCH | запуск напрямую |      141 строк |
+| `uch-metrics-collector.sh` | uch-metrics-collector.sh - сбор метрик из всех частей проекта UCH | запуск напрямую |      175 строк |
+| `uch-project-tech-collector.sh` | uch-project-tech-collector.sh - сбор технологического стека проекта UCH | запуск напрямую |      102 строк |
+| `uch-report-generator.sh` | uch-report-generator.sh - генератор сводного отчета | запуск напрямую |      233 строк |
+| `uch-tech-debt-analyzer.sh` | uch-tech-debt-analyzer.sh - анализ технического долга автоматизации | анализ техдолга |      287 строк |
+
+### 📝 ДОКУМЕНТЫ
+
+| Инструмент | Описание | Команды | Размер |
+|------------|----------|---------|--------|
+| `analyze_migration_fixed.sh` | Создаем директорию для миграции | запуск напрямую |      143 строк |
+| `fix_frontmatter.sh` | Скрипт исправления frontmatter в документах | исправление frontmatter |      205 строк |
+| `migrate_documents.sh` | 🚀 ЗАПУСК МИГРАЦИИ ДОКУМЕНТОВ UCH-DOCS | миграция документов |      192 строк |
+| `replace-document-v2.sh` | Параметры | запуск напрямую |      190 строк |
+| `uch-frontmatter-tool.sh` | uch-frontmatter-tool.sh - объединенный инструмент для работы с frontmatter | check, fix, stats |      148 строк |
+
+### 🔢 ID
+
+| Инструмент | Описание | Команды | Размер |
+|------------|----------|---------|--------|
+| `check-conflicts-simple.sh` | 🔍 ПРОСТАЯ ПРОВЕРКА КОНФЛИКТОВ ID | запуск напрямую |       51 строк |
+| `fix-conflicts-with-shift.sh` | 🔧 РЕШЕНИЕ КОНФЛИКТОВ СО СМЕЩЕНИЕМ | запуск напрямую |      174 строк |
+| `fix-id-conflicts.sh` | 🔧 РЕШЕНИЕ КОНФЛИКТОВ ID | запуск напрямую |      173 строк |
+| `uch-id-tool.sh` | uch-id-tool.sh - инструмент для работы с ID конфликтами | check, fix-shift, fix-replace, stats |      108 строк |
+
+### 🗑️ ОЧИСТКА
+
+| Инструмент | Описание | Команды | Размер |
+|------------|----------|---------|--------|
+| `remove-general-info.sh` | remove-general-info-final.sh - окончательное удаление блока | запуск напрямую |      163 строк |
+
+### 🛠️ УТИЛИТЫ
+
+| Инструмент | Описание | Команды | Размер |
+|------------|----------|---------|--------|
+| `add_slug_simple.sh` | Скрипт добавления slug к документам без slug | запуск напрямую |       93 строк |
+| `analyze-file-names.sh` | analyze-file-names.sh - анализ имен файлов | запуск напрямую |       99 строк |
+| `simple_rename.sh` | Максимально простой скрипт переименования файлов | запуск напрямую |      106 строк |
+
+## 🚀 КАК ИСПОЛЬЗОВАТЬ СИСТЕМУ
+
+### БЫСТРЫЙ СТАРТ:
+
+1. **Просмотреть все инструменты:**
+   ```bash
+   ./uch-toolkit.sh list
+   ```
+
+2. **Проверить состояние документации:**
+   ```bash
+   ./uch-toolkit.sh docs check
+   ```
+
+3. **Проанализировать технический долг:**
+   ```bash
+   ./uch-toolkit.sh analytics debt
+   ```
+
+4. **Проверить ID конфликты:**
+   ```bash
+   ./uch-toolkit.sh ids check
+   ```
+
+5. **Создать новый документ:**
+   ```bash
+   ./uch-create-modular.sh
+   ```
+
+### КОМАНДЫ ПО КАТЕГОРИЯМ:
+
+| Категория | Короткая команда | Пример |
+|-----------|------------------|--------|
+| Аналитика | `uch-toolkit.sh analytics <tool>` | `./uch-toolkit.sh analytics debt` |
+| Документы | `uch-toolkit.sh docs <tool>` | `./uch-toolkit.sh docs check` |
+| ID | `uch-toolkit.sh ids <tool>` | `./uch-toolkit.sh ids check` |
+| Очистка | `uch-toolkit.sh cleanup <tool>` | `./uch-toolkit.sh cleanup remove` |
+| Утилиты | `uch-toolkit.sh utils <tool>` | `./uch-toolkit.sh utils rename` |
+
+## 📞 ПОЛУЧЕНИЕ СПРАВКИ
+
+Для любого инструмента:
+```bash
+./uch-toolkit.sh <категория> <инструмент> --help
+# Или напрямую:
+./uch-scripts/tools/<категория>/<инструмент> --help
+```
+
+## 🔄 WORKFLOW РЕКОМЕНДАЦИИ
+
+### Ежедневный workflow:
+1. Проверить документацию: `uch-toolkit.sh docs check`
+2. Создать задачи: через `uch-create-modular.sh`
+3. Проверить конфликты: `uch-toolkit.sh ids check`
+
+### Еженедельный аудит:
+1. Анализ техдолга: `uch-toolkit.sh analytics debt`
+2. Генерация отчета: `uch-toolkit.sh analytics report`
+3. Очистка системы: `uch-toolkit.sh cleanup remove`
+
+## ⚠️ ИЗВЕСТНЫЕ ПРОБЛЕМЫ
+
+1. **macOS совместимость:** Некоторые скрипты могут требовать GNU версии утилит
+2. **Пути:** Все пути настроены для конкретной системы пользователя
+3. **Зависимости:** Требуется bash 4+ для некоторых функций
+
+---
+*Сгенерировано автоматически. Для обновления запустите этот скрипт снова.*

@@ -1,0 +1,286 @@
+---
+id: "5-010201-0003-1"
+name: "Autoplay policy AudioContext"
+type: "SOL"
+level: 5
+status: "active"
+tags: []
+created: "2026-01-02"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "5-010201-0003-1_SOL_Autoplay_policy_AudioContext"
+---
+
+
+## 🎯 ОПИСАНИЕ ПРОБЛЕМЫ
+
+### ЧТО ПРОИСХОДИТ:
+AudioContext остается в состоянии `suspended` после инициализации Strudel. Звук не воспроизводится без явного user gesture (клика пользователя).
+
+### КОНТЕКСТ:
+- Современные браузеры блокируют автовоспроизведение звука
+- Требуется взаимодействие пользователя для активации AudioContext
+- Проблема затрагивает все аудио-компоненты UCH
+
+## 🔍 ДИАГНОСТИКА
+
+### ТЕКУЩЕЕ СОСТОЯНИЕ:
+javascript
+// После загрузки страницы:
+const audioContext = window.strudel.getAudioContext();
+console.log(audioContext.state); // "suspended"
+
+// Пользователь должен кликнуть чтобы:
+audioContext.resume().then(() => {
+  console.log(audioContext.state); // "running"
+});
+
+### ПОВЕДЕНИЕ БРАУЗЕРОВ:
+
+- **Chrome**: Блокирует autoplay без user gesture
+    
+- **Firefox**: Аналогично
+    
+- **Safari**: Самые строгие ограничения
+    
+- **Edge**: Похоже на Chrome
+    
+
+## ⚠️ СИМПТОМЫ
+
+### В UCH:
+
+1. Strudel загружается, но звука нет
+    
+2. Кнопка Play не работает при первом клике
+    
+3. Требуется дополнительный клик для активации
+    
+4. В консоли: `The AudioContext was not allowed to start`
+    
+
+### В ЛОГАХ:
+
+text
+
+✅ Strudel initialized with WebAudio...
+⚠️ AudioContext state: suspended
+❌ Playback failed: AudioContext is not running
+
+## 💡 РЕШЕНИЯ И ПОДХОДЫ
+
+### РЕШЕНИЕ 1: КНОПКА АКТИВАЦИИ
+
+typescript
+
+// Явная кнопка "Разрешить звук"
+<button onClick={activateAudio}>
+  🔈 Разрешить воспроизведение звука
+</button>
+
+const activateAudio = async () => {
+  await audioContext.resume();
+  setAudioActivated(true);
+};
+
+### РЕШЕНИЕ 2: АВТОМАТИЧЕСКАЯ АКТИВАЦИЯ ПРИ ВЗАИМОДЕЙСТВИИ
+
+typescript
+
+// Активировать при любом клике в приложении
+document.addEventListener('click', async () => {
+  if (audioContext.state === 'suspended') {
+    await audioContext.resume();
+  }
+}, { once: true }); // Только первый клик
+
+### РЕШЕНИЕ 3: ИНТЕРАКТИВНЫЙ ЗАГРУЗЧИК
+
+- Показывать overlay с объяснением
+    
+- Требовать клик для продолжения
+    
+- Сохранять состояние в localStorage
+    
+
+### РЕШЕНИЕ 4: ДЕФЕРРИРОВАННАЯ ИНИЦИАЛИЗАЦИЯ
+
+- Не создавать AudioContext до клика
+    
+- Инициализировать Strudel только после активации
+    
+
+## 📋 ПЛАН ИСПРАВЛЕНИЯ
+
+### ЭТАП 1: НЕМЕДЛЕННЫЙ FIX (СЕГОДНЯ)
+
+1. Добавить кнопку активации в StrudelREPLNode
+    
+2. Показывать состояние AudioContext в UI
+    
+3. Блокировать кнопку Play до активации
+    
+
+### ЭТАП 2: УЛУЧШЕНИЕ UX (1-2 ДНЯ)
+
+1. Создать глобальный AudioContext менеджер
+    
+2. Единая точка активации для всего UCH
+    
+3. Сохранение состояния между сессиями
+    
+
+### ЭТАП 3: ПРОАКТИВНОЕ РЕШЕНИЕ (НЕДЕЛЯ)
+
+1. Интерактивный загрузчик с объяснением
+    
+2. Автоматическая активация при взаимодействии
+    
+3. Поддержка всех браузеров
+    
+
+## 🛠️ ТЕХНИЧЕСКАЯ РЕАЛИЗАЦИЯ
+
+### КОМПОНЕНТ AudioActivator:
+
+typescript
+
+// Глобальный сервис для управления AudioContext
+class AudioActivator {
+  private static instance: AudioActivator;
+  private audioContext: AudioContext | null = null;
+  
+  static getInstance() {
+    if (!AudioActivator.instance) {
+      AudioActivator.instance = new AudioActivator();
+    }
+    return AudioActivator.instance;
+  }
+  
+  async activate() {
+    if (!this.audioContext) {
+      this.audioContext = new AudioContext();
+    }
+    
+    if (this.audioContext.state === 'suspended') {
+      await this.audioContext.resume();
+      return true;
+    }
+    return false;
+  }
+  
+  getContext() {
+    return this.audioContext;
+  }
+}
+
+### ИНТЕГРАЦИЯ В StrudelREPLNode:
+
+typescript
+
+// В компоненте:
+const [audioActivated, setAudioActivated] = useState(false);
+
+useEffect(() => {
+  const activator = AudioActivator.getInstance();
+  const context = activator.getContext();
+  
+  // Использовать существующий контекст или создать новый
+  if (context) {
+    window.strudel.init({ audioContext: context });
+  }
+}, []);
+
+## 🔗 СВЯЗАННЫЕ ДОКУМЕНТЫ
+
+### РОДИТЕЛЬСКИЕ:
+
+- [[10 02-10 epic - Strudel интеграция]]
+    
+- [[06 line - Студия]]
+    
+
+### СМЕЖНЫЕ ПРОБЛЕМЫ:
+
+- [[13 02-10-03 task - Проблема с семплами]]
+    
+- [[00-02-04-01 - Глобальная аудио система]]
+    
+
+### РЕШЕНИЯ:
+
+- [[05-РЕШЕНИЯ/AudioContext activation patterns]]
+    
+
+### СТАНДАРТЫ:
+
+- [Web Audio Autoplay Policy](https://developer.chrome.com/blog/autoplay/)
+    
+
+## 📊 МЕТРИКИ И ПРИОРИТЕТ
+
+### ВЛИЯНИЕ:
+
+- **Пользователи**: Все пользователи UCH
+    
+- **Серьезность**: Высокая (блокирует основную функцию)
+    
+- **Частота**: 100% случаев
+    
+
+### ПРИОРИТЕТ:
+
+- **Важность**: 🔴 Критическая
+    
+- **Срочность**: Высокая
+    
+- **Сложность**: Низкая/Средняя
+    
+
+### ПРОГРЕСС:
+
+- **Диагностика**: 100%
+    
+- **Решение**: 50%
+    
+- **Реализация**: 0%
+    
+- **Тестирование**: 0%
+    
+
+## 🎯 КРИТЕРИИ УСПЕХА
+
+### ТЕХНИЧЕСКИЕ:
+
+1. AudioContext активируется за 1 клик
+    
+2. Состояние сохраняется между перезагрузками
+    
+3. Работает во всех поддерживаемых браузерах
+    
+
+### UX:
+
+1. Понятное объяснение пользователю
+    
+2. Минимальное количество действий
+    
+3. Отсутствие confusion (непоняток)
+    
+
+### ПРОИЗВОДИТЕЛЬНОСТЬ:
+
+1. Нет задержек при активации
+    
+2. Память не течет
+    
+3. Не влияет на другие компоненты
+    
+
+---
+
+*Создано: 2025-12-25*  
+_Статус: Открыто_  
+_Блокирует: Воспроизведение звука в UCH_  
+_Приоритет: Критический_  
+_Браузеры: Chrome, Firefox, Safari, Edge_

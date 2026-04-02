@@ -1,0 +1,194 @@
+---
+id: "2-010400-15"
+name: "QUICK-START-GUIDE"
+type: "GUIDE"
+level: 2
+status: "active"
+tags: []
+created: "2026-01-04"
+updated: "2026-01-28"
+author: "kirillkravcov"
+slug: "2-010400-15_GUIDE_QUICK-START-GUIDE"
+---
+
+# ⚡ БЫСТРЫЙ СТАРТ UCH-DOCS
+
+## 🎯 ОСНОВНЫЕ КОМАНДЫ:
+
+### 1. ПОСМОТРЕТЬ ВСЕ ИНСТРУМЕНТЫ:
+```
+./uch-toolkit.sh list
+
+### 2. РАБОТА С ДОКУМЕНТАМИ:
+
+# Проверить frontmatter
+./uch-toolkit.sh docs check
+
+# Исправить frontmatter
+./uch-toolkit.sh docs fix
+
+# Мигрировать документы
+./uch-toolkit.sh docs migrate
+
+### 3. АНАЛИТИКА:
+
+bash
+
+# Анализ техдолга
+./uch-toolkit.sh analytics debt
+
+# Анализ документации
+./uch-toolkit.sh analytics docs
+
+# Сбор метрик
+./uch-toolkit.sh analytics metrics
+
+# Полный отчет
+./uch-toolkit.sh analytics full
+
+### 4. РАБОТА С ID:
+
+bash
+
+# Проверить конфликты
+./uch-toolkit.sh ids check
+
+# Исправить со сдвигом
+./uch-toolkit.sh ids fix-shift
+
+# Исправить заменой
+./uch-toolkit.sh ids fix-replace
+
+### 5. ОЧИСТКА:
+
+bash
+
+# Удалить блок "Общая информация"
+./uch-toolkit.sh cleanup remove
+
+### 6. УТИЛИТЫ:
+
+bash
+
+# Переименовать файлы
+./uch-toolkit.sh utils rename
+
+# Анализ имен файлов
+./uch-toolkit.sh utils analyze
+
+### 7. СОЗДАНИЕ ДОКУМЕНТОВ:
+
+bash
+
+# Меню создания
+./uch-create-modular.sh
+
+## 📁 СТРУКТУРА ПАПОК:
+
+text
+
+uch-docs/
+├── uch-toolkit.sh              # 📦 ГЛАВНЫЙ МЕНЕДЖЕР
+├── uch-create-modular.sh       # 📝 СОЗДАНИЕ ДОКУМЕНТОВ
+├── uch-cron-manager.sh        # ⏰ АВТОМАТИЗАЦИЯ
+└── uch-scripts/tools/         # 🛠️ ВСЕ ИНСТРУМЕНТЫ
+    ├── analytics/             # 📊 АНАЛИТИКА
+    ├── docs/                  # 📝 ДОКУМЕНТЫ
+    ├── ids/                   # 🔢 ID
+    ├── cleanup/               # 🗑️ ОЧИСТКА
+    └── utils/                 # 🛠️ УТИЛИТЫ
+
+## 🔍 КАК НАЙТИ НУЖНЫЙ ИНСТРУМЕНТ:
+
+1. **Не знаете название?** Используйте `./uch-toolkit.sh list`
+    
+2. **Нужна справка?** Добавьте `--help` к любой команде
+    
+3. **Прямой доступ:** `./uch-scripts/tools/<категория>/<скрипт>`
+    
+
+## 🚀 ТИПИЧНЫЕ СЦЕНАРИИ:
+
+### Сценарий 1: Проверка проекта
+
+bash
+
+./uch-toolkit.sh docs check      # Проверить документы
+./uch-toolkit.sh ids check       # Проверить ID
+./uch-toolkit.sh analytics debt  # Проверить техдолг
+
+### Сценарий 2: Создание документа
+
+bash
+
+./uch-create-modular.sh          # Запустить меню создания
+# Или напрямую через uch-scripts/modules/
+
+### Сценарий 3: Еженедельный аудит
+
+bash
+
+./uch-toolkit.sh analytics full  # Полный отчет
+./uch-toolkit.sh cleanup remove  # Очистка
+
+## 📞 ПОМОЩЬ:
+
+- Полное дерево функций: `FUNCTION-TREE.md`
+    
+- Отчет об очистке: `TECH-DEBT-CLEANUP-REPORT.md`
+    
+- Структура инструментов: `uch-scripts/README.md`
+    
+
+---
+
+_Обновлено: $(date)_  
+_Для детальной информации смотри FUNCTION-TREE.md_  
+EOF
+
+echo "✅ Шпаргалка создана: QUICK-START-GUIDE.md"  
+echo ""
+
+text
+
+**Шаг 94: Показываем результат**
+
+```bash
+echo "🎉 ДЕРЕВО ФУНКЦИЙ И ШПАРГАЛКА СОЗДАНЫ!"
+echo ""
+echo "📁 СОЗДАННЫЕ ФАЙЛЫ:"
+echo "  • FUNCTION-TREE.md        - Полное дерево всех функций системы"
+echo "  • QUICK-START-GUIDE.md    - Краткая шпаргалка по использованию"
+echo "  • TECH-DEBT-CLEANUP-REPORT.md - Отчет об очистке техдолга"
+echo "  • uch-scripts/README.md   - Структура инструментов"
+echo ""
+echo "🚀 КЛЮЧЕВЫЕ КОМАНДЫ ДЛЯ ОЗНАКОМЛЕНИЯ:"
+echo ""
+echo "1. Посмотреть все инструменты:"
+echo "   ./uch-toolkit.sh list"
+echo ""
+echo "2. Проверить документацию:"
+echo "   ./uch-toolkit.sh docs check"
+echo ""
+echo "3. Проанализировать техдолг:"
+echo "   ./uch-toolkit.sh analytics debt"
+echo ""
+echo "4. Посмотреть краткую шпаргалку:"
+echo "   cat QUICK-START-GUIDE.md | head -50"
+echo ""
+echo "5. Посмотреть полное дерево функций:"
+echo "   cat FUNCTION-TREE.md | head -100"
+echo ""
+
+**Теперь у вас есть полная карта системы!** Вы можете:
+
+1. **Быстро найти нужный инструмент** через `FUNCTION-TREE.md`
+    
+2. **Вспомнить команды** через `QUICK-START-GUIDE.md`
+    
+3. **Понимать структуру** через `uch-scripts/README.md`
+    
+4. **Знать историю изменений** через `TECH-DEBT-CLEANUP-REPORT.md`
+    
+
+**Система организована, документирована и готова к использованию!** 🎉
