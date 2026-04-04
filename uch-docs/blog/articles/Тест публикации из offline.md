@@ -5,7 +5,7 @@ published: true
 tags: []
 category: ""
 ---
-# {{title}}
+# Тест публикации из offline
 
 ## Введение
 
