@@ -1,5 +1,5 @@
 ---
-title: "{{title}}"
+title: Тест публикации из offline
 date:
 published: true
 tags: []
