@@ -1,11 +1,95 @@
 ---
-chat_id: 3fe3b089-9bc9-4b8f-ac6d-77c58e5a3223
-title: Telegram proxy VPS setup
-message_count: 26
-exported_at: 2026-04-05T18:36:47.696Z
+chat_id: b22d7b5b-550b-4766-9563-5ba93c85f2c6
+title: Audit OpenCode Integration Complete
+message_count: 40
+exported_at: 2026-04-05T18:37:03.088Z
 ---
 
-# Telegram proxy VPS setup
+# Audit OpenCode Integration Complete
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
+
+## 🤖 **DeepSeek**
+
+undefined
+
+---
 
 ## 🤖 **DeepSeek**
 
