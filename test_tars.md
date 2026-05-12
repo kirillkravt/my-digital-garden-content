@@ -18,3 +18,7 @@
 sudo open -a "Visual Studio Code" /путь/к/файлу
 
 42dc73d3
+
+cd /Users/kirillkravcov/UniversalCreativeHub
+./stop_all_services.sh
+./start_all_services.sh
