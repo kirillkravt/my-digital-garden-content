@@ -32,4 +32,10 @@ Kymatics — это AI-native open-source платформа для создан
 
 
 
-git config --global user.email "kirillkravt
+##  **Отлично! Настройки Git готовы**
+
+Вижу:
+
+- `user.name=Kirill Kravcov` ✓
+    
+- `user.email=kirillkravt@gmail.com` ✓
