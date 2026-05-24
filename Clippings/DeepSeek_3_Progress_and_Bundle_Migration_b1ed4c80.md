@@ -2,7 +2,7 @@
 chat_id: b1ed4c80-6998-4465-836d-84c47b9532ef
 title: DeepSeek 3 Progress and Bundle Migration
 message_count: 84
-exported_at: 2026-05-24T13:51:17.083Z
+exported_at: 2026-05-24T19:30:16.583Z
 ---
 
 # DeepSeek 3 Progress and Bundle Migration

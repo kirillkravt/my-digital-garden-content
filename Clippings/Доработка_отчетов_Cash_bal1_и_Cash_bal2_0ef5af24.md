@@ -2,7 +2,7 @@
 chat_id: 0ef5af24-6ad8-451a-9efc-c09dcf707944
 title: Доработка отчетов Cash_bal1 и Cash_bal2
 message_count: 12
-exported_at: 2026-05-24T13:49:32.878Z
+exported_at: 2026-05-24T19:28:32.362Z
 ---
 
 # Доработка отчетов Cash_bal1 и Cash_bal2

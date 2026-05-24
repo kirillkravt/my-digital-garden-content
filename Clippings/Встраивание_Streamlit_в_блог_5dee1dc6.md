@@ -2,7 +2,7 @@
 chat_id: 5dee1dc6-1508-4f90-a8d7-51063b347800
 title: Встраивание Streamlit в блог
 message_count: 8
-exported_at: 2026-05-24T13:44:01.438Z
+exported_at: 2026-05-24T19:23:00.753Z
 ---
 
 # Встраивание Streamlit в блог

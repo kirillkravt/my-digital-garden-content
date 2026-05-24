@@ -2,7 +2,7 @@
 chat_id: 88f28d1f-0a2c-46b6-a962-378e0ddc417a
 title: Integration of Strudel with UCH Experiment
 message_count: 26
-exported_at: 2026-05-24T13:50:40.301Z
+exported_at: 2026-05-24T19:29:39.803Z
 ---
 
 # Integration of Strudel with UCH Experiment

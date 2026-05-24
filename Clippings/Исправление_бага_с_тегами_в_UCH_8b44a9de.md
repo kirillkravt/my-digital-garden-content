@@ -2,7 +2,7 @@
 chat_id: 8b44a9de-3970-4e93-ba89-28e51ec1fda1
 title: Исправление бага с тегами в UCH
 message_count: 20
-exported_at: 2026-05-24T13:50:15.793Z
+exported_at: 2026-05-24T19:29:15.287Z
 ---
 
 # Исправление бага с тегами в UCH

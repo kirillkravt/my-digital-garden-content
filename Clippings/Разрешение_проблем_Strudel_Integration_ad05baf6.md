@@ -2,7 +2,7 @@
 chat_id: ad05baf6-2e17-4a56-b105-5c957e754cb8
 title: Разрешение проблем Strudel Integration
 message_count: 112
-exported_at: 2026-05-24T13:51:50.798Z
+exported_at: 2026-05-24T19:30:50.298Z
 ---
 
 # Разрешение проблем Strudel Integration

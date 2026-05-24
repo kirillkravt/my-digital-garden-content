@@ -2,7 +2,7 @@
 chat_id: b562a8d1-6e9a-4707-989d-8f665b9758c4
 title: Аранжировка отрывка с использованием JavaScript
 message_count: 4
-exported_at: 2026-05-24T13:54:17.820Z
+exported_at: 2026-05-24T19:33:17.258Z
 ---
 
 # Аранжировка отрывка с использованием JavaScript

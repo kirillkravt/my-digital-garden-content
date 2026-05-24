@@ -2,7 +2,7 @@
 chat_id: 1a5cd938-1018-460e-85ac-b5bc6b1b2359
 title: Правила BPMN для LLM
 message_count: 2
-exported_at: 2026-05-24T13:42:19.955Z
+exported_at: 2026-05-24T19:21:19.090Z
 ---
 
 # Правила BPMN для LLM

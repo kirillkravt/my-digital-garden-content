@@ -2,7 +2,7 @@
 chat_id: dc83d116-50cc-41d6-a73b-4806f8c7e3a0
 title: Audit of Data Sources and Django Blog
 message_count: 142
-exported_at: 2026-05-24T13:44:56.766Z
+exported_at: 2026-05-24T19:23:56.225Z
 ---
 
 # Audit of Data Sources and Django Blog

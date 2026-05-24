@@ -2,7 +2,7 @@
 chat_id: efcb201c-e162-4554-99a0-70fdbd9632ae
 title: Gap-анализ внедрения СБП платежей
 message_count: 4
-exported_at: 2026-05-24T13:55:58.690Z
+exported_at: 2026-05-24T19:34:58.087Z
 ---
 
 # Gap-анализ внедрения СБП платежей

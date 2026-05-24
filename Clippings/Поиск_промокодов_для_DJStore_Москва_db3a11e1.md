@@ -2,7 +2,7 @@
 chat_id: db3a11e1-1cf1-4362-a83b-aac310c3cbdb
 title: Поиск промокодов для DJStore Москва
 message_count: 8
-exported_at: 2026-05-24T13:55:43.411Z
+exported_at: 2026-05-24T19:34:42.801Z
 ---
 
 # Поиск промокодов для DJStore Москва

@@ -2,7 +2,7 @@
 chat_id: 975cd06e-7006-4046-ae68-f3c4257a4a33
 title: Аудит и унификация UI Kymatics
 message_count: 330
-exported_at: 2026-05-24T13:42:22.997Z
+exported_at: 2026-05-24T19:21:22.147Z
 ---
 
 # Аудит и унификация UI Kymatics

@@ -2,7 +2,7 @@
 chat_id: fa474ab5-0cce-448a-9fdd-64e3d91e9d95
 title: Видение AI студии процессов
 message_count: 20
-exported_at: 2026-05-24T13:42:47.676Z
+exported_at: 2026-05-24T19:21:46.839Z
 ---
 
 # Видение AI студии процессов

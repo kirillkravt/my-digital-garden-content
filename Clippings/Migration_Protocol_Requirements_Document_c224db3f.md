@@ -2,7 +2,7 @@
 chat_id: c224db3f-0e8c-41c4-9413-f7a71e1dc9cf
 title: Migration Protocol Requirements Document
 message_count: 10
-exported_at: 2026-05-24T13:43:39.942Z
+exported_at: 2026-05-24T19:22:39.215Z
 ---
 
 # Migration Protocol Requirements Document

@@ -2,7 +2,7 @@
 chat_id: 818d96fb-a6b2-44c6-990d-ddea484c66ef
 title: Stabilizing Code Indexing Error
 message_count: 226
-exported_at: 2026-05-24T13:44:13.727Z
+exported_at: 2026-05-24T19:23:13.070Z
 ---
 
 # Stabilizing Code Indexing Error

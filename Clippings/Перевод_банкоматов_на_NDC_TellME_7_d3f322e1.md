@@ -2,7 +2,7 @@
 chat_id: d3f322e1-e905-46ac-8543-0bdbbeecf1bc
 title: Перевод банкоматов на NDC TellME 7
 message_count: 6
-exported_at: 2026-05-24T13:53:50.346Z
+exported_at: 2026-05-24T19:32:49.760Z
 ---
 
 # Перевод банкоматов на NDC TellME 7

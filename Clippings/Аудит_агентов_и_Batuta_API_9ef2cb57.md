@@ -2,7 +2,7 @@
 chat_id: 9ef2cb57-2067-4b3c-9e1f-7e70abfdb3be
 title: Аудит агентов и Batuta API
 message_count: 350
-exported_at: 2026-05-24T13:45:05.966Z
+exported_at: 2026-05-24T19:24:05.449Z
 ---
 
 # Аудит агентов и Batuta API

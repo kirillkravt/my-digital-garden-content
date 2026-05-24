@@ -2,7 +2,7 @@
 chat_id: e02c7556-0b09-433d-bb66-4766fd0ed7b4
 title: Создание Strudel бандла для UCH
 message_count: 66
-exported_at: 2026-05-24T13:51:20.156Z
+exported_at: 2026-05-24T19:30:19.647Z
 ---
 
 # Создание Strudel бандла для UCH

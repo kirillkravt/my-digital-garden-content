@@ -2,7 +2,7 @@
 chat_id: b9e9b4cd-36c7-45a5-85b4-44bc9af8efac
 title: Значение термина "креды" в API
 message_count: 2
-exported_at: 2026-05-24T13:55:00.634Z
+exported_at: 2026-05-24T19:34:00.021Z
 ---
 
 # Значение термина "креды" в API

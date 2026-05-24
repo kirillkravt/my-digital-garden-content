@@ -2,7 +2,7 @@
 chat_id: 4f1cb71a-6277-485f-ad0a-a4c349a2f39b
 title: Восстановление Clipping пайплайна
 message_count: 376
-exported_at: 2026-05-24T13:42:59.965Z
+exported_at: 2026-05-24T19:21:59.171Z
 ---
 
 # Восстановление Clipping пайплайна

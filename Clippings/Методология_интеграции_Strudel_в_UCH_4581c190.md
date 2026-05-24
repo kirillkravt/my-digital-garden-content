@@ -2,7 +2,7 @@
 chat_id: 4581c190-e58f-4fde-b981-22d7d9ca9abd
 title: Методология интеграции Strudel в UCH
 message_count: 6
-exported_at: 2026-05-24T13:50:55.642Z
+exported_at: 2026-05-24T19:29:55.142Z
 ---
 
 # Методология интеграции Strudel в UCH

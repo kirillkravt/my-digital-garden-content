@@ -2,7 +2,7 @@
 chat_id: eff71324-eb10-4c18-ad4d-820fe144caca
 title: GitHub Webhook Integration Design
 message_count: 170
-exported_at: 2026-05-24T13:47:48.660Z
+exported_at: 2026-05-24T19:26:48.222Z
 ---
 
 # GitHub Webhook Integration Design

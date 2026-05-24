@@ -2,7 +2,7 @@
 chat_id: 0a28483c-c576-478a-94f6-61134c1c5ada
 title: Запуск этапа разработки Kymatics
 message_count: 186
-exported_at: 2026-05-24T13:41:33.733Z
+exported_at: 2026-05-24T19:20:32.879Z
 ---
 
 # Запуск этапа разработки Kymatics

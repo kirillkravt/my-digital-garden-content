@@ -2,7 +2,7 @@
 chat_id: 6583eabc-8721-4369-8fee-73b636efde56
 title: AI-native архитектура проектирование мультиагентных систем 2025||AI-native architecture design principles multi-agent system 2025||мультиагентная система оркестратор агентов архитектура паттерны||multi-agent orchestration framework architecture patterns 2025||human in the loop
 message_count: 55
-exported_at: 2026-05-24T13:43:33.827Z
+exported_at: 2026-05-24T19:22:33.084Z
 ---
 
 # AI-native архитектура проектирование мультиагентных систем 2025||AI-native architecture design principles multi-agent system 2025||мультиагентная система оркестратор агентов архитектура паттерны||multi-agent orchestration framework architecture patterns 2025||human in the loop

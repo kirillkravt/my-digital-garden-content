@@ -2,7 +2,7 @@
 chat_id: bb22d962-7f53-4006-83fe-f933f1b3fa0b
 title: DeepSeek 20 Progress and Development Plan
 message_count: 14
-exported_at: 2026-05-24T13:51:38.541Z
+exported_at: 2026-05-24T19:30:38.039Z
 ---
 
 # DeepSeek 20 Progress and Development Plan

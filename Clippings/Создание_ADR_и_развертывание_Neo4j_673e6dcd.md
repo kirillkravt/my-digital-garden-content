@@ -2,7 +2,7 @@
 chat_id: 673e6dcd-2f25-490d-bd4a-a6fa6148a39e
 title: Создание ADR и развертывание Neo4j
 message_count: 130
-exported_at: 2026-05-24T13:46:56.518Z
+exported_at: 2026-05-24T19:25:56.055Z
 ---
 
 # Создание ADR и развертывание Neo4j

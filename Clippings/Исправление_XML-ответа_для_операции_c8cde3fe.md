@@ -2,7 +2,7 @@
 chat_id: c8cde3fe-f9b7-4192-b8ab-9c66f5ad868a
 title: Исправление XML-ответа для операции
 message_count: 16
-exported_at: 2026-05-24T13:54:36.171Z
+exported_at: 2026-05-24T19:33:35.573Z
 ---
 
 # Исправление XML-ответа для операции

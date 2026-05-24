@@ -2,7 +2,7 @@
 chat_id: 324ea03d-4329-4865-8498-5787c36a3488
 title: Исследование интеграции Strudel в UCH
 message_count: 32
-exported_at: 2026-05-24T13:50:49.501Z
+exported_at: 2026-05-24T19:29:48.996Z
 ---
 
 # Исследование интеграции Strudel в UCH

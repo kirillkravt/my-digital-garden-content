@@ -2,7 +2,7 @@
 chat_id: c1cea2e2-b7d4-4aed-943a-65485d595c65
 title: Миграция и исправление документации UCH-DOCS
 message_count: 2
-exported_at: 2026-05-24T13:50:03.527Z
+exported_at: 2026-05-24T19:29:03.016Z
 ---
 
 # Миграция и исправление документации UCH-DOCS

@@ -2,7 +2,7 @@
 chat_id: 65c5c163-7e58-42f5-8729-e2f2f952c6c9
 title: Системы нумерации в Jira и Confluence
 message_count: 64
-exported_at: 2026-05-24T13:48:56.097Z
+exported_at: 2026-05-24T19:27:55.621Z
 ---
 
 # Системы нумерации в Jira и Confluence

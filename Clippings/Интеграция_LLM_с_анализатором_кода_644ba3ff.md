@@ -2,7 +2,7 @@
 chat_id: 644ba3ff-4c68-4abc-8078-7fe030bbb5ae
 title: Интеграция LLM с анализатором кода
 message_count: 130
-exported_at: 2026-05-24T13:47:51.741Z
+exported_at: 2026-05-24T19:26:51.293Z
 ---
 
 # Интеграция LLM с анализатором кода

@@ -2,7 +2,7 @@
 chat_id: 42a31837-c0c5-42b8-b642-affe04f1bbd6
 title: Анализ и решение проблем Strudel
 message_count: 66
-exported_at: 2026-05-24T13:52:06.135Z
+exported_at: 2026-05-24T19:31:05.632Z
 ---
 
 # Анализ и решение проблем Strudel

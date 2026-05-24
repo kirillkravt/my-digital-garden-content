@@ -2,7 +2,7 @@
 chat_id: d48f3a66-5ff5-4ff5-8569-3795a59c82f8
 title: Разработка интеграции Strudel в проект
 message_count: 86
-exported_at: 2026-05-24T13:51:56.917Z
+exported_at: 2026-05-24T19:30:56.422Z
 ---
 
 # Разработка интеграции Strudel в проект

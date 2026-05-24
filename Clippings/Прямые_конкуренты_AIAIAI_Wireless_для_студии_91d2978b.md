@@ -2,7 +2,7 @@
 chat_id: 91d2978b-27e2-48d7-913e-4caeee54d926
 title: Прямые конкуренты AIAIAI Wireless для студии
 message_count: 2
-exported_at: 2026-05-24T13:56:10.924Z
+exported_at: 2026-05-24T19:35:10.304Z
 ---
 
 # Прямые конкуренты AIAIAI Wireless для студии

@@ -2,7 +2,7 @@
 chat_id: 4d09b25b-a262-4f06-9d46-90b085ac12c7
 title: Генерация классов в Coder Agent
 message_count: 124
-exported_at: 2026-05-24T13:43:21.508Z
+exported_at: 2026-05-24T19:22:20.712Z
 ---
 
 # Генерация классов в Coder Agent

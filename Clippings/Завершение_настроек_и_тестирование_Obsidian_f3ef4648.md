@@ -2,7 +2,7 @@
 chat_id: f3ef4648-bba8-4061-af40-75f352ad50a4
 title: Завершение настроек и тестирование Obsidian
 message_count: 22
-exported_at: 2026-05-24T13:52:42.948Z
+exported_at: 2026-05-24T19:31:42.415Z
 ---
 
 # Завершение настроек и тестирование Obsidian

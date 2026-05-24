@@ -2,7 +2,7 @@
 chat_id: 4d5e0bae-6d8f-4e46-b1b3-8239c76064ae
 title: Аудит и интеграция платформы Kymatics
 message_count: 318
-exported_at: 2026-05-24T13:42:38.387Z
+exported_at: 2026-05-24T19:21:37.552Z
 ---
 
 # Аудит и интеграция платформы Kymatics

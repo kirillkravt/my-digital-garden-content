@@ -2,7 +2,7 @@
 chat_id: ecd2764b-cbf5-494c-bec9-80857e8584c3
 title: Создание UI управления проектами Kymatics
 message_count: 112
-exported_at: 2026-05-24T13:42:35.305Z
+exported_at: 2026-05-24T19:21:34.469Z
 ---
 
 # Создание UI управления проектами Kymatics

@@ -2,7 +2,7 @@
 chat_id: 68fb475e-a0bb-4505-a23d-d1d1844a614c
 title: Мультиагентная BPMN интеграция
 message_count: 146
-exported_at: 2026-05-24T13:41:36.806Z
+exported_at: 2026-05-24T19:20:35.950Z
 ---
 
 # Мультиагентная BPMN интеграция

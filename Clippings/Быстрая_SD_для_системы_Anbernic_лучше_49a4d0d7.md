@@ -2,7 +2,7 @@
 chat_id: 49a4d0d7-f352-479c-a616-11f1ab6ff7db
 title: Быстрая SD для системы Anbernic лучше
 message_count: 4
-exported_at: 2026-05-24T13:54:08.660Z
+exported_at: 2026-05-24T19:33:08.095Z
 ---
 
 # Быстрая SD для системы Anbernic лучше

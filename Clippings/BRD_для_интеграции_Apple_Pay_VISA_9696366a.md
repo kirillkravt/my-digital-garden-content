@@ -2,7 +2,7 @@
 chat_id: 9696366a-5ebb-4857-82a3-55cc60ddad9d
 title: BRD для интеграции Apple Pay VISA
 message_count: 2
-exported_at: 2026-05-24T13:48:28.531Z
+exported_at: 2026-05-24T19:27:28.065Z
 ---
 
 # BRD для интеграции Apple Pay VISA

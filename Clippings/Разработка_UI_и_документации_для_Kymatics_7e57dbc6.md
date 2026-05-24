@@ -2,7 +2,7 @@
 chat_id: 7e57dbc6-5f7c-44f3-b990-fb173bae4d6d
 title: Разработка UI и документации для Kymatics
 message_count: 210
-exported_at: 2026-05-24T13:43:18.431Z
+exported_at: 2026-05-24T19:22:17.634Z
 ---
 
 # Разработка UI и документации для Kymatics

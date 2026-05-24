@@ -2,7 +2,7 @@
 chat_id: 102a9adf-1bcd-4cfc-aa69-c432bd24de7d
 title: Требования к интеграции Hashicorp Vault
 message_count: 26
-exported_at: 2026-05-24T13:55:31.192Z
+exported_at: 2026-05-24T19:34:30.571Z
 ---
 
 # Требования к интеграции Hashicorp Vault

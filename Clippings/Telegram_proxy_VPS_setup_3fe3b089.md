@@ -2,7 +2,7 @@
 chat_id: 3fe3b089-9bc9-4b8f-ac6d-77c58e5a3223
 title: Telegram proxy VPS setup
 message_count: 26
-exported_at: 2026-05-24T13:44:44.464Z
+exported_at: 2026-05-24T19:23:43.901Z
 ---
 
 # Telegram proxy VPS setup

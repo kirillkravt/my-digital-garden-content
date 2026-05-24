@@ -2,7 +2,7 @@
 chat_id: 6ec7359a-7c85-4dfc-b805-a67cc85478d4
 title: Аудит архитектуры проекта UCH
 message_count: 146
-exported_at: 2026-05-24T13:43:49.145Z
+exported_at: 2026-05-24T19:22:48.433Z
 ---
 
 # Аудит архитектуры проекта UCH

@@ -2,7 +2,7 @@
 chat_id: a0cf72c5-22a5-4d90-bba3-f17c07063cdc
 title: Стабилизация Coder Agent и UI
 message_count: 238
-exported_at: 2026-05-24T13:43:24.578Z
+exported_at: 2026-05-24T19:22:23.791Z
 ---
 
 # Стабилизация Coder Agent и UI

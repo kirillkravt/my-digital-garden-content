@@ -2,7 +2,7 @@
 chat_id: 5bac0eaf-808f-426c-95ab-bcb76e3d503b
 title: Проблема с громкостью наушников FIIO на MacBook
 message_count: 4
-exported_at: 2026-05-24T13:53:53.398Z
+exported_at: 2026-05-24T19:32:52.817Z
 ---
 
 # Проблема с громкостью наушников FIIO на MacBook

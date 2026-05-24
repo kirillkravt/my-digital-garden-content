@@ -2,7 +2,7 @@
 chat_id: a190d52b-d951-4976-a1ea-a2a61cd2f92b
 title: Рефакторинг терминала Kymatics
 message_count: 238
-exported_at: 2026-05-24T13:41:46.053Z
+exported_at: 2026-05-24T19:20:45.205Z
 ---
 
 # Рефакторинг терминала Kymatics

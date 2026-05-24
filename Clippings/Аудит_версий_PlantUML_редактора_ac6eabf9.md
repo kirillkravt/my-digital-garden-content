@@ -2,7 +2,7 @@
 chat_id: ac6eabf9-0838-402a-9549-f729950e4a76
 title: Аудит версий PlantUML редактора
 message_count: 192
-exported_at: 2026-05-24T13:45:45.823Z
+exported_at: 2026-05-24T19:24:45.344Z
 ---
 
 # Аудит версий PlantUML редактора

@@ -2,7 +2,7 @@
 chat_id: 40ca2a00-11b7-4411-bfb9-8232ba5f5d36
 title: Откат к рабочему состоянию Strudel
 message_count: 72
-exported_at: 2026-05-24T13:51:47.732Z
+exported_at: 2026-05-24T19:30:47.229Z
 ---
 
 # Откат к рабочему состоянию Strudel

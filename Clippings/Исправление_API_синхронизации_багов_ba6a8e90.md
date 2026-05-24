@@ -2,7 +2,7 @@
 chat_id: ba6a8e90-d071-46b9-a26f-a32afd0fd23d
 title: Исправление API синхронизации багов
 message_count: 330
-exported_at: 2026-05-24T13:41:52.214Z
+exported_at: 2026-05-24T19:20:51.364Z
 ---
 
 # Исправление API синхронизации багов

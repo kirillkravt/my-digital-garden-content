@@ -2,7 +2,7 @@
 chat_id: 66e001c1-e5e1-4290-8493-f44de6766ee5
 title: Аудит проекта Kymatics этап 48
 message_count: 390
-exported_at: 2026-05-24T13:43:27.659Z
+exported_at: 2026-05-24T19:22:26.879Z
 ---
 
 # Аудит проекта Kymatics этап 48

@@ -2,7 +2,7 @@
 chat_id: 06b6e521-7532-43ac-9d49-3782559f607d
 title: Исследование архитектуры Strudel для интеграции MIDI
 message_count: 72
-exported_at: 2026-05-24T13:51:23.214Z
+exported_at: 2026-05-24T19:30:22.714Z
 ---
 
 # Исследование архитектуры Strudel для интеграции MIDI

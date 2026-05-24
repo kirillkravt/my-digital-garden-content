@@ -2,7 +2,7 @@
 chat_id: 2ae39a76-ade7-4e75-b331-02b4b766f7c7
 title: Создание агента Batuta в проекте UCH
 message_count: 150
-exported_at: 2026-05-24T13:46:38.116Z
+exported_at: 2026-05-24T19:25:37.621Z
 ---
 
 # Создание агента Batuta в проекте UCH

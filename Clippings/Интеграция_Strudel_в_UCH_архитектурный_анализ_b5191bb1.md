@@ -2,7 +2,7 @@
 chat_id: b5191bb1-ed56-4a85-a295-f5ebbcd8931d
 title: Интеграция Strudel в UCH: архитектурный анализ
 message_count: 46
-exported_at: 2026-05-24T13:50:46.427Z
+exported_at: 2026-05-24T19:29:45.928Z
 ---
 
 # Интеграция Strudel в UCH: архитектурный анализ

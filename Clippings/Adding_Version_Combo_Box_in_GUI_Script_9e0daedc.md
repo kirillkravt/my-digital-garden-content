@@ -2,7 +2,7 @@
 chat_id: 9e0daedc-bea4-425d-8412-9bb13df75f38
 title: Adding Version Combo Box in GUI Script
 message_count: 46
-exported_at: 2026-05-24T13:49:17.524Z
+exported_at: 2026-05-24T19:28:17.037Z
 ---
 
 # Adding Version Combo Box in GUI Script

@@ -2,7 +2,7 @@
 chat_id: b98b59c7-2b30-4bc7-b271-ed9b1d31875c
 title: fsd расшифруй и переведи
 message_count: 6
-exported_at: 2026-05-24T13:55:25.089Z
+exported_at: 2026-05-24T19:34:24.460Z
 ---
 
 # fsd расшифруй и переведи

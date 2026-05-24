@@ -2,7 +2,7 @@
 chat_id: dabd15b0-788b-4dfa-9f21-fb01c7be66b1
 title: Принципы работы LLM и локальный запуск
 message_count: 98
-exported_at: 2026-05-24T13:48:10.144Z
+exported_at: 2026-05-24T19:27:09.687Z
 ---
 
 # Принципы работы LLM и локальный запуск

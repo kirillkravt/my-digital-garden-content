@@ -2,7 +2,7 @@
 chat_id: 2b51b0a4-ca54-47cf-a9c3-a45743e109d3
 title: Решение проблемы боковой панели в Django
 message_count: 14
-exported_at: 2026-05-24T13:53:10.563Z
+exported_at: 2026-05-24T19:32:09.965Z
 ---
 
 # Решение проблемы боковой панели в Django

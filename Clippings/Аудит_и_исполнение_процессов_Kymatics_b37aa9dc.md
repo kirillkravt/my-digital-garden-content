@@ -2,7 +2,7 @@
 chat_id: b37aa9dc-85e7-433a-aec7-d1f8a03ad812
 title: Аудит и исполнение процессов Kymatics
 message_count: 302
-exported_at: 2026-05-24T13:42:29.136Z
+exported_at: 2026-05-24T19:21:28.279Z
 ---
 
 # Аудит и исполнение процессов Kymatics

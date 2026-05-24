@@ -2,7 +2,7 @@
 chat_id: 733db1b0-a0e2-4245-8568-ff0d842249dc
 title: Бюджетный сет на Octatrack и Faderfox
 message_count: 2
-exported_at: 2026-05-24T13:55:52.584Z
+exported_at: 2026-05-24T19:34:51.976Z
 ---
 
 # Бюджетный сет на Octatrack и Faderfox

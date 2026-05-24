@@ -2,7 +2,7 @@
 chat_id: 912ca1e4-8b02-4d1e-a751-23f76cc9eb49
 title: Аудит PlantUML рендера
 message_count: 262
-exported_at: 2026-05-24T13:45:33.525Z
+exported_at: 2026-05-24T19:24:33.036Z
 ---
 
 # Аудит PlantUML рендера

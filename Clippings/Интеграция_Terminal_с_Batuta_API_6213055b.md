@@ -2,7 +2,7 @@
 chat_id: 6213055b-9807-4dc3-b644-1b8f1090c4f2
 title: Интеграция Terminal с Batuta API
 message_count: 590
-exported_at: 2026-05-24T13:43:12.287Z
+exported_at: 2026-05-24T19:22:11.485Z
 ---
 
 # Интеграция Terminal с Batuta API

@@ -2,7 +2,7 @@
 chat_id: 1acdcc9a-ea63-49e0-b5b1-c90e3cfc803c
 title: Требования к идемпотентности POST и PUT
 message_count: 12
-exported_at: 2026-05-24T13:45:27.410Z
+exported_at: 2026-05-24T19:24:26.920Z
 ---
 
 # Требования к идемпотентности POST и PUT

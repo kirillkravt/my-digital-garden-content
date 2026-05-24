@@ -2,7 +2,7 @@
 chat_id: 917fd302-c992-4ee8-b3aa-cd2bfe62507e
 title: OpenCode Windows macOS Alternatives
 message_count: 14
-exported_at: 2026-05-24T13:47:39.465Z
+exported_at: 2026-05-24T19:26:39.015Z
 ---
 
 # OpenCode Windows macOS Alternatives

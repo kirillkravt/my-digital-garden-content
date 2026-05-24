@@ -2,7 +2,7 @@
 chat_id: 86f46192-e0f0-4032-b0f7-04bcce61441f
 title: Интеграция Vite с Django: решение проблем
 message_count: 64
-exported_at: 2026-05-24T13:52:27.619Z
+exported_at: 2026-05-24T19:31:27.082Z
 ---
 
 # Интеграция Vite с Django: решение проблем
