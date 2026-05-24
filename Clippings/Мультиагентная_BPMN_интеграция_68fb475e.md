@@ -2,7 +2,7 @@
 chat_id: 68fb475e-a0bb-4505-a23d-d1d1844a614c
 title: Мультиагентная BPMN интеграция
 message_count: 146
-exported_at: 2026-05-24T20:04:42.405Z
+exported_at: 2026-05-24T20:11:05.934Z
 ---
 
 # Мультиагентная BPMN интеграция
@@ -6668,10 +6668,7 @@ ls -la /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/batuta/api_m
   -H "Content-Type: application/json" \
   -d '{"project_id": "test", "memory": "test memory", "metadata": {}}'
 {"detail":"Chroma is running in http-only client mode, and can only be run with 'chromadb.api.fastapi.FastAPI' or 'chromadb.api.async_fastapi.AsyncFastAPI' as the chroma_api_impl.             see https://docs.trychroma.com/guides#using-the-python-http-only-client for more information."}%                    
-(.venv) kirillkravcov@Mac batuta % 
-
-
-
+(.venv) kirillkravcov@Mac batuta %
 
 ---
 

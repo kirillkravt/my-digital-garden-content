@@ -1,11 +1,503 @@
 ---
 chat_id: 0a28483c-c576-478a-94f6-61134c1c5ada
 title: Запуск этапа разработки Kymatics
-message_count: 190
-exported_at: 2026-05-24T20:04:37.308Z
+message_count: 194
+exported_at: 2026-05-24T20:11:00.833Z
 ---
 
 # Запуск этапа разработки Kymatics
+
+## 👤 **Kirill**
+
+Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу проблему. В сохраненном файле порядок сообщений **нарушен** — системный промпт (который должен быть самым первым) оказался **в конце** файла, а первое сообщение от пользователя `"все заработало..."` стоит на первом месте.
+
+## Причина
+
+В скрипте `formatChat()` сообщения сортируются по мере их поступления из IndexedDB, но:
+1. **Системный промпт** (role = 'SYSTEM') — не обрабатывается отдельно, он может иметь более поздний timestamp
+2. **Порядок сообщений** в IndexedDB может быть не хронологическим (особенно если чат подгружался частями)
+
+## Решение — добавить сортировку по времени
+
+В функции `formatChat()` нужно **сортировать сообщения по timestamp** перед форматированием:
+
+```javascript
+// Добавь эту функцию в скрипт
+function sortMessagesByTime(messages) {
+    return messages.sort((a, b) => {
+        const timeA = a.created_at || a.timestamp || 0;
+        const timeB = b.created_at || b.timestamp || 0;
+        return timeA - timeB;
+    });
+}
+
+// В formatChat() перед циклом добавь:
+messages = sortMessagesByTime(messages);
+```
+
+---
+
+## Обновленная функция `formatChat()`
+
+```javascript
+function formatChat(chatId, title, messages) {
+    // СОРТИРУЕМ ПО ВРЕМЕНИ
+    const sortedMessages = [...messages].sort((a, b) => {
+        const timeA = a.created_at || a.timestamp || 0;
+        const timeB = b.created_at || b.timestamp || 0;
+        return timeA - timeB;
+    });
+    
+    let content = `---\n`;
+    content += `chat_id: ${chatId}\n`;
+    content += `title: ${title}\n`;
+    content += `message_count: ${sortedMessages.length}\n`;
+    content += `exported_at: ${new Date().toISOString()}\n`;
+    content += `---\n\n`;
+    content += `# ${title}\n\n`;
+
+    for (const msg of sortedMessages) {
+        let role = '';
+        if (msg.role === 'SYSTEM') role = '⚙️ **System**';
+        else if (msg.role === 'USER') role = '👤 **Kirill**';
+        else role = '🤖 **DeepSeek**';
+        
+        const text = getMessageText(msg);
+        if (text) {
+            content += `## ${role}\n\n${text}\n\n---\n\n`;
+        }
+    }
+    return content;
+}
+```
+
+---
+
+## Также нужно добавить поле `created_at` при сохранении
+
+В функции `saveToAPI`, перед отправкой, убедись, что у каждого сообщения есть `created_at`:
+
+```javascript
+// Если в сообщении нет created_at, используем timestamp из metadata или текущее время
+messages.forEach(msg => {
+    if (!msg.created_at && msg.timestamp) {
+        msg.created_at = msg.timestamp;
+    } else if (!msg.created_at) {
+        msg.created_at = Date.now();
+    }
+});
+```
+
+---
+
+## Полный исправленный фрагмент
+
+Вставь это в свой скрипт (замени существующие функции `formatChat` и добавь `sortMessagesByTime`):
+
+```javascript
+function sortMessagesByTime(messages) {
+    return [...messages].sort((a, b) => {
+        const timeA = a.created_at || a.timestamp || 0;
+        const timeB = b.created_at || b.timestamp || 0;
+        return timeA - timeB;
+    });
+}
+
+function formatChat(chatId, title, messages) {
+    const sortedMessages = sortMessagesByTime(messages);
+    
+    let content = `---\n`;
+    content += `chat_id: ${chatId}\n`;
+    content += `title: ${title}\n`;
+    content += `message_count: ${sortedMessages.length}\n`;
+    content += `exported_at: ${new Date().toISOString()}\n`;
+    content += `---\n\n`;
+    content += `# ${title}\n\n`;
+
+    for (const msg of sortedMessages) {
+        let role = '';
+        if (msg.role === 'SYSTEM') role = '⚙️ **System**';
+        else if (msg.role === 'USER') role = '👤 **Kirill**';
+        else role = '🤖 **DeepSeek**';
+        
+        const text = getMessageText(msg);
+        if (text) {
+            content += `## ${role}\n\n${text}\n\n---\n\n`;
+        }
+    }
+    return content;
+}
+```
+
+После этого пересохрани проблемные чаты — порядок должен стать правильным.
+
+---
+
+## 👤 **Kirill**
+
+Сделай полностью обновленный файл
+
+---
+
+## 🤖 **DeepSeek**
+
+Вот **полностью обновленный скрипт** v13.2 с исправленным порядком сообщений:
+
+```javascript
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v13.2 (Fixed Message Order)
+// @namespace    Violentmonkey Scripts
+// @version      13.2
+// @description  Save FULL DeepSeek chats - fixed chronological order, SYSTEM message first
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v13.2 (Fixed Message Order) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false,
+        delayBetweenChats: 2000,
+        maxLoadWaitMs: 15000,
+        stabilityChecks: 3
+    };
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Получить ВСЕ сообщения чата из IndexedDB
+    async function getChatMessagesFromIndexedDB(chatId) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.get(chatId);
+                getAll.onsuccess = () => {
+                    const record = getAll.result;
+                    db.close();
+                    if (record && record.data?.chat_messages) {
+                        resolve(record.data.chat_messages);
+                    } else {
+                        resolve([]);
+                    }
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // Извлечь текст из сообщения
+    function getMessageText(msg) {
+        if (msg.fragments && msg.fragments.length > 0) {
+            return msg.fragments.map(f => f.content || f.text || '').join('');
+        }
+        if (msg.content) return msg.content;
+        if (msg.text) return msg.text;
+        return '';
+    }
+
+    // Сортировка сообщений по времени (хронологический порядок)
+    function sortMessagesByTime(messages) {
+        return [...messages].sort((a, b) => {
+            const timeA = a.created_at || a.timestamp || a.update_time || 0;
+            const timeB = b.created_at || b.timestamp || b.update_time || 0;
+            
+            // Если оба времени 0, пытаемся определить порядок по ролям (SYSTEM должен быть первым)
+            if (timeA === 0 && timeB === 0) {
+                if (a.role === 'SYSTEM') return -1;
+                if (b.role === 'SYSTEM') return 1;
+            }
+            return timeA - timeB;
+        });
+    }
+
+    // Форматировать чат в Markdown (с правильным порядком)
+    function formatChat(chatId, title, messages) {
+        // Сортируем сообщения по времени
+        const sortedMessages = sortMessagesByTime(messages);
+        
+        let content = `---\n`;
+        content += `chat_id: ${chatId}\n`;
+        content += `title: ${title}\n`;
+        content += `message_count: ${sortedMessages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${title}\n\n`;
+
+        for (const msg of sortedMessages) {
+            let role = '';
+            if (msg.role === 'SYSTEM') {
+                role = '⚙️ **System**';
+            } else if (msg.role === 'USER') {
+                role = '👤 **Kirill**';
+            } else {
+                role = '🤖 **DeepSeek**';
+            }
+            
+            const text = getMessageText(msg);
+            if (text && text.trim()) {
+                content += `## ${role}\n\n${text.trim()}\n\n---\n\n`;
+            }
+        }
+        return content;
+    }
+
+    // Ожидание полной загрузки сообщений чата
+    async function waitForChatToLoad(chatId, timeoutMs = CONFIG.maxLoadWaitMs) {
+        console.log(`  ⏳ Ожидание загрузки сообщений чата...`);
+        
+        let lastCount = 0;
+        let stableChecks = 0;
+        const startTime = Date.now();
+        
+        while (Date.now() - startTime < timeoutMs) {
+            const messages = await getChatMessagesFromIndexedDB(chatId);
+            const currentCount = messages.length;
+            
+            if (currentCount > 0) {
+                if (currentCount === lastCount) {
+                    stableChecks++;
+                    console.log(`    📊 Стабильно: ${currentCount} сообщений (${stableChecks}/${CONFIG.stabilityChecks})`);
+                    
+                    if (stableChecks >= CONFIG.stabilityChecks) {
+                        console.log(`  ✅ Чат загружен: ${currentCount} сообщений`);
+                        return messages;
+                    }
+                } else {
+                    stableChecks = 0;
+                    console.log(`    📥 Загружено ${currentCount} сообщений...`);
+                }
+                lastCount = currentCount;
+            }
+            
+            await sleep(1000);
+        }
+        
+        const finalMessages = await getChatMessagesFromIndexedDB(chatId);
+        console.warn(`  ⚠️ Таймаут! Загружено ${finalMessages.length} сообщений`);
+        return finalMessages;
+    }
+
+    // Проверка целостности сообщений
+    function validateMessages(messages, chatTitle) {
+        if (!messages || messages.length === 0) {
+            console.warn(`  ⚠️ Нет сообщений для проверки`);
+            return false;
+        }
+        
+        // Проверяем наличие SYSTEM сообщения в начале
+        const hasSystemFirst = messages[0]?.role === 'SYSTEM';
+        if (!hasSystemFirst) {
+            console.warn(`  ⚠️ Первое сообщение не SYSTEM (${messages[0]?.role}). Порядок может быть нарушен.`);
+        }
+        
+        // Проверяем пустые сообщения
+        const emptyMessages = messages.filter(msg => !getMessageText(msg) || getMessageText(msg).trim() === '');
+        if (emptyMessages.length > 0) {
+            console.warn(`  ⚠️ Найдено ${emptyMessages.length} пустых сообщений`);
+        }
+        
+        const isValid = emptyMessages.length === 0;
+        console.log(`  ${isValid ? '✅' : '⚠️'} Валидация: ${messages.length} сообщений`);
+        return isValid;
+    }
+
+    // Отправить в Clipping API
+    async function saveToAPI(chatId, title, messages) {
+        let safeTitle = title || 'Untitled';
+        safeTitle = safeTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')
+            .replace(/[\s]+/g, '_')
+            .substring(0, 50);
+
+        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
+            const firstMsg = messages.find(m => m.role === 'USER');
+            if (firstMsg) {
+                let firstLine = getMessageText(firstMsg).split('\n')[0].substring(0, 40);
+                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
+            }
+        }
+
+        if (!safeTitle || safeTitle.length === 0) {
+            safeTitle = chatId.substring(0, 8);
+        }
+
+        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
+        const content = formatChat(chatId, title || safeTitle, messages);
+
+        console.log(`  📄 Файл: ${filename} (${messages.length} сообщений)`);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chatId,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    // Найти все чаты с прокруткой
+    async function findAllChatsWithScroll() {
+        const sidebar = document.querySelector('.ds-virtual-list');
+        if (!sidebar) {
+            console.log('❌ Боковая панель не найдена');
+            return [];
+        }
+
+        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
+
+        let lastCount = 0;
+        let scrolls = 0;
+
+        while (scrolls < 50) {
+            sidebar.scrollTop = sidebar.scrollHeight;
+            await sleep(1500);
+
+            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
+            if (chats.length === lastCount) break;
+            lastCount = chats.length;
+            scrolls++;
+            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
+        }
+
+        const allChats = [];
+        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
+            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
+            if (match) {
+                allChats.push({
+                    id: match[1],
+                    title: a.textContent?.trim() || 'Untitled'
+                });
+            }
+        });
+
+        console.log(`✅ Найдено ${allChats.length} чатов`);
+        return allChats;
+    }
+
+    // Сохранить все чаты
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        const chats = await findAllChatsWithScroll();
+        if (chats.length === 0) {
+            console.log('❌ Чаты не найдены');
+            CONFIG.isProcessing = false;
+            return;
+        }
+
+        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
+
+        let savedCount = 0;
+        let failedCount = 0;
+        let incompleteCount = 0;
+
+        for (let i = 0; i < chats.length; i++) {
+            const chat = chats[i];
+            console.log(`\n[${i+1}/${chats.length}] ${chat.title}`);
+
+            try {
+                const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
+                if (link) {
+                    link.click();
+                    
+                    const messages = await waitForChatToLoad(chat.id);
+                    
+                    if (messages.length > 0) {
+                        const isValid = validateMessages(messages, chat.title);
+                        
+                        if (!isValid) {
+                            incompleteCount++;
+                        }
+                        
+                        await saveToAPI(chat.id, chat.title, messages);
+                        savedCount++;
+                        console.log(`  ✅ Сохранен (${messages.length} сообщений)`);
+                    } else {
+                        console.log(`  ❌ Нет сообщений`);
+                        failedCount++;
+                    }
+                } else {
+                    console.log(`  ❌ Ссылка не найдена`);
+                    failedCount++;
+                }
+            } catch (err) {
+                console.error(`  ❌ Ошибка: ${err.message}`);
+                failedCount++;
+            }
+            
+            await sleep(CONFIG.delayBetweenChats);
+        }
+
+        console.log('\n' + '='.repeat(50));
+        console.log(`📊 ИТОГО: Сохранено: ${savedCount}, Неполных: ${incompleteCount}, Ошибок: ${failedCount}`);
+        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
+        CONFIG.isProcessing = false;
+    }
+
+    // Добавить кнопку
+    const btn = document.createElement('button');
+    btn.textContent = '📚 Save ALL Chats (v13.2 ORDER FIX)';
+    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);`;
+    btn.onclick = saveAllChats;
+    
+    setTimeout(() => {
+        if (document.body) {
+            document.body.appendChild(btn);
+        }
+    }, 2000);
+})();
+```
+
+## Что изменилось в v13.2:
+
+| Изменение | Описание |
+|-----------|----------|
+| **`sortMessagesByTime()`** | Новая функция — сортирует сообщения по `created_at`/`timestamp`/`update_time` |
+| **SYSTEM первым** | При отсутствии времени, SYSTEM сообщение ставится первым |
+| **Улучшенный `formatChat()`** | Использует сортировку перед форматированием |
+| **Валидация порядка** | Проверяет, что первое сообщение — SYSTEM |
+| **Логи** | Показывает количество сообщений в файле |
+
+## Установка:
+
+1. Скопируй весь код выше
+2. В Violentmonkey → Создать новый скрипт
+3. Вставить код
+4. Сохранить (Ctrl+S)
+5. Обновить страницу DeepSeek
+6. Нажать кнопку **"Save ALL Chats (v13.2 ORDER FIX)"**
+
+Теперь SYSTEM сообщение будет **первым** в каждом сохраненном файле, как в оригинальном чате.
+
+---
 
 ## 👤 **Kirill**
 
@@ -4434,9 +4926,7 @@ Content-Type: application/json
 Vary: Accept
 Content-Length: 251
 
-(.venv) kirillkravcov@Mac tactical-command-v3 % 
-
-
+(.venv) kirillkravcov@Mac tactical-command-v3 %
 
 ---
 
