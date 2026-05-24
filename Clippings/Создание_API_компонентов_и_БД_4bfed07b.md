@@ -2,7 +2,7 @@
 chat_id: 4bfed07b-f180-4c09-806a-a5728ebecbc5
 title: Создание API компонентов и БД
 message_count: 246
-exported_at: 2026-05-24T20:46:03.483Z
+exported_at: 2026-05-24T20:53:26.131Z
 ---
 
 # Создание API компонентов и БД

@@ -2,7 +2,7 @@
 chat_id: a027ba11-bd88-4e9d-9f04-698fc8521c15
 title: Аудит архитектуры Kymatics
 message_count: 276
-exported_at: 2026-05-24T20:45:42.989Z
+exported_at: 2026-05-24T20:52:57.665Z
 ---
 
 # Аудит архитектуры Kymatics

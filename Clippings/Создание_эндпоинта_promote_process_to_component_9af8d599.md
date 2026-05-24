@@ -2,7 +2,7 @@
 chat_id: 9af8d599-1a87-47db-a85f-59625ba72373
 title: Создание эндпоинта promote process to component
 message_count: 350
-exported_at: 2026-05-24T20:45:32.740Z
+exported_at: 2026-05-24T20:52:43.437Z
 ---
 
 # Создание эндпоинта promote process to component

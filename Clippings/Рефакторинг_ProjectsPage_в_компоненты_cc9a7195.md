@@ -2,7 +2,7 @@
 chat_id: cc9a7195-3d98-41eb-ba9e-3ecdc84c7391
 title: Рефакторинг ProjectsPage в компоненты
 message_count: 422
-exported_at: 2026-05-24T20:45:22.498Z
+exported_at: 2026-05-24T20:52:29.191Z
 ---
 
 # Рефакторинг ProjectsPage в компоненты
