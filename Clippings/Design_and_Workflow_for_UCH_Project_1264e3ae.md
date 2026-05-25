@@ -2,7 +2,7 @@
 chat_id: 1264e3ae-84c4-43f5-abf0-590aeb73277c
 title: Design and Workflow for UCH Project
 message_count: 322
-exported_at: 2026-05-25T09:49:25.894Z
+exported_at: 2026-05-25T09:56:30.784Z
 ---
 
 # Design and Workflow for UCH Project
@@ -18619,6 +18619,172 @@ yaml
 
 ---
 
+## 👤 **Kirill**
+
+Так прогресс есть! Теперь хронология сообщений работает, но чаты открываются и сохраняются в рандомном порядке. нет вообще никакой логики может открыться чат из 25-го года затем последний, потом чат месячной давности. В предыдущих версиях скриптов такого не было.
+Вот один из предыдущих скриптов с нормальным сохранением (по порядку):
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v11.0 (IndexedDB)
+// @namespace    Violentmonkey Scripts
+// @version      11.0
+// @description  Save FULL DeepSeek chats directly from IndexedDB (no scrolling)
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v11.0 (IndexedDB Full Export) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false
+    };
+
+    // Стили (как в v10.0, копируем)
+    const styles = `
+        .deepseek-btn { padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; margin: 5px; }
+        #deepseek-save-all-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .deepseek-progress { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 20px; border-radius: 16px; z-index: 10000; }
+    `;
+
+    async function getAllChatsFromIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.getAll();
+                getAll.onsuccess = () => {
+                    const records = getAll.result;
+                    const chats = [];
+                    for (const record of records) {
+                        const session = record.data?.chat_session;
+                        const messages = record.data?.chat_messages || [];
+                        if (session && messages.length > 0) {
+                            chats.push({
+                                id: session.id,
+                                title: session.title || 'Untitled',
+                                messages: messages,
+                                createdAt: session.created_at
+                            });
+                        }
+                    }
+                    db.close();
+                    resolve(chats);
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    function formatChatToMarkdown(chat) {
+        let content = `---\n`;
+        content += `chat_id: ${chat.id}\n`;
+        content += `title: ${chat.title}\n`;
+        content += `message_count: ${chat.messages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${chat.title}\n\n`;
+
+        for (let i = 0; i < chat.messages.length; i++) {
+            const msg = chat.messages[i];
+            const role = msg.role === 'user' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
+            content += `## ${role}\n\n`;
+            content += `${msg.content}\n\n`;
+            content += `---\n\n`;
+        }
+        return content;
+    }
+
+    async function saveChatToAPI(chat) {
+        const filename = `${chat.title.replace(/[^a-z0-9]/gi, '_')}_${chat.id.substring(0,8)}_v1.md`;
+        const content = formatChatToMarkdown(chat);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chat.id,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chat.id}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        addLog('🔄 Загрузка чатов из IndexedDB...', 'info');
+        const chats = await getAllChatsFromIndexedDB();
+        addLog(`📊 Найдено ${chats.length} чатов, ${chats.reduce((s,c)=>s+c.messages.length,0)} сообщений`, 'success');
+
+        for (let i = 0; i < chats.length; i++) {
+            try {
+                addLog(`💾 [${i+1}/${chats.length}] ${chats[i].title} (${chats[i].messages.length} сообщений)`, 'info');
+                await saveChatToAPI(chats[i]);
+                await new Promise(r => setTimeout(r, 500));
+            } catch(e) {
+                addLog(`❌ Ошибка: ${chats[i].title} - ${e.message}`, 'error');
+            }
+        }
+
+        addLog(`✅ Готово! Сохранено ${chats.length} чатов`, 'success');
+        CONFIG.isProcessing = false;
+    }
+
+    function addLog(message, type = 'info') {
+        console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
+        // Можно добавить UI лога как в v10.0
+    }
+
+    function createButton() {
+        const btn = document.createElement('button');
+        btn.id = 'deepseek-save-all-btn';
+        btn.className = 'deepseek-btn';
+        btn.innerHTML = '📚 Save ALL Chats (v11)';
+        btn.style.cssText = 'position: fixed; bottom: 100px; right: 25px; z-index: 9999;';
+        btn.addEventListener('click', saveAllChats);
+        document.body.appendChild(btn);
+
+        if (!document.querySelector('#deepseek-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.textContent = styles;
+            document.head.appendChild(styleEl);
+        }
+        addLog('✅ Скрипт v11.0 активирован!', 'success');
+    }
+
+    setTimeout(createButton, 2000);
+})();// ==UserScript==
+// @name        New script deepseek.com
+// @namespace   Violentmonkey Scripts
+// @match       https://chat.deepseek.com/a/chat/s/ae9e519a-f3ba-45d3-a9d7-1cfec51175ba*
+// @icon        https://fe-static.deepseek.com/chat/favicon.svg
+// @grant       none
+// @version     1.0
+// @author      -
+// @description 05.04.2026, 21:35:29
+// ==/UserScript==
+
+---
+
 ## 🤖 **DeepSeek**
 
 🏛️ **Хранитель архитектуры** — анализирую проблему.
@@ -18841,167 +19007,7 @@ async function getAllChatsFromIndexedDB() {
 
 ## 👤 **Kirill**
 
-Так прогресс есть! Теперь хронология сообщений работает, но чаты открываются и сохраняются в рандомном порядке. нет вообще никакой логики может открыться чат из 25-го года затем последний, потом чат месячной давности. В предыдущих версиях скриптов такого не было.
-Вот один из предыдущих скриптов с нормальным сохранением (по порядку):
-// ==UserScript==
-// @name         DeepSeek Chat Saver - UCH Integration v11.0 (IndexedDB)
-// @namespace    Violentmonkey Scripts
-// @version      11.0
-// @description  Save FULL DeepSeek chats directly from IndexedDB (no scrolling)
-// @author       Kirill
-// @match        https://chat.deepseek.com/*
-// @grant        GM_xmlhttpRequest
-// @run-at       document-end
-// ==/UserScript==
-
-(function() {
-    'use strict';
-
-    console.log('%c=== DeepSeek UCH Saver v11.0 (IndexedDB Full Export) ===', 'background: #00ff00; color: black; font-size: 14px;');
-
-    const CONFIG = {
-        apiUrl: 'http://localhost:8011/api/clippings/save',
-        isProcessing: false
-    };
-
-    // Стили (как в v10.0, копируем)
-    const styles = `
-        .deepseek-btn { padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; margin: 5px; }
-        #deepseek-save-all-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .deepseek-progress { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 20px; border-radius: 16px; z-index: 10000; }
-    `;
-
-    async function getAllChatsFromIndexedDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('deepseek-chat');
-            request.onsuccess = () => {
-                const db = request.result;
-                const tx = db.transaction(['history-message'], 'readonly');
-                const store = tx.objectStore('history-message');
-                const getAll = store.getAll();
-                getAll.onsuccess = () => {
-                    const records = getAll.result;
-                    const chats = [];
-                    for (const record of records) {
-                        const session = record.data?.chat_session;
-                        const messages = record.data?.chat_messages || [];
-                        if (session && messages.length > 0) {
-                            chats.push({
-                                id: session.id,
-                                title: session.title || 'Untitled',
-                                messages: messages,
-                                createdAt: session.created_at
-                            });
-                        }
-                    }
-                    db.close();
-                    resolve(chats);
-                };
-                getAll.onerror = () => reject(getAll.error);
-            };
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    function formatChatToMarkdown(chat) {
-        let content = `---\n`;
-        content += `chat_id: ${chat.id}\n`;
-        content += `title: ${chat.title}\n`;
-        content += `message_count: ${chat.messages.length}\n`;
-        content += `exported_at: ${new Date().toISOString()}\n`;
-        content += `---\n\n`;
-        content += `# ${chat.title}\n\n`;
-
-        for (let i = 0; i < chat.messages.length; i++) {
-            const msg = chat.messages[i];
-            const role = msg.role === 'user' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
-            content += `## ${role}\n\n`;
-            content += `${msg.content}\n\n`;
-            content += `---\n\n`;
-        }
-        return content;
-    }
-
-    async function saveChatToAPI(chat) {
-        const filename = `${chat.title.replace(/[^a-z0-9]/gi, '_')}_${chat.id.substring(0,8)}_v1.md`;
-        const content = formatChatToMarkdown(chat);
-
-        return new Promise((resolve, reject) => {
-            GM_xmlhttpRequest({
-                method: 'POST',
-                url: CONFIG.apiUrl,
-                headers: { 'Content-Type': 'application/json' },
-                data: JSON.stringify({
-                    filename: filename,
-                    content: content,
-                    chat_id: chat.id,
-                    version: 1,
-                    source_url: `https://chat.deepseek.com/a/chat/s/${chat.id}`
-                }),
-                onload: (response) => {
-                    if (response.status === 200) resolve(true);
-                    else reject(new Error(`HTTP ${response.status}`));
-                },
-                onerror: reject
-            });
-        });
-    }
-
-    async function saveAllChats() {
-        if (CONFIG.isProcessing) return;
-        CONFIG.isProcessing = true;
-
-        addLog('🔄 Загрузка чатов из IndexedDB...', 'info');
-        const chats = await getAllChatsFromIndexedDB();
-        addLog(`📊 Найдено ${chats.length} чатов, ${chats.reduce((s,c)=>s+c.messages.length,0)} сообщений`, 'success');
-
-        for (let i = 0; i < chats.length; i++) {
-            try {
-                addLog(`💾 [${i+1}/${chats.length}] ${chats[i].title} (${chats[i].messages.length} сообщений)`, 'info');
-                await saveChatToAPI(chats[i]);
-                await new Promise(r => setTimeout(r, 500));
-            } catch(e) {
-                addLog(`❌ Ошибка: ${chats[i].title} - ${e.message}`, 'error');
-            }
-        }
-
-        addLog(`✅ Готово! Сохранено ${chats.length} чатов`, 'success');
-        CONFIG.isProcessing = false;
-    }
-
-    function addLog(message, type = 'info') {
-        console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
-        // Можно добавить UI лога как в v10.0
-    }
-
-    function createButton() {
-        const btn = document.createElement('button');
-        btn.id = 'deepseek-save-all-btn';
-        btn.className = 'deepseek-btn';
-        btn.innerHTML = '📚 Save ALL Chats (v11)';
-        btn.style.cssText = 'position: fixed; bottom: 100px; right: 25px; z-index: 9999;';
-        btn.addEventListener('click', saveAllChats);
-        document.body.appendChild(btn);
-
-        if (!document.querySelector('#deepseek-styles')) {
-            const styleEl = document.createElement('style');
-            styleEl.textContent = styles;
-            document.head.appendChild(styleEl);
-        }
-        addLog('✅ Скрипт v11.0 активирован!', 'success');
-    }
-
-    setTimeout(createButton, 2000);
-})();// ==UserScript==
-// @name        New script deepseek.com
-// @namespace   Violentmonkey Scripts
-// @match       https://chat.deepseek.com/a/chat/s/ae9e519a-f3ba-45d3-a9d7-1cfec51175ba*
-// @icon        https://fe-static.deepseek.com/chat/favicon.svg
-// @grant       none
-// @version     1.0
-// @author      -
-// @description 05.04.2026, 21:35:29
-// ==/UserScript==
+1
 
 ---
 
@@ -19028,12 +19034,6 @@ async function getAllChatsFromIndexedDB() {
 | Интеграция на VPS через Docker | ✅ |
 
 **Бюджет этапа 32
-
----
-
-## 👤 **Kirill**
-
-1
 
 ---
 

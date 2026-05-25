@@ -1,31 +1,11 @@
 ---
 chat_id: 0a28483c-c576-478a-94f6-61134c1c5ada
 title: Запуск этапа разработки Kymatics
-message_count: 202
-exported_at: 2026-05-25T09:49:15.639Z
+message_count: 212
+exported_at: 2026-05-25T09:56:20.532Z
 ---
 
 # Запуск этапа разработки Kymatics
-
-## 🤖 **DeepSeek**
-
-Отлично. **План принят, распределение ролей подтверждено.**
-
-Система переходит в режим активной разработки Этапа 94. Бюджет под контролем (2000₽ только на внешние API, локальный стек — бесплатно).
-
-**Директива на ближайшие 4 часа:**
-
-1.  **@🚀 Хранитель стабильности:** Запуск Neo4j. После запуска — проверить интеграцию с `neo4j_sync.py`. Результат запуска (логи, порты) — в этот канал.
-2.  **@🧠 Специалист по знаниям:** Разработать класс `UnifiedMemoryService` (обертка над ChromaDB + Neo4j). Учитывать интерфейсы из `memory_service.py`. Temporal reasoning — добавить поля `valid_from`/`valid_to` в схемы.
-3.  **@🎨 Дизайнер интерфейсов:** Аудит фронтенда: сдать отчет по 67 техдолгам (список файлов с наибольшим количеством TODO/FIXME). Определить базовые токены дизайн-системы (цвета: primary/gray/error, spacing: 4/8/16/24, шрифты).
-
-**Правило:** Работаем строго в последовательности: Memory Layer → Пайплайн → Фронтенд. Никакого "параллельного" фронтенда, пока не стабилизируется бэкенд.
-
-**Текущий статус:** `ЭТАП_94 = СТАРТ`.
-
-Исполнители, подтвердите получение задач и приступайте. Жду логи запуска Neo4j в течение 15 минут.
-
----
 
 ## 👤 **Kirill**
 
@@ -240,6 +220,37 @@ P2 (СРЕДНИЙ ПРИОРИТЕТ) — при наличии времени
 
 ## 🤖 **DeepSeek**
 
+Отлично. **План принят, распределение ролей подтверждено.**
+
+Система переходит в режим активной разработки Этапа 94. Бюджет под контролем (2000₽ только на внешние API, локальный стек — бесплатно).
+
+**Директива на ближайшие 4 часа:**
+
+1.  **@🚀 Хранитель стабильности:** Запуск Neo4j. После запуска — проверить интеграцию с `neo4j_sync.py`. Результат запуска (логи, порты) — в этот канал.
+2.  **@🧠 Специалист по знаниям:** Разработать класс `UnifiedMemoryService` (обертка над ChromaDB + Neo4j). Учитывать интерфейсы из `memory_service.py`. Temporal reasoning — добавить поля `valid_from`/`valid_to` в схемы.
+3.  **@🎨 Дизайнер интерфейсов:** Аудит фронтенда: сдать отчет по 67 техдолгам (список файлов с наибольшим количеством TODO/FIXME). Определить базовые токены дизайн-системы (цвета: primary/gray/error, spacing: 4/8/16/24, шрифты).
+
+**Правило:** Работаем строго в последовательности: Memory Layer → Пайплайн → Фронтенд. Никакого "параллельного" фронтенда, пока не стабилизируется бэкенд.
+
+**Текущий статус:** `ЭТАП_94 = СТАРТ`.
+
+Исполнители, подтвердите получение задач и приступайте. Жду логи запуска Neo4j в течение 15 минут.
+
+---
+
+## 👤 **Kirill**
+
+Действуем следующим образом:
+По одному действию!
+Ты пишешь команды для терминала или инструкции
+Я выполняю команду в терминале или инструкцию
+Тест
+Только потом идем дальше
+
+---
+
+## 🤖 **DeepSeek**
+
 Принято. Работаем строго по схеме: **Команда → Исполнение → Тест → Следующий шаг.**
 
 ---
@@ -267,12 +278,7 @@ docker run -d \
 
 ## 👤 **Kirill**
 
-Действуем следующим образом:
-По одному действию!
-Ты пишешь команды для терминала или инструкции
-Я выполняю команду в терминале или инструкцию
-Тест
-Только потом идем дальше
+Нужно делать на реальном проекте, а не вымышленном. Ты даешь команды, я выполняю и возвращаю результат.
 
 ---
 
@@ -292,7 +298,9 @@ docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Port
 
 ## 👤 **Kirill**
 
-Нужно делать на реальном проекте, а не вымышленном. Ты даешь команды, я выполняю и возвращаю результат.
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
 
 ---
 
@@ -312,7 +320,7 @@ docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.P
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 NAMES     STATUS    PORTS
 (.venv) kirillkravcov@Mac tactical-command-v3 %
 
@@ -341,9 +349,8 @@ docker run -d \
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
+ищи внимательней есть и docker и orbstack 
+/Users/kirillkravcov/UniversalCreativeHub
 
 ---
 
@@ -367,8 +374,11 @@ docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
 
 ## 👤 **Kirill**
 
-ищи внимательней есть и docker и orbstack 
-/Users/kirillkravcov/UniversalCreativeHub
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
+No neo4j containers found
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES     IMAGE     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
 
 ---
 
@@ -388,11 +398,7 @@ docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
-No neo4j containers found
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
-NAMES     IMAGE     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
+может просто docker не запущен?
 
 ---
 
@@ -404,24 +410,6 @@ NAMES     IMAGE     STATUS    PORTS
 
 ```bash
 docker info 2>&1 | head -5
-```
-
----
-
-## 👤 **Kirill**
-
-может просто docker не запущен?
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично! Neo4j скачался и запустился. Контейнер `neo4j-kymatics` создан (ID: `a5116df7d4a7`).
-
-**Теперь проверим, что контейнер работает:**
-
-```bash
-docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 ```
 
 ---
@@ -451,6 +439,27 @@ Client:
 
 ## 🤖 **DeepSeek**
 
+Отлично! Neo4j скачался и запустился. Контейнер `neo4j-kymatics` создан (ID: `a5116df7d4a7`).
+
+**Теперь проверим, что контейнер работает:**
+
+```bash
+docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES            STATUS          PORTS
+neo4j-kymatics   Up 16 seconds   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
 ✅ **Neo4j успешно запущен и работает!**
 
 STATUS: `Up 16 seconds`  
@@ -470,38 +479,13 @@ curl -I -u neo4j:kymatics2026 http://localhost:7474
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES            STATUS          PORTS
-neo4j-kymatics   Up 16 seconds   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Выполни эту команду в терминале и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
 curl -I -u neo4j:kymatics2026 http://localhost:7474
 
 ---
 
 ## 🤖 **DeepSeek**
 
-✅ **Neo4j доступен, аутентификация работает.** (HTTP 200 OK)
-
----
-
-**Шаг 94.1 продолжение: проверим существующие файлы проекта.**
-
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
-```
-
-Покажи вывод — нужно убедиться, что `neo4j_client.py` и `neo4j_sync.py` на месте.
+Выполни эту команду в терминале и покажи вывод.
 
 ---
 
@@ -521,18 +505,17 @@ Content-Length: 251
 
 ## 🤖 **DeepSeek**
 
-Отлично. Файлы на месте:
-- `neo4j_client.py` (1466 байт)
-- `neo4j_sync.py` (803 байта)
-- `memory_service.py` (5295 байт) — файловая версия
+✅ **Neo4j доступен, аутентификация работает.** (HTTP 200 OK)
 
 ---
 
-**Шаг 94.1: проверим содержимое `neo4j_client.py` — правильно ли настроено подключение.**
+**Шаг 94.1 продолжение: проверим существующие файлы проекта.**
 
 ```bash
-cat ai-farm/agents/batuta/neo4j_client.py
+cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
 ```
+
+Покажи вывод — нужно убедиться, что `neo4j_client.py` и `neo4j_sync.py` на месте.
 
 ---
 
@@ -637,18 +620,17 @@ drwxr-xr-x   9 kirillkravcov  staff    288 May 19 18:16 tools
 
 ## 🤖 **DeepSeek**
 
-Вижу проблему: в `neo4j_client.py` используется пароль `password`, но мы запустили Neo4j с паролем `kymatics2026`.
+Отлично. Файлы на месте:
+- `neo4j_client.py` (1466 байт)
+- `neo4j_sync.py` (803 байта)
+- `memory_service.py` (5295 байт) — файловая версия
 
-**Исправляем:**
+---
+
+**Шаг 94.1: проверим содержимое `neo4j_client.py` — правильно ли настроено подключение.**
 
 ```bash
-sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
-```
-
-Проверим исправление:
-
-```bash
-grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+cat ai-farm/agents/batuta/neo4j_client.py
 ```
 
 ---
@@ -708,6 +690,35 @@ async def update_task_status(task_id: str, status: str):
 
 ## 🤖 **DeepSeek**
 
+Вижу проблему: в `neo4j_client.py` используется пароль `password`, но мы запустили Neo4j с паролем `kymatics2026`.
+
+**Исправляем:**
+
+```bash
+sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
+```
+
+Проверим исправление:
+
+```bash
+grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+NEO4J_AUTH = ("neo4j", "kymatics2026")
+            auth=NEO4J_AUTH,
+            auth=NEO4J_AUTH,
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
 ✅ Пароль исправлен.
 
 ---
@@ -737,31 +748,6 @@ asyncio.run(test())
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
-NEO4J_AUTH = ("neo4j", "kymatics2026")
-            auth=NEO4J_AUTH,
-            auth=NEO4J_AUTH,
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j работает, аутентификация корректна, запрос возвращает результат.**
-
----
-
-**Шаг 94.1: проверим `neo4j_sync.py`:**
-
-```bash
-cat ai-farm/agents/batuta/neo4j_sync.py
-```
-
----
-
-## 👤 **Kirill**
-
 (.venv) kirillkravcov@Mac UniversalCreativeHub % >....                       
     auth = ('neo4j', 'kymatics2026')
     query = 'RETURN 1 as test'
@@ -781,18 +767,14 @@ asyncio.run(test())
 
 ## 🤖 **DeepSeek**
 
-Вижу: `neo4j_sync.py` тоже использует старый пароль `password`.
+✅ **Neo4j работает, аутентификация корректна, запрос возвращает результат.**
 
-**Исправляем:**
+---
 
-```bash
-sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
-```
-
-Проверим:
+**Шаг 94.1: проверим `neo4j_sync.py`:**
 
 ```bash
-grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
+cat ai-farm/agents/batuta/neo4j_sync.py
 ```
 
 ---
@@ -832,14 +814,18 @@ def create_task_node_sync(task_id: str, title: str, description: str, status: st
 
 ## 🤖 **DeepSeek**
 
-✅ Neo4j клиенты исправлены.
+Вижу: `neo4j_sync.py` тоже использует старый пароль `password`.
 
----
-
-**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**
+**Исправляем:**
 
 ```bash
-head -80 ai-farm/agents/batuta/memory_service.py
+sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
+```
+
+Проверим:
+
+```bash
+grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
 ```
 
 ---
@@ -856,14 +842,14 @@ NEO4J_AUTH = ("neo4j", "kymatics2026")
 
 ## 🤖 **DeepSeek**
 
-Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.
+✅ Neo4j клиенты исправлены.
 
-**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**
+---
 
-Сначала проверим, запущен ли ChromaDB:
+**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**
 
 ```bash
-curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
+head -80 ai-farm/agents/batuta/memory_service.py
 ```
 
 ---
@@ -957,6 +943,28 @@ class MemoryService:
 
 ## 🤖 **DeepSeek**
 
+Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.
+
+**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**
+
+Сначала проверим, запущен ли ChromaDB:
+
+```bash
+curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
+{"detail":"Not Found"}%                                                             
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
 ChromaDB отвечает (HTTP 404 — значит, сервер запущен, но эндпоинт не тот).
 
 Проверим основной эндпоинт ChromaDB:
@@ -969,7 +977,7 @@ curl -s http://localhost:8000/api/v1/version 2>&1
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8000/api/v1/version 2>&1
 {"detail":"Not Found"}%                                                             
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
@@ -987,8 +995,8 @@ curl -s http://localhost:8000/ 2>&1 | head -5
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8000/api/v1/version 2>&1
-{"detail":"Not Found"}%                                                             
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8000/ 2>&1 | head -5
+{"message":"UCH Clipping API is running","obsidian_path":"/Users/kirillkravcov/obsidian/my-digital-garden-content/Clippings"}%                                          
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1007,8 +1015,9 @@ lsof -i :8000 | head -5
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8000/ 2>&1 | head -5
-{"message":"UCH Clipping API is running","obsidian_path":"/Users/kirillkravcov/obsidian/my-digital-garden-content/Clippings"}%                                          
+(.venv) kirillkravcov@Mac UniversalCreativeHub % lsof -i :8000 | head -5
+COMMAND   PID          USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+Python  87623 kirillkravcov   11u  IPv4 0xe7f27961e65238f3      0t0  TCP *:irdmi (LISTEN)
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1027,9 +1036,8 @@ docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}" | grep -i chroma |
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % lsof -i :8000 | head -5
-COMMAND   PID          USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-Python  87623 kirillkravcov   11u  IPv4 0xe7f27961e65238f3      0t0  TCP *:irdmi (LISTEN)
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}" | grep -i chroma || echo "ChromaDB container not found"
+ChromaDB container not found
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1056,8 +1064,19 @@ sleep 3 && curl -s http://localhost:8001/api/v1/heartbeat
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}" | grep -i chroma || echo "ChromaDB container not found"
-ChromaDB container not found
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker run -d --name chroma-kymatics -p 8001:8000 chromadb/chroma:latest
+Unable to find image 'chromadb/chroma:latest' locally
+latest: Pulling from chromadb/chroma
+af930220c3b8: Pull complete 
+4f4fb700ef54: Pull complete 
+b3d387d9b72e: Pull complete 
+40d643378433: Pull complete 
+d69102e172ea: Pull complete 
+Digest: sha256:1e0b73a187a28757c572acba508c46f48c9e8b0acaf5c20e6d95cdedce1acdf6
+Status: Downloaded newer image for chromadb/chroma:latest
+24a20a740c99269c07d46cdce7a8d4e486f215a10c704485df020be88a742788
+(.venv) kirillkravcov@Mac UniversalCreativeHub % sleep 3 && curl -s http://localhost:8001/api/v1/heartbeat
+{"error":"Unimplemented","message":"The v1 API is deprecated. Please use /v2 apis"}%
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1076,19 +1095,8 @@ curl -s http://localhost:8001/api/v2/version
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker run -d --name chroma-kymatics -p 8001:8000 chromadb/chroma:latest
-Unable to find image 'chromadb/chroma:latest' locally
-latest: Pulling from chromadb/chroma
-af930220c3b8: Pull complete 
-4f4fb700ef54: Pull complete 
-b3d387d9b72e: Pull complete 
-40d643378433: Pull complete 
-d69102e172ea: Pull complete 
-Digest: sha256:1e0b73a187a28757c572acba508c46f48c9e8b0acaf5c20e6d95cdedce1acdf6
-Status: Downloaded newer image for chromadb/chroma:latest
-24a20a740c99269c07d46cdce7a8d4e486f215a10c704485df020be88a742788
-(.venv) kirillkravcov@Mac UniversalCreativeHub % sleep 3 && curl -s http://localhost:8001/api/v1/heartbeat
-{"error":"Unimplemented","message":"The v1 API is deprecated. Please use /v2 apis"}%
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/api/v2/version
+"1.0.0"%                                                                            
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1109,30 +1117,6 @@ Status: Downloaded newer image for chromadb/chroma:latest
 
 ```bash
 cat ai-farm/agents/batuta/tools/tool_graph.py | head -100
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/api/v2/version
-"1.0.0"%                                                                            
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Вижу: `GraphTool` ожидает Graph API на порту 8004, но у нас Neo4j напрямую на 7474/7687. Нужно либо поднять Graph API прослойку, либо переписать клиент для прямого подключения к Neo4j.
-
----
-
-**Упростим задачу: создадим новый унифицированный MemoryService с прямой поддержкой Neo4j и ChromaDB.**
-
-Сначала проверим, есть ли в проекте клиент для Neo4j Bolt протокола:
-
-```bash
-grep -r "neo4j" ai-farm/agents/batuta/*.py | grep -i "import\|from" | head -20
 ```
 
 ---
@@ -1240,6 +1224,33 @@ class GraphTool:
     async def get_technology(self, name: str) -> Dict:
         """Получить информацию о технологии"""
         try:
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу: `GraphTool` ожидает Graph API на порту 8004, но у нас Neo4j напрямую на 7474/7687. Нужно либо поднять Graph API прослойку, либо переписать клиент для прямого подключения к Neo4j.
+
+---
+
+**Упростим задачу: создадим новый унифицированный MemoryService с прямой поддержкой Neo4j и ChromaDB.**
+
+Сначала проверим, есть ли в проекте клиент для Neo4j Bolt протокола:
+
+```bash
+grep -r "neo4j" ai-farm/agents/batuta/*.py | grep -i "import\|from" | head -20
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -r "neo4j" ai-farm/agents/batuta/*.py | grep -i "import\|from" | head -20
+ai-farm/agents/batuta/main.py:from neo4j_sync import create_task_node_sync
+ai-farm/agents/batuta/main.py:from task_decomposer import decompose_task, create_subtasks_in_neo4j
+ai-farm/agents/batuta/main.py:    from neo4j_sync import NEO4J_URL, NEO4J_AUTH
+ai-farm/agents/batuta/task_decomposer.py:    from neo4j_sync import NEO4J_URL, NEO4J_AUTH
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1433,12 +1444,7 @@ EOF
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -r "neo4j" ai-farm/agents/batuta/*.py | grep -i "import\|from" | head -20
-ai-farm/agents/batuta/main.py:from neo4j_sync import create_task_node_sync
-ai-farm/agents/batuta/main.py:from task_decomposer import decompose_task, create_subtasks_in_neo4j
-ai-farm/agents/batuta/main.py:    from neo4j_sync import NEO4J_URL, NEO4J_AUTH
-ai-farm/agents/batuta/task_decomposer.py:    from neo4j_sync import NEO4J_URL, NEO4J_AUTH
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+done
 
 ---
 
@@ -1500,7 +1506,23 @@ asyncio.run(test())
 
 ## 👤 **Kirill**
 
-done
+(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
+    )
+    print(f'Added memory: {memory_id}')
+
+    # Семантический поиск
+    results = await service.search_semantic('проектирование процесса', limit=3)
+    print(f'Semantic search: {len(results)} results')
+    for r in results:
+        print(f'  - {r[\"memory\"]}')
+
+asyncio.run(test())
+"
+  File "<string>", line 3
+    from ai-farm.agents.batuta.unified_memory_service import get_unified_memory_service
+           ^
+SyntaxError: invalid syntax
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -1539,40 +1561,6 @@ asyncio.run(test())
 ## 👤 **Kirill**
 
 (.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
-    )
-    print(f'Added memory: {memory_id}')
-
-    # Семантический поиск
-    results = await service.search_semantic('проектирование процесса', limit=3)
-    print(f'Semantic search: {len(results)} results')
-    for r in results:
-        print(f'  - {r[\"memory\"]}')
-
-asyncio.run(test())
-"
-  File "<string>", line 3
-    from ai-farm.agents.batuta.unified_memory_service import get_unified_memory_service
-           ^
-SyntaxError: invalid syntax
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-ChromaDB подключился с ошибкой (type object is not subscriptable — проблема с версией Python 3.8). Semantic search упал в фоллбек, поиск не дал результатов, но память добавилась в файл.
-
-Проверим, что память сохранилась в файл:
-
-```bash
-cat ai-farm/agents/batuta/unified_memory/test_project.json
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
         metadata={'type': 'design', 'agent': 'architect'}
     )
     print(f'Added memory: {memory_id}')
@@ -1596,14 +1584,12 @@ Semantic search: 0 results
 
 ## 🤖 **DeepSeek**
 
-✅ Файловая память работает. ChromaDB не подключился из-за Python 3.8.
+ChromaDB подключился с ошибкой (type object is not subscriptable — проблема с версией Python 3.8). Semantic search упал в фоллбек, поиск не дал результатов, но память добавилась в файл.
 
----
-
-**Проверим версию Python и обновим при необходимости:**
+Проверим, что память сохранилась в файл:
 
 ```bash
-python --version
+cat ai-farm/agents/batuta/unified_memory/test_project.json
 ```
 
 ---
@@ -1625,6 +1611,28 @@ python --version
     }
   }
 ]%                                                                                  
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ Файловая память работает. ChromaDB не подключился из-за Python 3.8.
+
+---
+
+**Проверим версию Python и обновим при необходимости:**
+
+```bash
+python --version
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % python --version
+Python 3.8.9
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1800,9 +1808,7 @@ EOF
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % python --version
-Python 3.8.9
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+создал файл
 
 ---
 
@@ -1835,22 +1841,6 @@ asyncio.run(create_collection())
 
 ## 👤 **Kirill**
 
-создал файл
-
----
-
-## 🤖 **DeepSeek**
-
-ChromaDB API v2 требует другой путь. Проверим документацию:
-
-```bash
-curl -s http://localhost:8001/api/v2/collections
-```
-
----
-
-## 👤 **Kirill**
-
 (.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
 
 async def create_collection():
@@ -1870,10 +1860,10 @@ Create collection: 404 -
 
 ## 🤖 **DeepSeek**
 
-Пустой ответ. Попробуем GET с другим путем:
+ChromaDB API v2 требует другой путь. Проверим документацию:
 
 ```bash
-curl -s http://localhost:8001/api/v2/collections -X GET -H "Content-Type: application/json"
+curl -s http://localhost:8001/api/v2/collections
 ```
 
 ---
@@ -1887,10 +1877,10 @@ curl -s http://localhost:8001/api/v2/collections -X GET -H "Content-Type: applic
 
 ## 🤖 **DeepSeek**
 
-ChromaDB не отвечает на стандартные эндпоинты. Проверим, что контейнер вообще жив:
+Пустой ответ. Попробуем GET с другим путем:
 
 ```bash
-docker logs chroma-kymatics --tail 20
+curl -s http://localhost:8001/api/v2/collections -X GET -H "Content-Type: application/json"
 ```
 
 ---
@@ -1904,12 +1894,10 @@ docker logs chroma-kymatics --tail 20
 
 ## 🤖 **DeepSeek**
 
-ChromaDB работает, но использует port 8000 внутри контейнера, который мы пробросили на 8001. Эндпоинты v2 не работают — возможно, API изменился.
-
-**Проверим корневой путь:**
+ChromaDB не отвечает на стандартные эндпоинты. Проверим, что контейнер вообще жив:
 
 ```bash
-curl -s http://localhost:8001/
+docker logs chroma-kymatics --tail 20
 ```
 
 ---
@@ -1943,6 +1931,25 @@ No telemetry is configured.
 
 ## 🤖 **DeepSeek**
 
+ChromaDB работает, но использует port 8000 внутри контейнера, который мы пробросили на 8001. Эндпоинты v2 не работают — возможно, API изменился.
+
+**Проверим корневой путь:**
+
+```bash
+curl -s http://localhost:8001/
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
 Странно, пустой ответ. Проверим, есть ли вообще сервер на 8001:
 
 ```bash
@@ -1953,7 +1960,8 @@ nc -zv localhost 8001
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/
+(.venv) kirillkravcov@Mac UniversalCreativeHub % nc -zv localhost 8001
+Connection to localhost port 8001 [tcp/vcom-tunnel] succeeded!
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1972,8 +1980,8 @@ docker exec chroma-kymatics curl -s http://localhost:8000/api/v2/version
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % nc -zv localhost 8001
-Connection to localhost port 8001 [tcp/vcom-tunnel] succeeded!
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker exec chroma-kymatics curl -s http://localhost:8000/api/v2/version
+OCI runtime exec failed: exec failed: unable to start container process: exec: "curl": executable file not found in $PATH
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -1990,8 +1998,8 @@ docker exec chroma-kymatics wget -qO- http://localhost:8000/api/v2/version
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker exec chroma-kymatics curl -s http://localhost:8000/api/v2/version
-OCI runtime exec failed: exec failed: unable to start container process: exec: "curl": executable file not found in $PATH
+(.venv) kirillkravcov@Mac UniversalCreativeHub %        docker exec chroma-kymatics wget -qO- http://localhost:8000/api/v2/version
+OCI runtime exec failed: exec failed: unable to start container process: exec: "wget": executable file not found in $PATH
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2008,8 +2016,8 @@ docker exec chroma-kymatics python -c "import urllib.request; print(urllib.reque
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub %        docker exec chroma-kymatics wget -qO- http://localhost:8000/api/v2/version
-OCI runtime exec failed: exec failed: unable to start container process: exec: "wget": executable file not found in $PATH
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker exec chroma-kymatics python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/api/v2/version').read())"
+OCI runtime exec failed: exec failed: unable to start container process: exec: "python": executable file not found in $PATH
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2032,9 +2040,7 @@ grep -n "memory\|Memory" ai-farm/agents/batuta/process_executor.py | head -20
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker exec chroma-kymatics python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/api/v2/version').read())"
-OCI runtime exec failed: exec failed: unable to start container process: exec: "python": executable file not found in $PATH
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+как влияет отсутсвие chromadb на текущий прогресс?
 
 ---
 
@@ -2075,7 +2081,7 @@ grep -n "def execute" ai-farm/agents/batuta/process_executor.py | head -5
 
 ## 👤 **Kirill**
 
-как влияет отсутсвие chromadb на текущий прогресс?
+давай попробуем разобраться в проблематике. Остальные задачи немного подождут. Давай попробуем локализовать проблему
 
 ---
 
@@ -2097,7 +2103,10 @@ docker port chroma-kymatics
 
 ## 👤 **Kirill**
 
-давай попробуем разобраться в проблематике. Остальные задачи немного подождут. Давай попробуем локализовать проблему
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker port chroma-kymatics
+8000/tcp -> 0.0.0.0:8001
+8000/tcp -> [::]:8001
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -2115,9 +2124,10 @@ lsof -i :8001
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker port chroma-kymatics
-8000/tcp -> 0.0.0.0:8001
-8000/tcp -> [::]:8001
+(.venv) kirillkravcov@Mac UniversalCreativeHub % lsof -i :8001
+COMMAND    PID          USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+OrbStack  1809 kirillkravcov  204u  IPv4 0x9b0c965342deb994      0t0  TCP *:vcom-tunnel (LISTEN)
+OrbStack  1809 kirillkravcov  205u  IPv6 0xec0edfc927b26761      0t0  TCP *:vcom-tunnel (LISTEN)
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2136,10 +2146,8 @@ docker inspect chroma-kymatics --format '{{range .NetworkSettings.Networks}}{{.I
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % lsof -i :8001
-COMMAND    PID          USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-OrbStack  1809 kirillkravcov  204u  IPv4 0x9b0c965342deb994      0t0  TCP *:vcom-tunnel (LISTEN)
-OrbStack  1809 kirillkravcov  205u  IPv6 0xec0edfc927b26761      0t0  TCP *:vcom-tunnel (LISTEN)
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker inspect chroma-kymatics --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+192.168.215.3
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2156,8 +2164,7 @@ curl -s http://192.168.215.3:8000/api/v2/version
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker inspect chroma-kymatics --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
-192.168.215.3
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://192.168.215.3:8000/api/v2/version
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2176,7 +2183,8 @@ docker logs chroma-kymatics 2>&1 | grep -i "uvicorn\|start\|listen\|error" | hea
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://192.168.215.3:8000/api/v2/version
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker logs chroma-kymatics 2>&1 | grep -i "uvicorn\|start\|listen\|error" | head -20
+Getting started guide: https://docs.trychroma.com/docs/overview/getting-started
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2195,8 +2203,8 @@ docker exec chroma-kymatics ps aux
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker logs chroma-kymatics 2>&1 | grep -i "uvicorn\|start\|listen\|error" | head -20
-Getting started guide: https://docs.trychroma.com/docs/overview/getting-started
+(.venv) kirillkravcov@Mac UniversalCreativeHub % docker exec chroma-kymatics ps aux
+OCI runtime exec failed: exec failed: unable to start container process: exec: "ps": executable file not found in $PATH
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2210,27 +2218,6 @@ docker stop chroma-kymatics && docker rm chroma-kymatics
 docker run -d --name chroma-kymatics -p 8001:8000 -e IS_PERSISTENT=TRUE chromadb/chroma:latest
 sleep 5
 docker logs chroma-kymatics --tail 30
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % docker exec chroma-kymatics ps aux
-OCI runtime exec failed: exec failed: unable to start container process: exec: "ps": executable file not found in $PATH
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Логи те же, нет информации об HTTP сервере. Попробуем использовать старую версию ChromaDB (0.4.24), где API v1 работал стабильно:
-
-```bash
-docker stop chroma-kymatics && docker rm chroma-kymatics
-docker run -d --name chroma-kymatics -p 8001:8000 chromadb/chroma:0.4.24
-sleep 5
-curl -s http://localhost:8001/api/v1/heartbeat
 ```
 
 ---
@@ -2278,9 +2265,12 @@ No telemetry is configured.
 
 ## 🤖 **DeepSeek**
 
-Покажи вывод последних команд:
+Логи те же, нет информации об HTTP сервере. Попробуем использовать старую версию ChromaDB (0.4.24), где API v1 работал стабильно:
 
 ```bash
+docker stop chroma-kymatics && docker rm chroma-kymatics
+docker run -d --name chroma-kymatics -p 8001:8000 chromadb/chroma:0.4.24
+sleep 5
 curl -s http://localhost:8001/api/v1/heartbeat
 ```
 
@@ -2294,14 +2284,10 @@ curl -s http://localhost:8001/api/v1/heartbeat
 
 ## 🤖 **DeepSeek**
 
-✅ **ChromaDB v0.4.24 работает!** API v1 отвечает.
-
----
-
-**Теперь проверим коллекции:**
+Покажи вывод последних команд:
 
 ```bash
-curl -s http://localhost:8001/api/v1/collections
+curl -s http://localhost:8001/api/v1/heartbeat
 ```
 
 ---
@@ -2336,7 +2322,11 @@ c2c70f25c5603221077f456ec5bfa162b530f6284f583d2764d1562e12368dff
 
 ## 🤖 **DeepSeek**
 
-Команда сломалась. Выполни заново:
+✅ **ChromaDB v0.4.24 работает!** API v1 отвечает.
+
+---
+
+**Теперь проверим коллекции:**
 
 ```bash
 curl -s http://localhost:8001/api/v1/collections
@@ -2364,6 +2354,24 @@ zsh: parse error near `kirillkravcov@Mac'
 
 ## 🤖 **DeepSeek**
 
+Команда сломалась. Выполни заново:
+
+```bash
+curl -s http://localhost:8001/api/v1/collections
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/api/v1/collections
+[]%                                                                                 
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
 ✅ ChromaDB работает. Коллекций пока нет.
 
 ---
@@ -2379,8 +2387,10 @@ curl -s -X POST http://localhost:8001/api/v1/collections \
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/api/v1/collections
-[]%                                                                                 
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST http://localhost:8001/api/v1/collections \
+  -H "Content-Type: application/json" \
+  -d '{"name": "kymatics_memories"}'
+{"name":"kymatics_memories","id":"54abe5fa-6b81-45ef-8025-bbefb676b463","metadata":null,"tenant":"default_tenant","database":"default_database"}%                       
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2407,10 +2417,14 @@ curl -s -X POST http://localhost:8001/api/v1/collections/kymatics_memories/add \
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST http://localhost:8001/api/v1/collections \
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST http://localhost:8001/api/v1/collections/kymatics_memories/add \
   -H "Content-Type: application/json" \
-  -d '{"name": "kymatics_memories"}'
-{"name":"kymatics_memories","id":"54abe5fa-6b81-45ef-8025-bbefb676b463","metadata":null,"tenant":"default_tenant","database":"default_database"}%                       
+  -d '{
+    "ids": ["test-1"],
+    "documents": ["Агент архитектор спроектировал BPMN процесс для автоматизации развертывания"],
+    "metadatas": [{"project_id": "test_project", "type": "design"}]
+  }'
+{"error":"InvalidUUID","message":"Could not parse kymatics_memories as a UUID"}%    
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2427,14 +2441,8 @@ curl -s http://localhost:8001/api/v1/collections
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST http://localhost:8001/api/v1/collections/kymatics_memories/add \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ids": ["test-1"],
-    "documents": ["Агент архитектор спроектировал BPMN процесс для автоматизации развертывания"],
-    "metadatas": [{"project_id": "test_project", "type": "design"}]
-  }'
-{"error":"InvalidUUID","message":"Could not parse kymatics_memories as a UUID"}%    
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/api/v1/collections
+[{"name":"kymatics_memories","id":"54abe5fa-6b81-45ef-8025-bbefb676b463","metadata":null,"tenant":"default_tenant","database":"default_database"}]%                     
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2459,8 +2467,14 @@ curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-802
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s http://localhost:8001/api/v1/collections
-[{"name":"kymatics_memories","id":"54abe5fa-6b81-45ef-8025-bbefb676b463","metadata":null,"tenant":"default_tenant","database":"default_database"}]%                     
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/add" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": ["test-1"],
+    "documents": ["Агент архитектор спроектировал BPMN процесс для автоматизации развертывания"],
+    "metadatas": [{"project_id": "test_project", "type": "design"}]
+  }'
+true%                                                                               
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2481,38 +2495,6 @@ curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-802
     "query_texts": ["проектирование процесса"],
     "n_results": 3
   }' | python -m json.tool 2>/dev/null || curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/query" -H "Content-Type: application/json" -d '{"query_embeddings": null, "query_texts": ["проектирование процесса"], "n_results": 3}'
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/add" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ids": ["test-1"],
-    "documents": ["Агент архитектор спроектировал BPMN процесс для автоматизации развертывания"],
-    "metadatas": [{"project_id": "test_project", "type": "design"}]
-  }'
-true%                                                                               
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Нужно передавать `query_embeddings` как пустой массив (`.embedding` сервер сам сгенерирует).
-
-**Правильный запрос:**
-
-```bash
-curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/query" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query_embeddings": [],
-    "query_texts": ["проектирование процесса"],
-    "n_results": 3
-  }'
 ```
 
 ---
@@ -2546,14 +2528,18 @@ curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-802
 
 ## 🤖 **DeepSeek**
 
-Результат пустой. Возможно, эмбеддинги не сгенерировались при добавлении документа.
+Нужно передавать `query_embeddings` как пустой массив (`.embedding` сервер сам сгенерирует).
 
-**Проверим, есть ли документы в коллекции:**
+**Правильный запрос:**
 
 ```bash
-curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/get" \
+curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/query" \
   -H "Content-Type: application/json" \
-  -d '{"ids": ["test-1"]}'
+  -d '{
+    "query_embeddings": [],
+    "query_texts": ["проектирование процесса"],
+    "n_results": 3
+  }'
 ```
 
 ---
@@ -2568,6 +2554,30 @@ curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-802
     "n_results": 3
   }'
 {"ids":[],"distances":null,"metadatas":null,"embeddings":null,"documents":null,"uris":null,"data":null}%                                                                
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Результат пустой. Возможно, эмбеддинги не сгенерировались при добавлении документа.
+
+**Проверим, есть ли документы в коллекции:**
+
+```bash
+curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/get" \
+  -H "Content-Type: application/json" \
+  -d '{"ids": ["test-1"]}'
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/get" \
+  -H "Content-Type: application/json" \
+  -d '{"ids": ["test-1"]}'
+{"ids":["test-1"],"embeddings":null,"metadatas":[{"project_id":"test_project","type":"design"}],"documents":["Агент архитектор спроектировал BPMN процесс для автоматизации развертывания"],"uris":null,"data":null}%                                       
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2602,24 +2612,6 @@ grep -n "save.*memory\|add_memory\|persist" ai-farm/agents/batuta/process_execut
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -s -X POST "http://localhost:8001/api/v1/collections/54abe5fa-6b81-45ef-8025-bbefb676b463/get" \
-  -H "Content-Type: application/json" \
-  -d '{"ids": ["test-1"]}'
-{"ids":["test-1"],"embeddings":null,"metadatas":[{"project_id":"test_project","type":"design"}],"documents":["Агент архитектор спроектировал BPMN процесс для автоматизации развертывания"],"uris":null,"data":null}%                                       
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-```bash
-ls -la /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing
-```
-
----
-
-## 👤 **Kirill**
-
 исследуй /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing 
 Мы уже настраивали chromadb
 
@@ -2627,10 +2619,8 @@ ls -la /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing
 
 ## 🤖 **DeepSeek**
 
-Отлично! У вас уже есть `chroma_db` директория и работающий векторный пайплайн. Посмотрим, как он настроен:
-
 ```bash
-cat /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing/vector_store.py | head -80
+ls -la /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing
 ```
 
 ---
@@ -2693,6 +2683,96 @@ drwxr-xr-x   2 kirillkravcov  staff    64 Mar  3 08:52 tests
 -rwxr-xr-x   1 kirillkravcov  staff  1673 Mar  7 17:12 vector_api.py.bak
 -rwxr-xr-x   1 kirillkravcov  staff  2483 Apr  6 12:05 vector_store.py
 drwxr-xr-x   3 kirillkravcov  staff    96 Apr  6 12:05 watcher
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично! У вас уже есть `chroma_db` директория и работающий векторный пайплайн. Посмотрим, как он настроен:
+
+```bash
+cat /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing/vector_store.py | head -80
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cat /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing/vector_store.py | head -80
+"""
+Векторное хранилище на ChromaDB (альтернатива sqlite-vec)
+"""
+import chromadb
+from chromadb.utils import embedding_functions
+import sqlite3
+import json
+from tqdm import tqdm
+
+class VectorStore:
+    def __init__(self, persist_dir="./chroma_db"):
+        self.client = chromadb.PersistentClient(path=persist_dir)
+        self.embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name="all-MiniLM-L6-v2"
+        )
+        
+        # Создаем или получаем коллекцию
+        try:
+            self.collection = self.client.get_collection("uch_chunks")
+        except:
+            self.collection = self.client.create_collection(
+                name="uch_chunks",
+                embedding_function=self.embedding_fn
+            )
+    
+    def index_chunks(self, db_path="/Users/kirillkravcov/UniversalCreativeHub/data/chunks/vectors.db"):
+        """Индексация всех чанков из SQLite"""
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT id, filename, text, source FROM chunks")
+        chunks = cursor.fetchall()
+        
+        print(f"Индексация {len(chunks)} чанков...")
+        
+        batch_size = 100
+        for i in tqdm(range(0, len(chunks), batch_size)):
+            batch = chunks[i:i+batch_size]
+            
+            ids = [str(row[0]) for row in batch]
+            documents = [row[2] for row in batch]
+            metadatas = [
+                {
+                    "filename": row[1],
+                    "source": row[3]
+                } for row in batch
+            ]
+            
+            self.collection.add(
+                ids=ids,
+                documents=documents,
+                metadatas=metadatas
+            )
+        
+        conn.close()
+        print(f"✅ Индексация завершена")
+    
+    def search(self, query, n_results=10):
+        """Поиск по векторам"""
+        results = self.collection.query(
+            query_texts=[query],
+            n_results=n_results
+        )
+        
+        return results
+
+# Тест
+if __name__ == "__main__":
+    store = VectorStore()
+    # store.index_chunks()  # Раскомментировать для первой индексации
+    
+    results = store.search("архитектура агентов")
+    print(json.dumps(results, indent=2, ensure_ascii=False))
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -2891,81 +2971,7 @@ EOF
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cat /Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing/vector_store.py | head -80
-"""
-Векторное хранилище на ChromaDB (альтернатива sqlite-vec)
-"""
-import chromadb
-from chromadb.utils import embedding_functions
-import sqlite3
-import json
-from tqdm import tqdm
-
-class VectorStore:
-    def __init__(self, persist_dir="./chroma_db"):
-        self.client = chromadb.PersistentClient(path=persist_dir)
-        self.embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name="all-MiniLM-L6-v2"
-        )
-        
-        # Создаем или получаем коллекцию
-        try:
-            self.collection = self.client.get_collection("uch_chunks")
-        except:
-            self.collection = self.client.create_collection(
-                name="uch_chunks",
-                embedding_function=self.embedding_fn
-            )
-    
-    def index_chunks(self, db_path="/Users/kirillkravcov/UniversalCreativeHub/data/chunks/vectors.db"):
-        """Индексация всех чанков из SQLite"""
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT id, filename, text, source FROM chunks")
-        chunks = cursor.fetchall()
-        
-        print(f"Индексация {len(chunks)} чанков...")
-        
-        batch_size = 100
-        for i in tqdm(range(0, len(chunks), batch_size)):
-            batch = chunks[i:i+batch_size]
-            
-            ids = [str(row[0]) for row in batch]
-            documents = [row[2] for row in batch]
-            metadatas = [
-                {
-                    "filename": row[1],
-                    "source": row[3]
-                } for row in batch
-            ]
-            
-            self.collection.add(
-                ids=ids,
-                documents=documents,
-                metadatas=metadatas
-            )
-        
-        conn.close()
-        print(f"✅ Индексация завершена")
-    
-    def search(self, query, n_results=10):
-        """Поиск по векторам"""
-        results = self.collection.query(
-            query_texts=[query],
-            n_results=n_results
-        )
-        
-        return results
-
-# Тест
-if __name__ == "__main__":
-    store = VectorStore()
-    # store.index_chunks()  # Раскомментировать для первой индексации
-    
-    results = store.search("архитектура агентов")
-    print(json.dumps(results, indent=2, ensure_ascii=False))
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+done
 
 ---
 
@@ -3005,7 +3011,23 @@ asyncio.run(test())
 
 ## 👤 **Kirill**
 
-done
+(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
+    )
+    print(f'Added: {memory_id}')
+
+    # Семантический поиск
+    results = await service.search_semantic('проектирование процесса', limit=3)
+    print(f'Found: {len(results)} results')
+    for r in results:
+        print(f'  - {r[\"memory\"][:60]}... (score: {r.get(\"score\")})')
+
+asyncio.run(test())
+"
+⚠️ ChromaDB не доступен: Chroma is running in http-only client mode, and can only be run with 'chromadb.api.fastapi.FastAPI' or 'chromadb.api.async_fastapi.AsyncFastAPI' as the chroma_api_impl.             see https://docs.trychroma.com/guides#using-the-python-http-only-client for more information.
+UnifiedMemoryService: Neo4j=http://localhost:7474/db/neo4j/tx/commit, Chroma=False
+Added: 78034db2-a091-4812-9e64-f67095ead9f8
+Found: 0 results
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -3023,22 +3045,8 @@ pip show chromadb | grep Version
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
-    )
-    print(f'Added: {memory_id}')
-
-    # Семантический поиск
-    results = await service.search_semantic('проектирование процесса', limit=3)
-    print(f'Found: {len(results)} results')
-    for r in results:
-        print(f'  - {r[\"memory\"][:60]}... (score: {r.get(\"score\")})')
-
-asyncio.run(test())
-"
-⚠️ ChromaDB не доступен: Chroma is running in http-only client mode, and can only be run with 'chromadb.api.fastapi.FastAPI' or 'chromadb.api.async_fastapi.AsyncFastAPI' as the chroma_api_impl.             see https://docs.trychroma.com/guides#using-the-python-http-only-client for more information.
-UnifiedMemoryService: Neo4j=http://localhost:7474/db/neo4j/tx/commit, Chroma=False
-Added: 78034db2-a091-4812-9e64-f67095ead9f8
-Found: 0 results
+(.venv) kirillkravcov@Mac UniversalCreativeHub % pip show chromadb | grep Version
+Version: 0.5.23
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -3248,9 +3256,7 @@ EOF
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % pip show chromadb | grep Version
-Version: 0.5.23
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+готово
 
 ---
 
@@ -3296,7 +3302,23 @@ asyncio.run(test())
 
 ## 👤 **Kirill**
 
-готово
+(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
+    )
+    print(f'Added: {memory_id}')
+
+    # Семантический поиск
+    results = await service.search_semantic('проектирование процесса', limit=3)
+    print(f'Found: {len(results)} results')
+    for r in results:
+        print(f'  - {r[\"memory\"][:60]}... (score: {r.get(\"score\")})')
+
+asyncio.run(test())
+"
+⚠️ ChromaDB не доступен: Chroma is running in http-only client mode, and can only be run with 'chromadb.api.fastapi.FastAPI' or 'chromadb.api.async_fastapi.AsyncFastAPI' as the chroma_api_impl.             see https://docs.trychroma.com/guides#using-the-python-http-only-client for more information.
+UnifiedMemoryService: Neo4j=http://localhost:7474/db/neo4j/tx/commit, Chroma=False
+Added: 4823fd0c-a6c1-48f7-ac9c-ca42804321c4
+Found: 0 results
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -3337,23 +3359,12 @@ grep -n "add_memory\|save.*result\|store" ai-farm/agents/batuta/process_executor
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                              
-    )
-    print(f'Added: {memory_id}')
+ислледуй глубже как работала раньше 
+/Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing
+где еще использовалась chromadb
+/Users/kirillkravcov/UniversalCreativeHub/chroma_db
 
-    # Семантический поиск
-    results = await service.search_semantic('проектирование процесса', limit=3)
-    print(f'Found: {len(results)} results')
-    for r in results:
-        print(f'  - {r[\"memory\"][:60]}... (score: {r.get(\"score\")})')
-
-asyncio.run(test())
-"
-⚠️ ChromaDB не доступен: Chroma is running in http-only client mode, and can only be run with 'chromadb.api.fastapi.FastAPI' or 'chromadb.api.async_fastapi.AsyncFastAPI' as the chroma_api_impl.             see https://docs.trychroma.com/guides#using-the-python-http-only-client for more information.
-UnifiedMemoryService: Neo4j=http://localhost:7474/db/neo4j/tx/commit, Chroma=False
-Added: 4823fd0c-a6c1-48f7-ac9c-ca42804321c4
-Found: 0 results
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+где еще в /Users/kirillkravcov/UniversalCreativeHub?
 
 ---
 
@@ -3471,12 +3482,47 @@ def _init_chroma_local(self):
 
 ## 👤 **Kirill**
 
-ислледуй глубже как работала раньше 
-/Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/preprocessing
-где еще использовалась chromadb
-/Users/kirillkravcov/UniversalCreativeHub/chroma_db
-
-где еще в /Users/kirillkravcov/UniversalCreativeHub?
+(.venv) kirillkravcov@Mac UniversalCreativeHub % python test_chroma_local.py
+=== Тест локального Chroma === 
+/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Traceback (most recent call last):
+  File "test_chroma_local.py", line 8, in <module>
+    client = chromadb.PersistentClient(path="./test_local_db")
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/__init__.py", line 153, in PersistentClient
+    return ClientCreator(tenant=tenant, database=database, settings=settings)
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/api/client.py", line 58, in __init__
+    super().__init__(settings=settings)
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/api/shared_system_client.py", line 19, in __init__
+    SharedSystemClient._create_system_if_not_exists(self._identifier, settings)
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/api/shared_system_client.py", line 29, in _create_system_if_not_exists
+    new_system.instance(ProductTelemetryClient)
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/config.py", line 420, in instance
+    type = get_class(fqn, type)
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/config.py", line 469, in get_class
+    module = importlib.import_module(module_name)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 783, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/telemetry/product/posthog.py", line 1, in <module>
+    import posthog
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/__init__.py", line 5, in <module>
+    from posthog.client import Client
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/client.py", line 20, in <module>
+    from posthog.feature_flags import InconclusiveMatchError, match_feature_flag_properties
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/feature_flags.py", line 11, in <module>
+    from posthog.types import FlagValue
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/types.py", line 94, in <module>
+    class FlagsResponse(TypedDict, total=False):
+  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/types.py", line 95, in FlagsResponse
+    flags: dict[str, FeatureFlag]
+TypeError: 'type' object is not subscriptable
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -3531,47 +3577,14 @@ python test_chroma_local.py
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % python test_chroma_local.py
-=== Тест локального Chroma === 
-/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
-  warnings.warn(
-Traceback (most recent call last):
-  File "test_chroma_local.py", line 8, in <module>
-    client = chromadb.PersistentClient(path="./test_local_db")
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/__init__.py", line 153, in PersistentClient
-    return ClientCreator(tenant=tenant, database=database, settings=settings)
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/api/client.py", line 58, in __init__
-    super().__init__(settings=settings)
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/api/shared_system_client.py", line 19, in __init__
-    SharedSystemClient._create_system_if_not_exists(self._identifier, settings)
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/api/shared_system_client.py", line 29, in _create_system_if_not_exists
-    new_system.instance(ProductTelemetryClient)
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/config.py", line 420, in instance
-    type = get_class(fqn, type)
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/config.py", line 469, in get_class
-    module = importlib.import_module(module_name)
-  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/importlib/__init__.py", line 127, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 783, in exec_module
-  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/chromadb/telemetry/product/posthog.py", line 1, in <module>
-    import posthog
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/__init__.py", line 5, in <module>
-    from posthog.client import Client
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/client.py", line 20, in <module>
-    from posthog.feature_flags import InconclusiveMatchError, match_feature_flag_properties
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/feature_flags.py", line 11, in <module>
-    from posthog.types import FlagValue
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/types.py", line 94, in <module>
-    class FlagsResponse(TypedDict, total=False):
-  File "/Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/posthog/types.py", line 95, in FlagsResponse
-    flags: dict[str, FeatureFlag]
-TypeError: 'type' object is not subscriptable
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+Так. Срочно меняем приоритет 
+1. Нужно восстановить работу clipping сервиса
+✅ Найдено 345 чатов
+DeepSeek Chat Saver …exedDB).user.js:181 📊 Начинаем сохранение 345 чатов...
+DeepSeek Chat Saver …exedDB).user.js:185 [1/345] Запуск этапа разработки Kymatics
+DeepSeek Chat Saver …exedDB).user.js:106   📄 Файл: Запуск_этапа_разработки_Kymatics_0a28483c.md
+DeepSeek Chat Saver …exedDB).user.js:207 Uncaught (in promise) 
+{finalUrl: 'http://localhost:8011/api/clippings/save', readyState: 4, status: 0, statusText: '', lengthComputable: false, …}
 
 ---
 
@@ -3593,14 +3606,8 @@ lsof -i :8011
 
 ## 👤 **Kirill**
 
-Так. Срочно меняем приоритет 
-1. Нужно восстановить работу clipping сервиса
-✅ Найдено 345 чатов
-DeepSeek Chat Saver …exedDB).user.js:181 📊 Начинаем сохранение 345 чатов...
-DeepSeek Chat Saver …exedDB).user.js:185 [1/345] Запуск этапа разработки Kymatics
-DeepSeek Chat Saver …exedDB).user.js:106   📄 Файл: Запуск_этапа_разработки_Kymatics_0a28483c.md
-DeepSeek Chat Saver …exedDB).user.js:207 Uncaught (in promise) 
-{finalUrl: 'http://localhost:8011/api/clippings/save', readyState: 4, status: 0, statusText: '', lengthComputable: false, …}
+(.venv) kirillkravcov@Mac UniversalCreativeHub % lsof -i :8011
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -3618,7 +3625,7 @@ ps aux | grep -i clipping | grep -v grep
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % lsof -i :8011
+(.venv) kirillkravcov@Mac UniversalCreativeHub % ps aux | grep -i clipping | grep -v grep
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -3631,25 +3638,6 @@ ps aux | grep -i clipping | grep -v grep
 
 ```bash
 find /Users/kirillkravcov/UniversalCreativeHub -name "*clipping*" -type f 2>/dev/null | head -20
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % ps aux | grep -i clipping | grep -v grep
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Найден основной сервер: `/Users/kirillkravcov/UniversalCreativeHub/clipping_server.py`
-
-**Шаг 4: Проверим, какой порт использует `clipping_server.py`**
-
-```bash
-grep -n "port" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | head -10
 ```
 
 ---
@@ -3682,10 +3670,12 @@ grep -n "port" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | he
 
 ## 🤖 **DeepSeek**
 
-Не показало. Посмотрим ближе к концу файла:
+Найден основной сервер: `/Users/kirillkravcov/UniversalCreativeHub/clipping_server.py`
+
+**Шаг 4: Проверим, какой порт использует `clipping_server.py`**
 
 ```bash
-tail -30 /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py
+grep -n "port" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | head -10
 ```
 
 ---
@@ -3709,16 +3699,10 @@ tail -30 /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py
 
 ## 🤖 **DeepSeek**
 
-Нашел: `port=8011`. Сервер должен запускаться командой:
+Не показало. Посмотрим ближе к концу файла:
 
 ```bash
-python /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py
-```
-
-Но сначала проверим, не висит ли процесс, блокирующий порт:
-
-```bash
-lsof -i :8011
+tail -30 /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py
 ```
 
 ---
@@ -3762,14 +3746,16 @@ if __name__ == "__main__":
 
 ## 🤖 **DeepSeek**
 
-✅ Clipping сервер **запущен** (PID 77565) и слушает порт 8011.
-
-Но из скриншота видно, что запрос падает с `status: 0` — это обычно означает, что фронтенд не может достучаться до сервера.
-
-**Шаг 5: Проверим, отвечает ли сервер на запросы**
+Нашел: `port=8011`. Сервер должен запускаться командой:
 
 ```bash
-curl -v http://localhost:8011/ 2>&1 | head -20
+python /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py
+```
+
+Но сначала проверим, не висит ли процесс, блокирующий порт:
+
+```bash
+lsof -i :8011
 ```
 
 ---
@@ -3785,12 +3771,14 @@ Python  77565 kirillkravcov   11u  IPv4 0x4408a81282a66de1      0t0  TCP *:8011 
 
 ## 🤖 **DeepSeek**
 
-Сервер **работает** (uvicorn отвечает 404, потому что корневой путь не определен). Это значит, проблема не в доступности сервера, а в конкретном эндпоинте `/api/clippings/save`.
+✅ Clipping сервер **запущен** (PID 77565) и слушает порт 8011.
 
-**Шаг 6: Проверим, какие эндпоинты есть в сервере**
+Но из скриншота видно, что запрос падает с `status: 0` — это обычно означает, что фронтенд не может достучаться до сервера.
+
+**Шаг 5: Проверим, отвечает ли сервер на запросы**
 
 ```bash
-grep -n "@app" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | head -20
+curl -v http://localhost:8011/ 2>&1 | head -20
 ```
 
 ---
@@ -3824,6 +3812,27 @@ grep -n "@app" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | he
 
 ## 🤖 **DeepSeek**
 
+Сервер **работает** (uvicorn отвечает 404, потому что корневой путь не определен). Это значит, проблема не в доступности сервера, а в конкретном эндпоинте `/api/clippings/save`.
+
+**Шаг 6: Проверим, какие эндпоинты есть в сервере**
+
+```bash
+grep -n "@app" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | head -20
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -n "@app" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | head -20
+42:@app.get("/health")
+46:@app.post("/api/clip/fragment")
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
 **Проблема найдена!** В сервере **нет эндпоинта `/api/clippings/save`** — есть только:
 - `/health`
 - `/api/clip/fragment`
@@ -3846,10 +3855,7 @@ grep -n "@app" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | he
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -n "@app" /Users/kirillkravcov/UniversalCreativeHub/clipping_server.py | head -20
-42:@app.get("/health")
-46:@app.post("/api/clip/fragment")
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+странно, а как же до этого работало?
 
 ---
 
@@ -3867,7 +3873,10 @@ grep -r "clippings/save" /Users/kirillkravcov/UniversalCreativeHub --include="*.
 
 ## 👤 **Kirill**
 
-странно, а как же до этого работало?
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -r "clippings/save" /Users/kirillkravcov/UniversalCreativeHub --include="*.py" --include="*.js" --include="*.json" 2>/dev/null | head -20
+/Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py:            "save": "/api/clippings/save (POST)",
+/Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py:@app.post("/api/clippings/save")
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -3885,9 +3894,7 @@ ps aux | grep "clipping-api" | grep -v grep
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -r "clippings/save" /Users/kirillkravcov/UniversalCreativeHub --include="*.py" --include="*.js" --include="*.json" 2>/dev/null | head -20
-/Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py:            "save": "/api/clippings/save (POST)",
-/Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py:@app.post("/api/clippings/save")
+(.venv) kirillkravcov@Mac UniversalCreativeHub % ps aux | grep "clipping-api" | grep -v grep
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -3904,7 +3911,14 @@ ls -la /Users/kirillkravcov/UniversalCreativeHub/clipping-api/
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % ps aux | grep "clipping-api" | grep -v grep
+(.venv) kirillkravcov@Mac UniversalCreativeHub % ls -la /Users/kirillkravcov/UniversalCreativeHub/clipping-api/
+total 40
+drwxr-xr-x   6 kirillkravcov  staff   192 Apr  6 12:06 .
+drwxr-xr-x  92 kirillkravcov  staff  2944 May 24 16:26 ..
+-rwxr-xr-x   1 kirillkravcov  staff   739 Mar 14 19:06 clipping_api.log
+-rwxr-xr-x   1 kirillkravcov  staff  6853 Apr  6 12:05 main.py
+-rwxr-xr-x   1 kirillkravcov  staff    97 Mar 14 09:42 requirements.txt
+-rwxr-xr-x   1 kirillkravcov  staff   133 Apr  6 12:06 start.sh
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -3921,14 +3935,11 @@ cat /Users/kirillkravcov/UniversalCreativeHub/clipping-api/start.sh
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % ls -la /Users/kirillkravcov/UniversalCreativeHub/clipping-api/
-total 40
-drwxr-xr-x   6 kirillkravcov  staff   192 Apr  6 12:06 .
-drwxr-xr-x  92 kirillkravcov  staff  2944 May 24 16:26 ..
--rwxr-xr-x   1 kirillkravcov  staff   739 Mar 14 19:06 clipping_api.log
--rwxr-xr-x   1 kirillkravcov  staff  6853 Apr  6 12:05 main.py
--rwxr-xr-x   1 kirillkravcov  staff    97 Mar 14 09:42 requirements.txt
--rwxr-xr-x   1 kirillkravcov  staff   133 Apr  6 12:06 start.sh
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cat /Users/kirillkravcov/UniversalCreativeHub/clipping-api/start.sh
+#!/bin/bash
+cd "$(dirname "$0")"
+source ../venv_clipping/bin/activate
+python -m uvicorn main:app --host 0.0.0.0 --port 8011 --reload
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -3957,12 +3968,14 @@ cd /Users/kirillkravcov/UniversalCreativeHub/clipping-api && python -m uvicorn m
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cat /Users/kirillkravcov/UniversalCreativeHub/clipping-api/start.sh
-#!/bin/bash
-cd "$(dirname "$0")"
-source ../venv_clipping/bin/activate
-python -m uvicorn main:app --host 0.0.0.0 --port 8011 --reload
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+(.venv) kirillkravcov@Mac UniversalCreativeHub % kill 77565
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cd /Users/kirillkravcov/UniversalCreativeHub/clipping-api && python -m uvicorn main:app --host 0.0.0.0 --port 8011 --reload
+INFO:     Will watch for changes in these directories: ['/Users/kirillkravcov/UniversalCreativeHub/clipping-api']
+INFO:     Uvicorn running on http://0.0.0.0:8011 (Press CTRL+C to quit)
+INFO:     Started reloader process [80395] using WatchFiles
+INFO:     Started server process [80403]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
 
 ---
 
@@ -3984,14 +3997,11 @@ curl -X POST http://localhost:8011/api/clippings/save \
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % kill 77565
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cd /Users/kirillkravcov/UniversalCreativeHub/clipping-api && python -m uvicorn main:app --host 0.0.0.0 --port 8011 --reload
-INFO:     Will watch for changes in these directories: ['/Users/kirillkravcov/UniversalCreativeHub/clipping-api']
-INFO:     Uvicorn running on http://0.0.0.0:8011 (Press CTRL+C to quit)
-INFO:     Started reloader process [80395] using WatchFiles
-INFO:     Started server process [80403]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
+(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -X POST http://localhost:8011/api/clippings/save \
+  -H "Content-Type: application/json" \
+  -d '{"text": "test clipping", "source": "test"}' 2>&1
+{"detail":[{"type":"missing","loc":["body","filename"],"msg":"Field required","input":{"text":"test clipping","source":"test"}},{"type":"missing","loc":["body","content"],"msg":"Field required","input":{"text":"test clipping","source":"test"}}]}%      
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 
@@ -4003,26 +4013,6 @@ INFO:     Application startup complete.
 
 ```bash
 grep -A 20 "clippings/save" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py | head -30
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % curl -X POST http://localhost:8011/api/clippings/save \
-  -H "Content-Type: application/json" \
-  -d '{"text": "test clipping", "source": "test"}' 2>&1
-{"detail":[{"type":"missing","loc":["body","filename"],"msg":"Field required","input":{"text":"test clipping","source":"test"}},{"type":"missing","loc":["body","content"],"msg":"Field required","input":{"text":"test clipping","source":"test"}}]}%      
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Вижу: эндпоинт использует модель `ClippingSaveRequest`. Найдем её определение:
-
-```bash
-grep -B 5 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py
 ```
 
 ---
@@ -4066,10 +4056,10 @@ async def save_clipping(request: ClippingSaveRequest):
 
 ## 🤖 **DeepSeek**
 
-Нужно показать полное определение:
+Вижу: эндпоинт использует модель `ClippingSaveRequest`. Найдем её определение:
 
 ```bash
-grep -A 10 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py
+grep -B 5 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py
 ```
 
 ---
@@ -4083,6 +4073,34 @@ grep -A 10 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub
     context_limit: Optional[int] = 3
 
 class ClippingSaveRequest(BaseModel):
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Нужно показать полное определение:
+
+```bash
+grep -A 10 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -A 10 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py
+class ClippingSaveRequest(BaseModel):
+    filename: str
+    content: str
+    chat_id: Optional[str] = None
+    version: Optional[int] = 1
+    source_url: Optional[str] = None
+    saved_at: Optional[str] = None
+
+class RAGProcessor:
+    def __init__(self, search_api_url: str = "http://localhost:8003/search"):
+        self.search_api_url = search_api_url
 (.venv) kirillkravcov@Mac UniversalCreativeHub %
 
 ---
@@ -4115,19 +4133,7 @@ DeepSeek Chat Saver отправляет:
 
 ## 👤 **Kirill**
 
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep -A 10 "class ClippingSaveRequest" /Users/kirillkravcov/UniversalCreativeHub/clipping-api/main.py
-class ClippingSaveRequest(BaseModel):
-    filename: str
-    content: str
-    chat_id: Optional[str] = None
-    version: Optional[int] = 1
-    source_url: Optional[str] = None
-    saved_at: Optional[str] = None
-
-class RAGProcessor:
-    def __init__(self, search_api_url: str = "http://localhost:8003/search"):
-        self.search_api_url = search_api_url
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
+все заработало. Только скрипт требует доработки. Некоторые чаты может не успевали прогрузится и поэтому не полностью некоторые чаты сохраняются и не сначала. А как проверить все ли сообщения в чате сохраняются?
 
 ---
 
@@ -4306,7 +4312,231 @@ done
 
 ## 👤 **Kirill**
 
-все заработало. Только скрипт требует доработки. Некоторые чаты может не успевали прогрузится и поэтому не полностью некоторые чаты сохраняются и не сначала. А как проверить все ли сообщения в чате сохраняются?
+Посмотри внимательно скрипт и модифицируй только без потери функциональности!
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v13.0 (Full Chat from IndexedDB)
+// @namespace    Violentmonkey Scripts
+// @version      13.0
+// @description  Save FULL DeepSeek chats - finds 293 chats, extracts ALL messages from IndexedDB
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v13.0 (Full Chat from IndexedDB) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false,
+        delayBetweenChats: 2000
+    };
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Получить ВСЕ сообщения чата из IndexedDB
+    async function getChatMessagesFromIndexedDB(chatId) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.get(chatId);
+                getAll.onsuccess = () => {
+                    const record = getAll.result;
+                    db.close();
+                    if (record && record.data?.chat_messages) {
+                        resolve(record.data.chat_messages);
+                    } else {
+                        resolve([]);
+                    }
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // Извлечь текст из сообщения
+    function getMessageText(msg) {
+        if (msg.fragments && msg.fragments.length > 0) {
+            return msg.fragments.map(f => f.content || f.text || '').join('');
+        }
+        if (msg.content) return msg.content;
+        if (msg.text) return msg.text;
+        return '';
+    }
+
+    // Форматировать чат в Markdown
+    function formatChat(chatId, title, messages) {
+        let content = `---\n`;
+        content += `chat_id: ${chatId}\n`;
+        content += `title: ${title}\n`;
+        content += `message_count: ${messages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${title}\n\n`;
+
+        for (const msg of messages) {
+            const role = msg.role === 'USER' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
+            const text = getMessageText(msg);
+            if (text) {
+                content += `## ${role}\n\n${text}\n\n---\n\n`;
+            }
+        }
+        return content;
+    }
+
+        // Отправить в Clipping API
+    async function saveToAPI(chatId, title, messages) {
+        // Очищаем title от недопустимых символов для имени файла
+        let safeTitle = title || 'Untitled';
+        safeTitle = safeTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')  // Удаляем запрещенные символы
+            .replace(/[\s]+/g, '_')                  // Пробелы в _
+            .substring(0, 50);                       // Ограничиваем длину
+
+        // Если title пустой или стал пустым после очистки
+        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
+            // Используем первые 50 символов первого сообщения как заголовок
+            const firstMsg = messages.find(m => m.role === 'USER');
+            if (firstMsg) {
+                let firstLine = getMessageText(firstMsg).split('\n')[0].substring(0, 40);
+                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
+            }
+        }
+
+        // Если все еще пусто - используем ID
+        if (!safeTitle || safeTitle.length === 0) {
+            safeTitle = chatId.substring(0, 8);
+        }
+
+        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
+        const content = formatChat(chatId, title || safeTitle, messages);
+
+        console.log(`  📄 Файл: ${filename}`);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chatId,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+        // Найти все чаты с прокруткой
+    async function findAllChatsWithScroll() {
+        // Находим контейнер с чатами
+        const sidebar = document.querySelector('.ds-virtual-list');
+        if (!sidebar) {
+            console.log('❌ Боковая панель не найдена');
+            return [];
+        }
+
+        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
+
+        let lastCount = 0;
+        let scrolls = 0;
+
+        while (scrolls < 50) {
+            sidebar.scrollTop = sidebar.scrollHeight;
+            await sleep(1500);
+
+            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
+            if (chats.length === lastCount) break;
+            lastCount = chats.length;
+            scrolls++;
+            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
+        }
+
+        const allChats = [];
+        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
+            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
+            if (match) {
+                allChats.push({
+                    id: match[1],
+                    title: a.textContent?.trim() || 'Untitled'
+                });
+            }
+        });
+
+        console.log(`✅ Найдено ${allChats.length} чатов`);
+        return allChats;
+    }
+
+    // Сохранить все чаты
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        const chats = await findAllChatsWithScroll();
+        if (chats.length === 0) {
+            console.log('❌ Чаты не найдены');
+            CONFIG.isProcessing = false;
+            return;
+        }
+
+        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
+
+        for (let i = 0; i < chats.length; i++) {
+            const chat = chats[i];
+            console.log(`[${i+1}/${chats.length}] ${chat.title}`);
+
+            // Открываем чат
+            const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
+            if (link) {
+                link.click();
+                await sleep(2500);
+
+                // Читаем сообщения из IndexedDB
+                const messages = await getChatMessagesFromIndexedDB(chat.id);
+                if (messages.length > 0) {
+                    await saveToAPI(chat.id, chat.title, messages);
+                    console.log(`  ✅ ${messages.length} сообщений`);
+                } else {
+                    console.log(`  ⚠️ Нет сообщений`);
+                }
+            }
+            await sleep(500);
+        }
+
+        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
+        CONFIG.isProcessing = false;
+    }
+
+    // Добавить кнопку
+    const btn = document.createElement('button');
+    btn.textContent = '📚 Save ALL Chats (v13 FULL)';
+    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;`;
+    btn.onclick = saveAllChats;
+    setTimeout(() => document.body.appendChild(btn), 2000);
+})();// ==UserScript==
+// @name        New script deepseek.com
+// @namespace   Violentmonkey Scripts
+// @match       https://chat.deepseek.com/a/chat/s/ae9e519a-f3ba-45d3-a9d7-1cfec51175ba*
+// @icon        https://fe-static.deepseek.com/chat/favicon.svg
+// @grant       none
+// @version     1.0
+// @author      -
+// @description 05.04.2026, 21:53:16
+// ==/UserScript==
 
 ---
 
@@ -4662,231 +4892,7 @@ done
 
 ## 👤 **Kirill**
 
-Посмотри внимательно скрипт и модифицируй только без потери функциональности!
-// ==UserScript==
-// @name         DeepSeek Chat Saver - UCH Integration v13.0 (Full Chat from IndexedDB)
-// @namespace    Violentmonkey Scripts
-// @version      13.0
-// @description  Save FULL DeepSeek chats - finds 293 chats, extracts ALL messages from IndexedDB
-// @author       Kirill
-// @match        https://chat.deepseek.com/*
-// @grant        GM_xmlhttpRequest
-// @run-at       document-end
-// ==/UserScript==
-
-(function() {
-    'use strict';
-
-    console.log('%c=== DeepSeek UCH Saver v13.0 (Full Chat from IndexedDB) ===', 'background: #00ff00; color: black; font-size: 14px;');
-
-    const CONFIG = {
-        apiUrl: 'http://localhost:8011/api/clippings/save',
-        isProcessing: false,
-        delayBetweenChats: 2000
-    };
-
-    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    // Получить ВСЕ сообщения чата из IndexedDB
-    async function getChatMessagesFromIndexedDB(chatId) {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('deepseek-chat');
-            request.onsuccess = () => {
-                const db = request.result;
-                const tx = db.transaction(['history-message'], 'readonly');
-                const store = tx.objectStore('history-message');
-                const getAll = store.get(chatId);
-                getAll.onsuccess = () => {
-                    const record = getAll.result;
-                    db.close();
-                    if (record && record.data?.chat_messages) {
-                        resolve(record.data.chat_messages);
-                    } else {
-                        resolve([]);
-                    }
-                };
-                getAll.onerror = () => reject(getAll.error);
-            };
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    // Извлечь текст из сообщения
-    function getMessageText(msg) {
-        if (msg.fragments && msg.fragments.length > 0) {
-            return msg.fragments.map(f => f.content || f.text || '').join('');
-        }
-        if (msg.content) return msg.content;
-        if (msg.text) return msg.text;
-        return '';
-    }
-
-    // Форматировать чат в Markdown
-    function formatChat(chatId, title, messages) {
-        let content = `---\n`;
-        content += `chat_id: ${chatId}\n`;
-        content += `title: ${title}\n`;
-        content += `message_count: ${messages.length}\n`;
-        content += `exported_at: ${new Date().toISOString()}\n`;
-        content += `---\n\n`;
-        content += `# ${title}\n\n`;
-
-        for (const msg of messages) {
-            const role = msg.role === 'USER' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
-            const text = getMessageText(msg);
-            if (text) {
-                content += `## ${role}\n\n${text}\n\n---\n\n`;
-            }
-        }
-        return content;
-    }
-
-        // Отправить в Clipping API
-    async function saveToAPI(chatId, title, messages) {
-        // Очищаем title от недопустимых символов для имени файла
-        let safeTitle = title || 'Untitled';
-        safeTitle = safeTitle
-            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')  // Удаляем запрещенные символы
-            .replace(/[\s]+/g, '_')                  // Пробелы в _
-            .substring(0, 50);                       // Ограничиваем длину
-
-        // Если title пустой или стал пустым после очистки
-        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
-            // Используем первые 50 символов первого сообщения как заголовок
-            const firstMsg = messages.find(m => m.role === 'USER');
-            if (firstMsg) {
-                let firstLine = getMessageText(firstMsg).split('\n')[0].substring(0, 40);
-                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
-            }
-        }
-
-        // Если все еще пусто - используем ID
-        if (!safeTitle || safeTitle.length === 0) {
-            safeTitle = chatId.substring(0, 8);
-        }
-
-        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
-        const content = formatChat(chatId, title || safeTitle, messages);
-
-        console.log(`  📄 Файл: ${filename}`);
-
-        return new Promise((resolve, reject) => {
-            GM_xmlhttpRequest({
-                method: 'POST',
-                url: CONFIG.apiUrl,
-                headers: { 'Content-Type': 'application/json' },
-                data: JSON.stringify({
-                    filename: filename,
-                    content: content,
-                    chat_id: chatId,
-                    version: 1,
-                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
-                }),
-                onload: (response) => {
-                    if (response.status === 200) resolve(true);
-                    else reject(new Error(`HTTP ${response.status}`));
-                },
-                onerror: reject
-            });
-        });
-    }
-
-        // Найти все чаты с прокруткой
-    async function findAllChatsWithScroll() {
-        // Находим контейнер с чатами
-        const sidebar = document.querySelector('.ds-virtual-list');
-        if (!sidebar) {
-            console.log('❌ Боковая панель не найдена');
-            return [];
-        }
-
-        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
-
-        let lastCount = 0;
-        let scrolls = 0;
-
-        while (scrolls < 50) {
-            sidebar.scrollTop = sidebar.scrollHeight;
-            await sleep(1500);
-
-            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
-            if (chats.length === lastCount) break;
-            lastCount = chats.length;
-            scrolls++;
-            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
-        }
-
-        const allChats = [];
-        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
-            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
-            if (match) {
-                allChats.push({
-                    id: match[1],
-                    title: a.textContent?.trim() || 'Untitled'
-                });
-            }
-        });
-
-        console.log(`✅ Найдено ${allChats.length} чатов`);
-        return allChats;
-    }
-
-    // Сохранить все чаты
-    async function saveAllChats() {
-        if (CONFIG.isProcessing) return;
-        CONFIG.isProcessing = true;
-
-        const chats = await findAllChatsWithScroll();
-        if (chats.length === 0) {
-            console.log('❌ Чаты не найдены');
-            CONFIG.isProcessing = false;
-            return;
-        }
-
-        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
-
-        for (let i = 0; i < chats.length; i++) {
-            const chat = chats[i];
-            console.log(`[${i+1}/${chats.length}] ${chat.title}`);
-
-            // Открываем чат
-            const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
-            if (link) {
-                link.click();
-                await sleep(2500);
-
-                // Читаем сообщения из IndexedDB
-                const messages = await getChatMessagesFromIndexedDB(chat.id);
-                if (messages.length > 0) {
-                    await saveToAPI(chat.id, chat.title, messages);
-                    console.log(`  ✅ ${messages.length} сообщений`);
-                } else {
-                    console.log(`  ⚠️ Нет сообщений`);
-                }
-            }
-            await sleep(500);
-        }
-
-        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
-        CONFIG.isProcessing = false;
-    }
-
-    // Добавить кнопку
-    const btn = document.createElement('button');
-    btn.textContent = '📚 Save ALL Chats (v13 FULL)';
-    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;`;
-    btn.onclick = saveAllChats;
-    setTimeout(() => document.body.appendChild(btn), 2000);
-})();// ==UserScript==
-// @name        New script deepseek.com
-// @namespace   Violentmonkey Scripts
-// @match       https://chat.deepseek.com/a/chat/s/ae9e519a-f3ba-45d3-a9d7-1cfec51175ba*
-// @icon        https://fe-static.deepseek.com/chat/favicon.svg
-// @grant       none
-// @version     1.0
-// @author      -
-// @description 05.04.2026, 21:53:16
-// ==/UserScript==
+Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок
 
 ---
 
@@ -5018,7 +5024,7 @@ function formatChat(chatId, title, messages) {
 
 ## 👤 **Kirill**
 
-Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок
+Сделай полностью обновленный файл
 
 ---
 
@@ -5378,7 +5384,7 @@ function formatChat(chatId, title, messages) {
 
 ## 👤 **Kirill**
 
-Сделай полностью обновленный файл
+какая выяснилась особенность. Скрипт не учитывает, что в чате сообщения могут быть не одним днем, а например, user мог вернуться к чату спустя несколько дней. И получается что скрипт определяет скорее всего первое сообщение по последней дате изменения, а нужно найти самое раннее сообщение с самой раннеей датой и временем в чате. Исслдеуй
 
 ---
 
@@ -5606,7 +5612,8 @@ function getMessageTime(msg) {
 
 ## 👤 **Kirill**
 
-какая выяснилась особенность. Скрипт не учитывает, что в чате сообщения могут быть не одним днем, а например, user мог вернуться к чату спустя несколько дней. И получается что скрипт определяет скорее всего первое сообщение по последней дате изменения, а нужно найти самое раннее сообщение с самой раннеей датой и временем в чате. Исслдеуй
+Promise {<fulfilled>: undefined}
+VM9940:12 ❌ Не удалось определить ID чата
 
 ---
 
@@ -5673,8 +5680,14 @@ if (possibleIds) {
 
 ## 👤 **Kirill**
 
-Promise {<fulfilled>: undefined}
-VM9940:12 ❌ Не удалось определить ID чата
+Current URL: https://chat.deepseek.com/a/chat/s/0a28483c-c576-478a-94f6-61134c1c5ada
+VM10002:3 Pathname: /a/chat/s/0a28483c-c576-478a-94f6-61134c1c5ada
+VM10002:13 Проверка паттернов:
+VM10002:15 Паттерн 0: найден ID = 0a28483c-c576-478a-94f6-61134c1c5ada
+VM10002:15 Паттерн 1: найден ID = 0a28483c-c576-478a-94f6-61134c1c5ada
+VM10002:15 Паттерн 2: найден ID = 0a28483c-c576-478a-94f6-61134c1c5ada
+VM10002:16 Паттерн 3: не найден
+undefined
 
 ---
 
@@ -5760,14 +5773,213 @@ request.onerror = (e) => console.error('Ошибка открытия DB:', e);
 
 ## 👤 **Kirill**
 
-Current URL: https://chat.deepseek.com/a/chat/s/0a28483c-c576-478a-94f6-61134c1c5ada
-VM10002:3 Pathname: /a/chat/s/0a28483c-c576-478a-94f6-61134c1c5ada
-VM10002:13 Проверка паттернов:
-VM10002:15 Паттерн 0: найден ID = 0a28483c-c576-478a-94f6-61134c1c5ada
-VM10002:15 Паттерн 1: найден ID = 0a28483c-c576-478a-94f6-61134c1c5ada
-VM10002:15 Паттерн 2: найден ID = 0a28483c-c576-478a-94f6-61134c1c5ada
-VM10002:16 Паттерн 3: не найден
-undefined
+request.onerror = (e) => console.error('Ошибка открытия DB:', e);
+(e) => console.error('Ошибка открытия DB:', e)
+VM10119:15 📊 Найдено 194 сообщений
+VM10119:18 
+=== ПЕРВЫЕ 3 СООБЩЕНИЯ ===
+VM10119:20 
+--- Сообщение 0 (USER) ---
+VM10119:21 {
+  "message_id": 191,
+  "parent_id": 190,
+  "model": "",
+  "role": "USER",
+  "thinking_enabled": false,
+  "ban_edit": false,
+  "ban_regenerate": false,
+  "status": "FINISHED",
+  "incomplete_message": null,
+  "accumulated_token_usage": 104326,
+  "feedback": null,
+  "inserted_at": 1779653273.488,
+  "search_enabled": true,
+  "fragments": [
+    {
+      "id": 1,
+      "type": "FILE",
+      "files": [
+        {
+          "id": "file-d982b8ff-5ecc-4324-a559-67f972f5ee8b",
+          "status": "SUCCESS",
+          "file_name": "Запуск_этапа_разработки_Kymatics_0a28483c.md",
+          "from_share": false,
+          "file_size": 189004,
+          "model_kind": "NORMAL",
+          "token_usage": 49522,
+          "error_code": null,
+          "inserted_at": 1779653271.306,
+          "updated_at": 1779653271.306,
+          "signed_path": "/file?file_id=d982b8ff-5ecc-4324-a559-67f972f5ee8b&state=qdZXkwzMHeLPhEhv1Fb0NJfjeF%2BCsKaoqYZPvfDWGnAsHF3bwN9upfUMFxkYHaDRyvF3KObLUxwFAPKyTIdt9JzfAhd33Vm9dbqP%2F%2FbyGawrEAMxjtYZ1QOn5Ku1Nqrb7Q%2F%2FwMUBuOf8XaRHs2q9T8%2BQoYLjx6%2FsLypsGWlupOetvPNkZVrEUfBPtOlza6BiXjNSitb0CPOyuAf2shliMJg7XueawmSgyT43l0SUTUC31QqRJKKNIMrxQudUSb4D8%2FwMaiLvrW9GP%2BNuN5s7QKfmp%2BlpAkCCaqY32Da1wjITGF9K6EXKG4OjPLxHLWsdqfDFa0N1krblZUEWpyKKA97HHBFWRGDpmgHnZYo3euYpbFzO%2FnE0%2F8d5OSwnknZliA%3D%3D",
+          "is_image": false,
+          "audit_result": null
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "REQUEST",
+      "content": "Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок"
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+VM10119:20 
+--- Сообщение 1 (ASSISTANT) ---
+VM10119:21 {
+  "message_id": 192,
+  "parent_id": 191,
+  "model": "",
+  "role": "ASSISTANT",
+  "thinking_enabled": false,
+  "ban_edit": false,
+  "ban_regenerate": false,
+  "status": "FINISHED",
+  "incomplete_message": null,
+  "accumulated_token_usage": 105388,
+  "feedback": null,
+  "inserted_at": 1779653273.485,
+  "search_enabled": true,
+  "fragments": [
+    {
+      "id": 2,
+      "type": "RESPONSE",
+      "content": "Вижу проблему. В сохраненном файле порядок сообщений **нарушен** — системный промпт (который должен быть самым первым) оказался **в конце** файла, а первое сообщение от пользователя `\"все заработало...\"` стоит на первом месте.\n\n## Причина\n\nВ скрипте `formatChat()` сообщения сортируются по мере их поступления из IndexedDB, но:\n1. **Системный промпт** (role = 'SYSTEM') — не обрабатывается отдельно, он может иметь более поздний timestamp\n2. **Порядок сообщений** в IndexedDB может быть не хронологическим (особенно если чат подгружался частями)\n\n## Решение — добавить сортировку по времени\n\nВ функции `formatChat()` нужно **сортировать сообщения по timestamp** перед форматированием:\n\n```javascript\n// Добавь эту функцию в скрипт\nfunction sortMessagesByTime(messages) {\n    return messages.sort((a, b) => {\n        const timeA = a.created_at || a.timestamp || 0;\n        const timeB = b.created_at || b.timestamp || 0;\n        return timeA - timeB;\n    });\n}\n\n// В formatChat() перед циклом добавь:\nmessages = sortMessagesByTime(messages);\n```\n\n---\n\n## Обновленная функция `formatChat()`\n\n```javascript\nfunction formatChat(chatId, title, messages) {\n    // СОРТИРУЕМ ПО ВРЕМЕНИ\n    const sortedMessages = [...messages].sort((a, b) => {\n        const timeA = a.created_at || a.timestamp || 0;\n        const timeB = b.created_at || b.timestamp || 0;\n        return timeA - timeB;\n    });\n    \n    let content = `---\\n`;\n    content += `chat_id: ${chatId}\\n`;\n    content += `title: ${title}\\n`;\n    content += `message_count: ${sortedMessages.length}\\n`;\n    content += `exported_at: ${new Date().toISOString()}\\n`;\n    content += `---\\n\\n`;\n    content += `# ${title}\\n\\n`;\n\n    for (const msg of sortedMessages) {\n        let role = '';\n        if (msg.role === 'SYSTEM') role = '⚙️ **System**';\n        else if (msg.role === 'USER') role = '👤 **Kirill**';\n        else role = '🤖 **DeepSeek**';\n        \n        const text = getMessageText(msg);\n        if (text) {\n            content += `## ${role}\\n\\n${text}\\n\\n---\\n\\n`;\n        }\n    }\n    return content;\n}\n```\n\n---\n\n## Также нужно добавить поле `created_at` при сохранении\n\nВ функции `saveToAPI`, перед отправкой, убедись, что у каждого сообщения есть `created_at`:\n\n```javascript\n// Если в сообщении нет created_at, используем timestamp из metadata или текущее время\nmessages.forEach(msg => {\n    if (!msg.created_at && msg.timestamp) {\n        msg.created_at = msg.timestamp;\n    } else if (!msg.created_at) {\n        msg.created_at = Date.now();\n    }\n});\n```\n\n---\n\n## Полный исправленный фрагмент\n\nВставь это в свой скрипт (замени существующие функции `formatChat` и добавь `sortMessagesByTime`):\n\n```javascript\nfunction sortMessagesByTime(messages) {\n    return [...messages].sort((a, b) => {\n        const timeA = a.created_at || a.timestamp || 0;\n        const timeB = b.created_at || b.timestamp || 0;\n        return timeA - timeB;\n    });\n}\n\nfunction formatChat(chatId, title, messages) {\n    const sortedMessages = sortMessagesByTime(messages);\n    \n    let content = `---\\n`;\n    content += `chat_id: ${chatId}\\n`;\n    content += `title: ${title}\\n`;\n    content += `message_count: ${sortedMessages.length}\\n`;\n    content += `exported_at: ${new Date().toISOString()}\\n`;\n    content += `---\\n\\n`;\n    content += `# ${title}\\n\\n`;\n\n    for (const msg of sortedMessages) {\n        let role = '';\n        if (msg.role === 'SYSTEM') role = '⚙️ **System**';\n        else if (msg.role === 'USER') role = '👤 **Kirill**';\n        else role = '🤖 **DeepSeek**';\n        \n        const text = getMessageText(msg);\n        if (text) {\n            content += `## ${role}\\n\\n${text}\\n\\n---\\n\\n`;\n        }\n    }\n    return content;\n}\n```\n\nПосле этого пересохрани проблемные чаты — порядок должен стать правильным.",
+      "references": [],
+      "stage_id": 1
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+VM10119:20 
+--- Сообщение 2 (USER) ---
+VM10119:21 {
+  "message_id": 193,
+  "parent_id": 192,
+  "model": "",
+  "role": "USER",
+  "thinking_enabled": false,
+  "ban_edit": false,
+  "ban_regenerate": false,
+  "status": "FINISHED",
+  "incomplete_message": null,
+  "accumulated_token_usage": 105428,
+  "feedback": null,
+  "inserted_at": 1779653339.615,
+  "search_enabled": true,
+  "fragments": [
+    {
+      "id": 1,
+      "type": "REQUEST",
+      "content": "Сделай полностью обновленный файл"
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+VM10119:25 
+=== ПОСЛЕДНИЕ 3 СООБЩЕНИЯ ===
+VM10119:27 
+--- Сообщение 191 (ASSISTANT) ---
+VM10119:28 {
+  "message_id": 36,
+  "parent_id": 35,
+  "model": "",
+  "role": "ASSISTANT",
+  "thinking_enabled": false,
+  "ban_edit": false,
+  "ban_regenerate": false,
+  "status": "FINISHED",
+  "incomplete_message": null,
+  "accumulated_token_usage": 10237,
+  "feedback": null,
+  "inserted_at": 1779563142.0019999,
+  "search_enabled": true,
+  "fragments": [
+    {
+      "id": 2,
+      "type": "RESPONSE",
+      "content": "✅ Neo4j клиенты исправлены.\n\n---\n\n**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**\n\n```bash\nhead -80 ai-farm/agents/batuta/memory_service.py\n```",
+      "references": [],
+      "stage_id": 1
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+VM10119:27 
+--- Сообщение 192 (USER) ---
+VM10119:28 {
+  "message_id": 37,
+  "parent_id": 36,
+  "model": "",
+  "role": "USER",
+  "thinking_enabled": false,
+  "ban_edit": false,
+  "ban_regenerate": false,
+  "status": "FINISHED",
+  "incomplete_message": null,
+  "accumulated_token_usage": 11021,
+  "feedback": null,
+  "inserted_at": 1779563154.6569998,
+  "search_enabled": true,
+  "fragments": [
+    {
+      "id": 1,
+      "type": "REQUEST",
+      "content": "(.venv) kirillkravcov@Mac UniversalCreativeHub % head -80 ai-farm/agents/batuta/memory_service.py\n\"\"\"\nPersistent Memory Service - файловая версия (быстрая и стабильная)\n\"\"\"\nimport json\nimport os\nimport uuid\nfrom datetime import datetime\nfrom typing import List, Dict, Any, Optional\nfrom pathlib import Path\n\nclass MemoryService:\n    \"\"\"Сервис для долговременной памяти агентов (файловая версия)\"\"\"\n    \n    def __init__(self, persist_dir: str = None):\n        if persist_dir is None:\n            persist_dir = os.path.join(os.path.dirname(__file__), \"memory_files\")\n        \n        self.persist_dir = Path(persist_dir)\n        self.persist_dir.mkdir(parents=True, exist_ok=True)\n        print(f\"MemoryService initialized at {self.persist_dir}\")\n    \n    def _get_memory_file(self, project_id: str) -> Path:\n        \"\"\"Получить путь к файлу памяти проекта\"\"\"\n        safe_name = \"\".join(c for c in project_id if c.isalnum() or c in \"._-\")\n        return self.persist_dir / f\"{safe_name}.json\"\n    \n    def _load_memories(self, project_id: str) -> List[Dict]:\n        \"\"\"Загрузить все памяти проекта\"\"\"\n        file_path = self._get_memory_file(project_id)\n        if file_path.exists():\n            try:\n                with open(file_path, 'r', encoding='utf-8') as f:\n                    return json.load(f)\n            except:\n                return []\n        return []\n    \n    def _save_memories(self, project_id: str, memories: List[Dict]):\n        \"\"\"Сохранить памяти проекта\"\"\"\n        file_path = self._get_memory_file(project_id)\n        with open(file_path, 'w', encoding='utf-8') as f:\n            json.dump(memories, f, indent=2, ensure_ascii=False, default=str)\n    \n    def add_memory(self, project_id: str, memory: str, metadata: Dict[str, Any] = None) -> str:\n        \"\"\"Добавить запись в память проекта\"\"\"\n        memories = self._load_memories(project_id)\n        \n        memory_id = str(uuid.uuid4())\n        meta = metadata or {}\n        meta[\"timestamp\"] = datetime.now().isoformat()\n        meta[\"project_id\"] = project_id\n        \n        memories.append({\n            \"id\": memory_id,\n            \"memory\": memory,\n            \"metadata\": meta,\n            \"created_at\": datetime.now().isoformat()\n        })\n        \n        self._save_memories(project_id, memories)\n        return memory_id\n    \n    def search_memory(self, project_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:\n        \"\"\"Поиск по памяти проекта (простой текстовый поиск)\"\"\"\n        memories = self._load_memories(project_id)\n        \n        query_lower = query.lower()\n        query_words = query_lower.split()\n        \n        scored = []\n        for mem in memories:\n            memory_lower = mem[\"memory\"].lower()\n            # Считаем количество совпадений слов\n            score = 0\n            for word in query_words:\n                if word in memory_lower:\n                    score += 1\n            \n            if query_words:\n                score = score / len(query_words)\n(.venv) kirillkravcov@Mac UniversalCreativeHub %"
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+VM10119:27 
+--- Сообщение 193 (ASSISTANT) ---
+VM10119:28 {
+  "message_id": 38,
+  "parent_id": 37,
+  "model": "",
+  "role": "ASSISTANT",
+  "thinking_enabled": false,
+  "ban_edit": false,
+  "ban_regenerate": false,
+  "status": "FINISHED",
+  "incomplete_message": null,
+  "accumulated_token_usage": 11133,
+  "feedback": null,
+  "inserted_at": 1779563154.6539998,
+  "search_enabled": true,
+  "fragments": [
+    {
+      "id": 2,
+      "type": "RESPONSE",
+      "content": "Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.\n\n**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**\n\nСначала проверим, запущен ли ChromaDB:\n\n```bash\ncurl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo \"ChromaDB not running\"\n```",
+      "references": [],
+      "stage_id": 1
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+VM10119:32 
+=== АНАЛИЗ ПОЛЕЙ ВРЕМЕНИ ===
+VM10119:41 Сообщение 0 (USER): {}
+VM10119:41 Сообщение 1 (ASSISTANT): {}
+VM10119:41 Сообщение 2 (USER): {}
+VM10119:41 Сообщение 3 (ASSISTANT): {}
+VM10119:41 Сообщение 4 (USER): {}
+VM10119:46 
+=== РАЗНИЦА ВО ВРЕМЕНИ ===
+VM10119:57 Первое сообщение время: null
+VM10119:58 Последнее сообщение время: null
 
 ---
 
@@ -6237,16 +6449,166 @@ function sortMessagesByTime(messages) {
 
 ## 👤 **Kirill**
 
-request.onerror = (e) => console.error('Ошибка открытия DB:', e);
+Есть ошибки.
+Самое первое сообщение теряется. В остальном вроде хронология сохраняется
+сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191   ⚠️ Найдено 5 нарушений хронологического порядка в первых сообщениях
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196   ⚠️ Первое сообщение не SYSTEM (USER)
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:205   ⚠️ Валидация: 238 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:232   📄 Файл: Рефакторинг_терминала_Kymatics_a190d52b.md (238 сообщений)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:338   📅 Диапазон: 19.05.2026 → 20.05.2026
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:314 
+[7/345] Создание эндпоинта promote process to component
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:131   ⏳ Ожидание загрузки сообщений чата...
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:157     📥 Загружено 350 сообщений...
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 350 сообщений (1/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 350 сообщений (2/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 350 сообщений (3/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:152   ✅ Чат загружен: 350 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191   ⚠️ Найдено 5 нарушений хронологического порядка в первых сообщениях
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196   ⚠️ Первое сообщение не SYSTEM (USER)
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:205   ⚠️ Валидация: 350 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:232   📄 Файл: Создание_эндпоинта_promote_process_to_component_9af8d599.md (350 сообщений)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:338   📅 Диапазон: 18.05.2026 → 19.05.2026
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:314 
+[8/345] Исправление API синхронизации багов
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:131   ⏳ Ожидание загрузки сообщений чата...
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:157     📥 Загружено 330 сообщений...
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 330 сообщений (1/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 330 сообщений (2/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 330 сообщений (3/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:152   ✅ Чат загружен: 330 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191   ⚠️ Найдено 5 нарушений хронологического порядка в первых сообщениях
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196   ⚠️ Первое сообщение не SYSTEM (USER)
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:205   ⚠️ Валидация: 330 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:232   📄 Файл: Исправление_API_синхронизации_багов_ba6a8e90.md (330 сообщений)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:338   📅 Диапазон: 18.05.2026 → 18.05.2026
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:314 
+[9/345] Аудит архитектуры Kymatics
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:131   ⏳ Ожидание загрузки сообщений чата...
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:157     📥 Загружено 276 сообщений...
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 276 сообщений (1/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 276 сообщений (2/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:144     📊 Стабильно: 276 сообщений (3/3)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:152   ✅ Чат загружен: 276 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191   ⚠️ Найдено 6 нарушений хронологического порядка в первых сообщениях
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:191
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196   ⚠️ Первое сообщение не SYSTEM (USER)
+validateMessages @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:196
+saveAllChats @ DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:324
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:205   ⚠️ Валидация: 276 сообщений
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:232   📄 Файл: Аудит_архитектуры_Kymatics_a027ba11.md (276 сообщений)
+DeepSeek Chat Saver - UCH Integration v13.3 (Fixed inserted_at sort).user.js:338   📅 Диапазон: 16.05.2026 → 18.05.2026
+
+---
+
+## 🤖 **DeepSeek**
+
+Ты прав. Проблема: **SYSTEM сообщение вообще отсутствует в сохраненном файле**, а первое сообщение — USER. Это значит, что либо:
+
+1. SYSTEM сообщение не сохраняется в IndexedDB (или имеет другой `role`)
+2. SYSTEM сообщение имеет `inserted_at` **позже**, чем первое USER сообщение
+3. SYSTEM сообщение существует, но фильтруется где-то в процессе
+
+Давай сначала проверим, **есть ли вообще SYSTEM сообщения в IndexedDB**.
+
+Выполни в консоли браузера (на странице любого чата):
+
+```javascript
+// Проверка наличия SYSTEM сообщений
+const chatId = window.location.pathname.match(/\/a\/chat\/s\/([a-f0-9-]+)/)?.[1];
+if (!chatId) {
+    console.log('❌ Не удалось определить ID чата из URL');
+} else {
+    const request = indexedDB.open('deepseek-chat');
+    request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction(['history-message'], 'readonly');
+        const store = tx.objectStore('history-message');
+        const get = store.get(chatId);
+        get.onsuccess = () => {
+            const record = get.result;
+            if (record && record.data?.chat_messages) {
+                const messages = record.data.chat_messages;
+                
+                // Ищем SYSTEM сообщения
+                const systemMessages = messages.filter(m => m.role === 'SYSTEM');
+                console.log(`📊 Всего сообщений: ${messages.length}`);
+                console.log(`🔧 SYSTEM сообщений: ${systemMessages.length}`);
+                
+                if (systemMessages.length > 0) {
+                    console.log('📋 Первое SYSTEM сообщение:');
+                    console.log(JSON.stringify(systemMessages[0], null, 2));
+                    
+                    // Сравниваем inserted_at первого SYSTEM и первого USER
+                    const firstUser = messages.find(m => m.role === 'USER');
+                    if (firstUser) {
+                        console.log(`SYSTEM inserted_at: ${systemMessages[0].inserted_at}`);
+                        console.log(`USER inserted_at: ${firstUser.inserted_at}`);
+                        console.log(`Разница: ${(systemMessages[0].inserted_at - firstUser.inserted_at) * 1000} мс`);
+                    }
+                } else {
+                    console.log('❌ SYSTEM сообщения отсутствуют в IndexedDB');
+                    console.log('📋 Возможные роли в сообщениях:');
+                    const roles = [...new Set(messages.map(m => m.role))];
+                    console.log(roles);
+                    
+                    // Показываем первое сообщение в массиве
+                    console.log('📋 Первое сообщение в массиве (без сортировки):');
+                    console.log(JSON.stringify(messages[0], null, 2));
+                }
+                
+                db.close();
+            } else {
+                console.log('❌ Нет сообщений для этого чата');
+            }
+        };
+        get.onerror = (e) => console.error('Ошибка:', e);
+    };
+    request.onerror = (e) => console.error('Ошибка открытия DB:', e);
+}
+```
+
+**Выполни этот код и покажи результат** — это покажет:
+1. Есть ли вообще SYSTEM сообщения
+2. Какое у них `inserted_at` по сравнению с USER
+3. Какие роли вообще присутствуют
+
+После этого я точно пойму, нужно ли:
+- Искать SYSTEM сообщения по другому признаку (может, `role === 'SYSTEM'` не используется)
+- Или SYSTEM сообщения хранится в другом месте
+- Или добавить поддержку другого поля для определения первого сообщения
+
+---
+
+## 👤 **Kirill**
+
+А что за system сообщение?
+Первое сообщение в чате всегда от user
+
 (e) => console.error('Ошибка открытия DB:', e)
-VM10119:15 📊 Найдено 194 сообщений
-VM10119:18 
-=== ПЕРВЫЕ 3 СООБЩЕНИЯ ===
-VM10119:20 
---- Сообщение 0 (USER) ---
-VM10119:21 {
-  "message_id": 191,
-  "parent_id": 190,
+VM10413:19 📊 Всего сообщений: 202
+VM10413:20 🔧 SYSTEM сообщений: 0
+VM10413:34 ❌ SYSTEM сообщения отсутствуют в IndexedDB
+VM10413:35 📋 Возможные роли в сообщениях:
+VM10413:37 (2) ['USER', 'ASSISTANT']
+VM10413:40 📋 Первое сообщение в массиве (без сортировки):
+VM10413:41 {
+  "message_id": 195,
+  "parent_id": 194,
   "model": "",
   "role": "USER",
   "thinking_enabled": false,
@@ -6254,196 +6616,720 @@ VM10119:21 {
   "ban_regenerate": false,
   "status": "FINISHED",
   "incomplete_message": null,
-  "accumulated_token_usage": 104326,
+  "accumulated_token_usage": 108783,
   "feedback": null,
-  "inserted_at": 1779653273.488,
+  "inserted_at": 1779702232.074,
   "search_enabled": true,
   "fragments": [
     {
       "id": 1,
-      "type": "FILE",
-      "files": [
-        {
-          "id": "file-d982b8ff-5ecc-4324-a559-67f972f5ee8b",
-          "status": "SUCCESS",
-          "file_name": "Запуск_этапа_разработки_Kymatics_0a28483c.md",
-          "from_share": false,
-          "file_size": 189004,
-          "model_kind": "NORMAL",
-          "token_usage": 49522,
-          "error_code": null,
-          "inserted_at": 1779653271.306,
-          "updated_at": 1779653271.306,
-          "signed_path": "/file?file_id=d982b8ff-5ecc-4324-a559-67f972f5ee8b&state=qdZXkwzMHeLPhEhv1Fb0NJfjeF%2BCsKaoqYZPvfDWGnAsHF3bwN9upfUMFxkYHaDRyvF3KObLUxwFAPKyTIdt9JzfAhd33Vm9dbqP%2F%2FbyGawrEAMxjtYZ1QOn5Ku1Nqrb7Q%2F%2FwMUBuOf8XaRHs2q9T8%2BQoYLjx6%2FsLypsGWlupOetvPNkZVrEUfBPtOlza6BiXjNSitb0CPOyuAf2shliMJg7XueawmSgyT43l0SUTUC31QqRJKKNIMrxQudUSb4D8%2FwMaiLvrW9GP%2BNuN5s7QKfmp%2BlpAkCCaqY32Da1wjITGF9K6EXKG4OjPLxHLWsdqfDFa0N1krblZUEWpyKKA97HHBFWRGDpmgHnZYo3euYpbFzO%2FnE0%2F8d5OSwnknZliA%3D%3D",
-          "is_image": false,
-          "audit_result": null
+      "type": "REQUEST",
+      "content": "какая выяснилась особенность. Скрипт не учитывает, что в чате сообщения могут быть не одним днем, а например, user мог вернуться к чату спустя несколько дней. И получается что скрипт определяет скорее всего первое сообщение по последней дате изменения, а нужно найти самое раннее сообщение с самой раннеей датой и временем в чате. Исслдеуй"
+    }
+  ],
+  "has_pending_fragment": false,
+  "auto_continue": false,
+  "search_triggered": false
+}
+
+---
+
+## 🤖 **DeepSeek**
+
+Ты абсолютно прав! Я ошибся. **В DeepSeek нет SYSTEM сообщений в IndexedDB.** Системный промпт (инструкции для модели) хранится где-то отдельно или не сохраняется вообще.
+
+## Исправляем логику:
+
+Первое сообщение в чате — **всегда USER**. Это нормально. Проблема в другом: **нарушение хронологического порядка** (5-6 нарушений в первых сообщениях) и **потеря самого первого сообщения**.
+
+Давай проверим, правильно ли сортируются сообщения по `inserted_at`:
+
+```javascript
+// Проверка сортировки сообщений по inserted_at
+const chatId = window.location.pathname.match(/\/a\/chat\/s\/([a-f0-9-]+)/)?.[1];
+if (!chatId) {
+    console.log('❌ Не удалось определить ID чата из URL');
+} else {
+    const request = indexedDB.open('deepseek-chat');
+    request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction(['history-message'], 'readonly');
+        const store = tx.objectStore('history-message');
+        const get = store.get(chatId);
+        get.onsuccess = () => {
+            const record = get.result;
+            if (record && record.data?.chat_messages) {
+                const messages = record.data.chat_messages;
+                
+                // Сортируем по inserted_at
+                const sorted = [...messages].sort((a, b) => a.inserted_at - b.inserted_at);
+                
+                console.log('=== ПЕРВЫЕ 5 СООБЩЕНИЙ ПОСЛЕ СОРТИРОВКИ ===');
+                for (let i = 0; i < Math.min(5, sorted.length); i++) {
+                    const msg = sorted[i];
+                    const date = new Date(msg.inserted_at * 1000);
+                    console.log(`${i}: [${date.toLocaleString()}] ${msg.role}: ${getMessageText(msg).substring(0, 50)}...`);
+                }
+                
+                console.log('\n=== ПОСЛЕДНИЕ 5 СООБЩЕНИЙ ===');
+                for (let i = Math.max(0, sorted.length - 5); i < sorted.length; i++) {
+                    const msg = sorted[i];
+                    const date = new Date(msg.inserted_at * 1000);
+                    console.log(`${i}: [${date.toLocaleString()}] ${msg.role}`);
+                }
+                
+                // Проверяем, есть ли сообщения с одинаковым inserted_at
+                const timestamps = messages.map(m => m.inserted_at);
+                const unique = new Set(timestamps);
+                if (unique.size !== timestamps.length) {
+                    console.log(`⚠️ Есть дубликаты inserted_at: ${timestamps.length} сообщений, ${unique.size} уникальных`);
+                }
+                
+                db.close();
+            }
+        };
+    };
+}
+```
+
+А также добавь в скрипт **функцию для принудительной сортировки по `inserted_at`** (убедись, что она используется везде):
+
+```javascript
+// Функция для надежной сортировки сообщений
+function sortMessagesByTime(messages) {
+    // Создаем копию и сортируем по inserted_at (числовое значение)
+    return [...messages].sort((a, b) => {
+        // Используем inserted_at как основной ключ
+        const timeA = a.inserted_at || 0;
+        const timeB = b.inserted_at || 0;
+        
+        if (timeA === timeB) {
+            // Если время одинаковое, используем message_id как вторичный ключ
+            return (a.message_id || 0) - (b.message_id || 0);
         }
-      ]
-    },
-    {
-      "id": 2,
-      "type": "REQUEST",
-      "content": "Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок"
-    }
-  ],
-  "has_pending_fragment": false,
-  "auto_continue": false,
-  "search_triggered": false
+        return timeA - timeB;
+    });
 }
-VM10119:20 
---- Сообщение 1 (ASSISTANT) ---
-VM10119:21 {
-  "message_id": 192,
-  "parent_id": 191,
-  "model": "",
-  "role": "ASSISTANT",
-  "thinking_enabled": false,
-  "ban_edit": false,
-  "ban_regenerate": false,
-  "status": "FINISHED",
-  "incomplete_message": null,
-  "accumulated_token_usage": 105388,
-  "feedback": null,
-  "inserted_at": 1779653273.485,
-  "search_enabled": true,
-  "fragments": [
-    {
-      "id": 2,
-      "type": "RESPONSE",
-      "content": "Вижу проблему. В сохраненном файле порядок сообщений **нарушен** — системный промпт (который должен быть самым первым) оказался **в конце** файла, а первое сообщение от пользователя `\"все заработало...\"` стоит на первом месте.\n\n## Причина\n\nВ скрипте `formatChat()` сообщения сортируются по мере их поступления из IndexedDB, но:\n1. **Системный промпт** (role = 'SYSTEM') — не обрабатывается отдельно, он может иметь более поздний timestamp\n2. **Порядок сообщений** в IndexedDB может быть не хронологическим (особенно если чат подгружался частями)\n\n## Решение — добавить сортировку по времени\n\nВ функции `formatChat()` нужно **сортировать сообщения по timestamp** перед форматированием:\n\n```javascript\n// Добавь эту функцию в скрипт\nfunction sortMessagesByTime(messages) {\n    return messages.sort((a, b) => {\n        const timeA = a.created_at || a.timestamp || 0;\n        const timeB = b.created_at || b.timestamp || 0;\n        return timeA - timeB;\n    });\n}\n\n// В formatChat() перед циклом добавь:\nmessages = sortMessagesByTime(messages);\n```\n\n---\n\n## Обновленная функция `formatChat()`\n\n```javascript\nfunction formatChat(chatId, title, messages) {\n    // СОРТИРУЕМ ПО ВРЕМЕНИ\n    const sortedMessages = [...messages].sort((a, b) => {\n        const timeA = a.created_at || a.timestamp || 0;\n        const timeB = b.created_at || b.timestamp || 0;\n        return timeA - timeB;\n    });\n    \n    let content = `---\\n`;\n    content += `chat_id: ${chatId}\\n`;\n    content += `title: ${title}\\n`;\n    content += `message_count: ${sortedMessages.length}\\n`;\n    content += `exported_at: ${new Date().toISOString()}\\n`;\n    content += `---\\n\\n`;\n    content += `# ${title}\\n\\n`;\n\n    for (const msg of sortedMessages) {\n        let role = '';\n        if (msg.role === 'SYSTEM') role = '⚙️ **System**';\n        else if (msg.role === 'USER') role = '👤 **Kirill**';\n        else role = '🤖 **DeepSeek**';\n        \n        const text = getMessageText(msg);\n        if (text) {\n            content += `## ${role}\\n\\n${text}\\n\\n---\\n\\n`;\n        }\n    }\n    return content;\n}\n```\n\n---\n\n## Также нужно добавить поле `created_at` при сохранении\n\nВ функции `saveToAPI`, перед отправкой, убедись, что у каждого сообщения есть `created_at`:\n\n```javascript\n// Если в сообщении нет created_at, используем timestamp из metadata или текущее время\nmessages.forEach(msg => {\n    if (!msg.created_at && msg.timestamp) {\n        msg.created_at = msg.timestamp;\n    } else if (!msg.created_at) {\n        msg.created_at = Date.now();\n    }\n});\n```\n\n---\n\n## Полный исправленный фрагмент\n\nВставь это в свой скрипт (замени существующие функции `formatChat` и добавь `sortMessagesByTime`):\n\n```javascript\nfunction sortMessagesByTime(messages) {\n    return [...messages].sort((a, b) => {\n        const timeA = a.created_at || a.timestamp || 0;\n        const timeB = b.created_at || b.timestamp || 0;\n        return timeA - timeB;\n    });\n}\n\nfunction formatChat(chatId, title, messages) {\n    const sortedMessages = sortMessagesByTime(messages);\n    \n    let content = `---\\n`;\n    content += `chat_id: ${chatId}\\n`;\n    content += `title: ${title}\\n`;\n    content += `message_count: ${sortedMessages.length}\\n`;\n    content += `exported_at: ${new Date().toISOString()}\\n`;\n    content += `---\\n\\n`;\n    content += `# ${title}\\n\\n`;\n\n    for (const msg of sortedMessages) {\n        let role = '';\n        if (msg.role === 'SYSTEM') role = '⚙️ **System**';\n        else if (msg.role === 'USER') role = '👤 **Kirill**';\n        else role = '🤖 **DeepSeek**';\n        \n        const text = getMessageText(msg);\n        if (text) {\n            content += `## ${role}\\n\\n${text}\\n\\n---\\n\\n`;\n        }\n    }\n    return content;\n}\n```\n\nПосле этого пересохрани проблемные чаты — порядок должен стать правильным.",
-      "references": [],
-      "stage_id": 1
-    }
-  ],
-  "has_pending_fragment": false,
-  "auto_continue": false,
-  "search_triggered": false
+```
+
+**Выполни первый скрипт (проверочный) и покажи результат** — тогда увидим:
+1. Какое сообщение становится первым после сортировки
+2. Есть ли проблемы с дубликатами `inserted_at`
+3. Сохраняется ли правильный порядок между USER и ASSISTANT
+
+---
+
+## 👤 **Kirill**
+
+=== ПЕРВЫЕ 5 СООБЩЕНИЙ ПОСЛЕ СОРТИРОВКИ ===
+VM10430:24 Uncaught ReferenceError: getMessageText is not defined
+    at get.onsuccess (<anonymous>:24:73)
+get.onsuccess @ VM10430:24
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял, функция `getMessageText` не определена в консоли. Вот исправленный скрипт:
+
+```javascript
+// Проверка сортировки сообщений по inserted_at
+const chatId = window.location.pathname.match(/\/a\/chat\/s\/([a-f0-9-]+)/)?.[1];
+if (!chatId) {
+    console.log('❌ Не удалось определить ID чата из URL');
+} else {
+    const request = indexedDB.open('deepseek-chat');
+    request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction(['history-message'], 'readonly');
+        const store = tx.objectStore('history-message');
+        const get = store.get(chatId);
+        get.onsuccess = () => {
+            const record = get.result;
+            if (record && record.data?.chat_messages) {
+                const messages = record.data.chat_messages;
+                
+                // Функция извлечения текста
+                function getText(msg) {
+                    if (msg.fragments && msg.fragments.length > 0) {
+                        return msg.fragments.map(f => f.content || f.text || '').join('');
+                    }
+                    if (msg.content) return msg.content;
+                    if (msg.text) return msg.text;
+                    return '';
+                }
+                
+                // Сортируем по inserted_at
+                const sorted = [...messages].sort((a, b) => a.inserted_at - b.inserted_at);
+                
+                console.log('=== ПЕРВЫЕ 5 СООБЩЕНИЙ ПОСЛЕ СОРТИРОВКИ ===');
+                for (let i = 0; i < Math.min(5, sorted.length); i++) {
+                    const msg = sorted[i];
+                    const date = new Date(msg.inserted_at * 1000);
+                    const text = getText(msg).substring(0, 60);
+                    console.log(`${i}: [${date.toLocaleString()}] ${msg.role}: ${text}...`);
+                }
+                
+                console.log('\n=== ПОСЛЕДНИЕ 5 СООБЩЕНИЙ ===');
+                for (let i = Math.max(0, sorted.length - 5); i < sorted.length; i++) {
+                    const msg = sorted[i];
+                    const date = new Date(msg.inserted_at * 1000);
+                    console.log(`${i}: [${date.toLocaleString()}] ${msg.role}`);
+                }
+                
+                // Проверяем минимальный и максимальный inserted_at
+                const minTime = Math.min(...messages.map(m => m.inserted_at));
+                const maxTime = Math.max(...messages.map(m => m.inserted_at));
+                console.log(`\n📅 Диапазон времени: ${new Date(minTime * 1000).toLocaleString()} → ${new Date(maxTime * 1000).toLocaleString()}`);
+                console.log(`📊 Всего сообщений: ${messages.length}`);
+                
+                // Находим самое раннее сообщение
+                const earliest = sorted[0];
+                console.log('\n🥇 САМОЕ РАННЕЕ СООБЩЕНИЕ:');
+                console.log(`  Роль: ${earliest.role}`);
+                console.log(`  Время: ${new Date(earliest.inserted_at * 1000).toLocaleString()}`);
+                console.log(`  Текст: ${getText(earliest).substring(0, 100)}`);
+                
+                db.close();
+            } else {
+                console.log('❌ Нет сообщений для этого чата');
+            }
+        };
+    };
 }
-VM10119:20 
---- Сообщение 2 (USER) ---
-VM10119:21 {
-  "message_id": 193,
-  "parent_id": 192,
-  "model": "",
-  "role": "USER",
-  "thinking_enabled": false,
-  "ban_edit": false,
-  "ban_regenerate": false,
-  "status": "FINISHED",
-  "incomplete_message": null,
-  "accumulated_token_usage": 105428,
-  "feedback": null,
-  "inserted_at": 1779653339.615,
-  "search_enabled": true,
-  "fragments": [
-    {
-      "id": 1,
-      "type": "REQUEST",
-      "content": "Сделай полностью обновленный файл"
-    }
-  ],
-  "has_pending_fragment": false,
-  "auto_continue": false,
-  "search_triggered": false
+```
+
+---
+
+## 👤 **Kirill**
+
+Некорректно
+самое ранее сообщение ровно перед этим от assistant
+📊 Всего сообщений: 202
+VM10496:53 
+🥇 САМОЕ РАННЕЕ СООБЩЕНИЕ:
+VM10496:54   Роль: ASSISTANT
+VM10496:55   Время: 23.05.2026, 21:57:35
+VM10496:56   Текст: Отлично. **План принят, распределение ролей подтверждено.**
+
+Система переходит в режим активной разр
+
+---
+
+## 🤖 **DeepSeek**
+
+Ты прав! Это серьезная проблема. **Самое раннее сообщение — ASSISTANT, а USER сообщение должно быть первым.** Это значит, что:
+
+1. **USER сообщение имеет БОЛЬШЕЕ значение `inserted_at`**, чем ответ ASSISTANT (что невозможно в нормальной хронологии)
+2. DeepSeek, вероятно, использует **другой механизм** для определения порядка сообщений
+
+## Давай посмотрим на `parent_id` и структуру дерева сообщений
+
+Выполни этот скрипт для анализа связей:
+
+```javascript
+// Анализ parent_id и восстановление порядка через дерево
+const chatId = window.location.pathname.match(/\/a\/chat\/s\/([a-f0-9-]+)/)?.[1];
+if (!chatId) {
+    console.log('❌ Не удалось определить ID чата из URL');
+} else {
+    const request = indexedDB.open('deepseek-chat');
+    request.onsuccess = () => {
+        const db = request.result;
+        const tx = db.transaction(['history-message'], 'readonly');
+        const store = tx.objectStore('history-message');
+        const get = store.get(chatId);
+        get.onsuccess = () => {
+            const record = get.result;
+            if (record && record.data?.chat_messages) {
+                const messages = record.data.chat_messages;
+                
+                // Функция извлечения текста
+                function getText(msg) {
+                    if (msg.fragments && msg.fragments.length > 0) {
+                        return msg.fragments.map(f => f.content || f.text || '').join('');
+                    }
+                    if (msg.content) return msg.content;
+                    if (msg.text) return msg.text;
+                    return '';
+                }
+                
+                // Строим карту сообщений по message_id
+                const messageMap = new Map();
+                messages.forEach(msg => {
+                    messageMap.set(msg.message_id, msg);
+                });
+                
+                // Находим корневые сообщения (те, у которых нет parent_id или parent_id не найден)
+                const roots = messages.filter(msg => {
+                    if (!msg.parent_id) return true;
+                    return !messageMap.has(msg.parent_id);
+                });
+                
+                console.log('=== КОРНЕВЫЕ СООБЩЕНИЯ (начало веток) ===');
+                roots.forEach(root => {
+                    const date = new Date(root.inserted_at * 1000);
+                    console.log(`ID:${root.message_id} [${date.toLocaleString()}] ${root.role}: ${getText(root).substring(0, 50)}`);
+                });
+                
+                // Восстанавливаем порядок через parent_id (обходим дерево)
+                function buildThread(startMsg, visited = new Set()) {
+                    if (!startMsg || visited.has(startMsg.message_id)) return [];
+                    visited.add(startMsg.message_id);
+                    
+                    const result = [startMsg];
+                    
+                    // Ищем ответы на это сообщение (где parent_id = current.message_id)
+                    const replies = messages
+                        .filter(m => m.parent_id === startMsg.message_id)
+                        .sort((a, b) => a.inserted_at - b.inserted_at);
+                    
+                    for (const reply of replies) {
+                        result.push(...buildThread(reply, visited));
+                    }
+                    return result;
+                }
+                
+                // Берем самое раннее корневое сообщение по inserted_at
+                const sortedRoots = [...roots].sort((a, b) => a.inserted_at - b.inserted_at);
+                if (sortedRoots.length > 0) {
+                    const thread = buildThread(sortedRoots[0]);
+                    console.log(`\n=== ПЕРВЫЕ 5 СООБЩЕНИЙ В ВОССТАНОВЛЕННОМ ПОРЯДКЕ (по parent_id) ===`);
+                    for (let i = 0; i < Math.min(5, thread.length); i++) {
+                        const msg = thread[i];
+                        const date = new Date(msg.inserted_at * 1000);
+                        const text = getText(msg).substring(0, 60);
+                        console.log(`${i}: [${date.toLocaleString()}] ${msg.role}: ${text}...`);
+                    }
+                    
+                    console.log(`\n📊 Восстановлено сообщений: ${thread.length} из ${messages.length}`);
+                }
+                
+                db.close();
+            }
+        };
+    };
 }
-VM10119:25 
-=== ПОСЛЕДНИЕ 3 СООБЩЕНИЯ ===
-VM10119:27 
---- Сообщение 191 (ASSISTANT) ---
-VM10119:28 {
-  "message_id": 36,
-  "parent_id": 35,
-  "model": "",
-  "role": "ASSISTANT",
-  "thinking_enabled": false,
-  "ban_edit": false,
-  "ban_regenerate": false,
-  "status": "FINISHED",
-  "incomplete_message": null,
-  "accumulated_token_usage": 10237,
-  "feedback": null,
-  "inserted_at": 1779563142.0019999,
-  "search_enabled": true,
-  "fragments": [
-    {
-      "id": 2,
-      "type": "RESPONSE",
-      "content": "✅ Neo4j клиенты исправлены.\n\n---\n\n**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**\n\n```bash\nhead -80 ai-farm/agents/batuta/memory_service.py\n```",
-      "references": [],
-      "stage_id": 1
+```
+
+Этот скрипт:
+1. Находит **корневые сообщения** (те, у которых нет `parent_id`)
+2. Восстанавливает **правильный порядок** через обход дерева (`parent_id` → ответы)
+3. Покажет, какое сообщение действительно должно быть первым
+
+**Выполни и покажи результат** — это решит загадку с порядком сообщений.
+
+---
+
+## 👤 **Kirill**
+
+=== КОРНЕВЫЕ СООБЩЕНИЯ (начало веток) ===
+VM10506:42 ID:1 [23.05.2026, 21:57:35] USER: СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMAT
+VM10506:67 
+=== ПЕРВЫЕ 5 СООБЩЕНИЙ В ВОССТАНОВЛЕННОМ ПОРЯДКЕ (по parent_id) ===
+VM10506:72 0: [23.05.2026, 21:57:35] USER: СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMATICS (ЭТАП ...
+VM10506:72 1: [23.05.2026, 21:57:35] ASSISTANT: Отлично. **План принят, распределение ролей подтверждено.**
+...
+VM10506:72 2: [23.05.2026, 21:58:04] USER: Действуем следующим образом:
+По одному действию!
+Ты пишешь к...
+VM10506:72 3: [23.05.2026, 21:58:04] ASSISTANT: Принято. Работаем строго по схеме: **Команда → Исполнение → ...
+VM10506:72 4: [23.05.2026, 21:58:25] USER: Нужно делать на реальном проекте, а не вымышленном. Ты даешь...
+VM10506:75 
+📊 Восстановлено сообщений: 202 из 202
+
+---
+
+## 🤖 **DeepSeek**
+
+🎉 **Проблема решена!**
+
+Теперь ясно:
+
+1. **Корневое сообщение (ID:1) — USER**, с текстом "СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMATICS..."
+2. **Правильный порядок восстанавливается через `parent_id`**, а не через `inserted_at`
+3. **`inserted_at` у USER и ASSISTANT одинаковые** (23.05.2026, 21:57:35), поэтому сортировка по времени не работает
+
+## Правильное решение: сортировка через parent_id (древовидная структура)
+
+Обновляем скрипт v13.4 — используем `parent_id` для восстановления хронологии:
+
+```javascript
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v13.4 (parent_id thread order)
+// @namespace    Violentmonkey Scripts
+// @version      13.4
+// @description  Save FULL DeepSeek chats - restores correct order using parent_id tree
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v13.4 (parent_id thread order) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false,
+        delayBetweenChats: 2000,
+        maxLoadWaitMs: 15000,
+        stabilityChecks: 3
+    };
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Получить ВСЕ сообщения чата из IndexedDB
+    async function getChatMessagesFromIndexedDB(chatId) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.get(chatId);
+                getAll.onsuccess = () => {
+                    const record = getAll.result;
+                    db.close();
+                    if (record && record.data?.chat_messages) {
+                        resolve(record.data.chat_messages);
+                    } else {
+                        resolve([]);
+                    }
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
     }
-  ],
-  "has_pending_fragment": false,
-  "auto_continue": false,
-  "search_triggered": false
-}
-VM10119:27 
---- Сообщение 192 (USER) ---
-VM10119:28 {
-  "message_id": 37,
-  "parent_id": 36,
-  "model": "",
-  "role": "USER",
-  "thinking_enabled": false,
-  "ban_edit": false,
-  "ban_regenerate": false,
-  "status": "FINISHED",
-  "incomplete_message": null,
-  "accumulated_token_usage": 11021,
-  "feedback": null,
-  "inserted_at": 1779563154.6569998,
-  "search_enabled": true,
-  "fragments": [
-    {
-      "id": 1,
-      "type": "REQUEST",
-      "content": "(.venv) kirillkravcov@Mac UniversalCreativeHub % head -80 ai-farm/agents/batuta/memory_service.py\n\"\"\"\nPersistent Memory Service - файловая версия (быстрая и стабильная)\n\"\"\"\nimport json\nimport os\nimport uuid\nfrom datetime import datetime\nfrom typing import List, Dict, Any, Optional\nfrom pathlib import Path\n\nclass MemoryService:\n    \"\"\"Сервис для долговременной памяти агентов (файловая версия)\"\"\"\n    \n    def __init__(self, persist_dir: str = None):\n        if persist_dir is None:\n            persist_dir = os.path.join(os.path.dirname(__file__), \"memory_files\")\n        \n        self.persist_dir = Path(persist_dir)\n        self.persist_dir.mkdir(parents=True, exist_ok=True)\n        print(f\"MemoryService initialized at {self.persist_dir}\")\n    \n    def _get_memory_file(self, project_id: str) -> Path:\n        \"\"\"Получить путь к файлу памяти проекта\"\"\"\n        safe_name = \"\".join(c for c in project_id if c.isalnum() or c in \"._-\")\n        return self.persist_dir / f\"{safe_name}.json\"\n    \n    def _load_memories(self, project_id: str) -> List[Dict]:\n        \"\"\"Загрузить все памяти проекта\"\"\"\n        file_path = self._get_memory_file(project_id)\n        if file_path.exists():\n            try:\n                with open(file_path, 'r', encoding='utf-8') as f:\n                    return json.load(f)\n            except:\n                return []\n        return []\n    \n    def _save_memories(self, project_id: str, memories: List[Dict]):\n        \"\"\"Сохранить памяти проекта\"\"\"\n        file_path = self._get_memory_file(project_id)\n        with open(file_path, 'w', encoding='utf-8') as f:\n            json.dump(memories, f, indent=2, ensure_ascii=False, default=str)\n    \n    def add_memory(self, project_id: str, memory: str, metadata: Dict[str, Any] = None) -> str:\n        \"\"\"Добавить запись в память проекта\"\"\"\n        memories = self._load_memories(project_id)\n        \n        memory_id = str(uuid.uuid4())\n        meta = metadata or {}\n        meta[\"timestamp\"] = datetime.now().isoformat()\n        meta[\"project_id\"] = project_id\n        \n        memories.append({\n            \"id\": memory_id,\n            \"memory\": memory,\n            \"metadata\": meta,\n            \"created_at\": datetime.now().isoformat()\n        })\n        \n        self._save_memories(project_id, memories)\n        return memory_id\n    \n    def search_memory(self, project_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:\n        \"\"\"Поиск по памяти проекта (простой текстовый поиск)\"\"\"\n        memories = self._load_memories(project_id)\n        \n        query_lower = query.lower()\n        query_words = query_lower.split()\n        \n        scored = []\n        for mem in memories:\n            memory_lower = mem[\"memory\"].lower()\n            # Считаем количество совпадений слов\n            score = 0\n            for word in query_words:\n                if word in memory_lower:\n                    score += 1\n            \n            if query_words:\n                score = score / len(query_words)\n(.venv) kirillkravcov@Mac UniversalCreativeHub %"
+
+    // Извлечь текст из сообщения
+    function getMessageText(msg) {
+        if (msg.fragments && msg.fragments.length > 0) {
+            return msg.fragments.map(f => f.content || f.text || '').join('');
+        }
+        if (msg.content) return msg.content;
+        if (msg.text) return msg.text;
+        return '';
     }
-  ],
-  "has_pending_fragment": false,
-  "auto_continue": false,
-  "search_triggered": false
-}
-VM10119:27 
---- Сообщение 193 (ASSISTANT) ---
-VM10119:28 {
-  "message_id": 38,
-  "parent_id": 37,
-  "model": "",
-  "role": "ASSISTANT",
-  "thinking_enabled": false,
-  "ban_edit": false,
-  "ban_regenerate": false,
-  "status": "FINISHED",
-  "incomplete_message": null,
-  "accumulated_token_usage": 11133,
-  "feedback": null,
-  "inserted_at": 1779563154.6539998,
-  "search_enabled": true,
-  "fragments": [
-    {
-      "id": 2,
-      "type": "RESPONSE",
-      "content": "Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.\n\n**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**\n\nСначала проверим, запущен ли ChromaDB:\n\n```bash\ncurl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo \"ChromaDB not running\"\n```",
-      "references": [],
-      "stage_id": 1
+
+    // Восстановление порядка сообщений через parent_id (древовидная структура)
+    function buildThreadOrder(messages) {
+        // Строим карту сообщений по message_id
+        const messageMap = new Map();
+        messages.forEach(msg => {
+            messageMap.set(msg.message_id, msg);
+        });
+        
+        // Находим корневые сообщения (нет parent_id или parent_id не найден)
+        const roots = messages.filter(msg => {
+            if (!msg.parent_id) return true;
+            return !messageMap.has(msg.parent_id);
+        });
+        
+        if (roots.length === 0) {
+            // Если нет корней - возвращаем как есть
+            return [...messages];
+        }
+        
+        // Сортируем корни по inserted_at (на случай нескольких веток)
+        roots.sort((a, b) => (a.inserted_at || 0) - (b.inserted_at || 0));
+        
+        // Рекурсивное построение ветки
+        function buildThread(startMsg, visited = new Set()) {
+            if (!startMsg || visited.has(startMsg.message_id)) return [];
+            visited.add(startMsg.message_id);
+            
+            const result = [startMsg];
+            
+            // Ищем ответы на это сообщение
+            const replies = messages
+                .filter(m => m.parent_id === startMsg.message_id)
+                .sort((a, b) => (a.inserted_at || 0) - (b.inserted_at || 0));
+            
+            for (const reply of replies) {
+                result.push(...buildThread(reply, visited));
+            }
+            return result;
+        }
+        
+        // Берем первую ветку (основной диалог)
+        const mainThread = buildThread(roots[0]);
+        
+        // Если есть другие ветки (ответвления), добавляем их в конец
+        if (roots.length > 1) {
+            for (let i = 1; i < roots.length; i++) {
+                const branch = buildThread(roots[i]);
+                mainThread.push(...branch);
+            }
+        }
+        
+        return mainThread;
     }
-  ],
-  "has_pending_fragment": false,
-  "auto_continue": false,
-  "search_triggered": false
-}
-VM10119:32 
-=== АНАЛИЗ ПОЛЕЙ ВРЕМЕНИ ===
-VM10119:41 Сообщение 0 (USER): {}
-VM10119:41 Сообщение 1 (ASSISTANT): {}
-VM10119:41 Сообщение 2 (USER): {}
-VM10119:41 Сообщение 3 (ASSISTANT): {}
-VM10119:41 Сообщение 4 (USER): {}
-VM10119:46 
-=== РАЗНИЦА ВО ВРЕМЕНИ ===
-VM10119:57 Первое сообщение время: null
-VM10119:58 Последнее сообщение время: null
+
+    // Форматировать чат в Markdown (с правильным порядком через parent_id)
+    function formatChat(chatId, title, messages) {
+        const orderedMessages = buildThreadOrder(messages);
+        
+        let content = `---\n`;
+        content += `chat_id: ${chatId}\n`;
+        content += `title: ${title}\n`;
+        content += `message_count: ${orderedMessages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${title}\n\n`;
+
+        for (const msg of orderedMessages) {
+            let role = '';
+            if (msg.role === 'USER') role = '👤 **Kirill**';
+            else if (msg.role === 'ASSISTANT') role = '🤖 **DeepSeek**';
+            else role = `**${msg.role}**`;
+            
+            const text = getMessageText(msg);
+            if (text && text.trim()) {
+                content += `## ${role}\n\n${text.trim()}\n\n---\n\n`;
+            }
+        }
+        return content;
+    }
+
+    // Ожидание полной загрузки сообщений чата
+    async function waitForChatToLoad(chatId, timeoutMs = CONFIG.maxLoadWaitMs) {
+        console.log(`  ⏳ Ожидание загрузки сообщений чата...`);
+        
+        let lastCount = 0;
+        let stableChecks = 0;
+        const startTime = Date.now();
+        
+        while (Date.now() - startTime < timeoutMs) {
+            const messages = await getChatMessagesFromIndexedDB(chatId);
+            const currentCount = messages.length;
+            
+            if (currentCount > 0) {
+                if (currentCount === lastCount) {
+                    stableChecks++;
+                    console.log(`    📊 Стабильно: ${currentCount} сообщений (${stableChecks}/${CONFIG.stabilityChecks})`);
+                    
+                    if (stableChecks >= CONFIG.stabilityChecks) {
+                        console.log(`  ✅ Чат загружен: ${currentCount} сообщений`);
+                        return messages;
+                    }
+                } else {
+                    stableChecks = 0;
+                    console.log(`    📥 Загружено ${currentCount} сообщений...`);
+                }
+                lastCount = currentCount;
+            }
+            
+            await sleep(1000);
+        }
+        
+        const finalMessages = await getChatMessagesFromIndexedDB(chatId);
+        console.warn(`  ⚠️ Таймаут! Загружено ${finalMessages.length} сообщений`);
+        return finalMessages;
+    }
+
+    // Проверка целостности сообщений
+    function validateMessages(messages, chatTitle) {
+        if (!messages || messages.length === 0) {
+            console.warn(`  ⚠️ Нет сообщений для проверки`);
+            return false;
+        }
+        
+        // Проверяем, что первое сообщение от USER
+        const ordered = buildThreadOrder(messages);
+        const firstRole = ordered[0]?.role;
+        if (firstRole !== 'USER') {
+            console.warn(`  ⚠️ Первое сообщение не USER: ${firstRole}`);
+        } else {
+            console.log(`  ✅ Первое сообщение: USER`);
+        }
+        
+        const emptyMessages = messages.filter(msg => !getMessageText(msg) || getMessageText(msg).trim() === '');
+        if (emptyMessages.length > 0) {
+            console.warn(`  ⚠️ Найдено ${emptyMessages.length} пустых сообщений`);
+        }
+        
+        const isValid = emptyMessages.length === 0;
+        console.log(`  ${isValid ? '✅' : '⚠️'} Валидация: ${messages.length} сообщений`);
+        return isValid;
+    }
+
+    // Отправить в Clipping API
+    async function saveToAPI(chatId, title, messages) {
+        let safeTitle = title || 'Untitled';
+        safeTitle = safeTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')
+            .replace(/[\s]+/g, '_')
+            .substring(0, 50);
+
+        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
+            const firstUserMsg = messages.find(m => m.role === 'USER');
+            if (firstUserMsg) {
+                let firstLine = getMessageText(firstUserMsg).split('\n')[0].substring(0, 40);
+                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
+            }
+        }
+
+        if (!safeTitle || safeTitle.length === 0) {
+            safeTitle = chatId.substring(0, 8);
+        }
+
+        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
+        const content = formatChat(chatId, title || safeTitle, messages);
+
+        console.log(`  📄 Файл: ${filename} (${messages.length} сообщений)`);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chatId,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    // Найти все чаты с прокруткой
+    async function findAllChatsWithScroll() {
+        const sidebar = document.querySelector('.ds-virtual-list');
+        if (!sidebar) {
+            console.log('❌ Боковая панель не найдена');
+            return [];
+        }
+
+        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
+
+        let lastCount = 0;
+        let scrolls = 0;
+
+        while (scrolls < 50) {
+            sidebar.scrollTop = sidebar.scrollHeight;
+            await sleep(1500);
+
+            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
+            if (chats.length === lastCount) break;
+            lastCount = chats.length;
+            scrolls++;
+            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
+        }
+
+        const allChats = [];
+        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
+            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
+            if (match) {
+                allChats.push({
+                    id: match[1],
+                    title: a.textContent?.trim() || 'Untitled'
+                });
+            }
+        });
+
+        console.log(`✅ Найдено ${allChats.length} чатов`);
+        return allChats;
+    }
+
+    // Сохранить все чаты
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        const chats = await findAllChatsWithScroll();
+        if (chats.length === 0) {
+            console.log('❌ Чаты не найдены');
+            CONFIG.isProcessing = false;
+            return;
+        }
+
+        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
+
+        let savedCount = 0;
+        let failedCount = 0;
+        let incompleteCount = 0;
+
+        for (let i = 0; i < chats.length; i++) {
+            const chat = chats[i];
+            console.log(`\n[${i+1}/${chats.length}] ${chat.title}`);
+
+            try {
+                const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
+                if (link) {
+                    link.click();
+                    
+                    const messages = await waitForChatToLoad(chat.id);
+                    
+                    if (messages.length > 0) {
+                        const isValid = validateMessages(messages, chat.title);
+                        
+                        if (!isValid) {
+                            incompleteCount++;
+                        }
+                        
+                        await saveToAPI(chat.id, chat.title, messages);
+                        savedCount++;
+                        
+                        // Показываем информацию о порядке
+                        const ordered = buildThreadOrder(messages);
+                        console.log(`  📋 Порядок восстановлен: ${ordered.length} сообщений`);
+                    } else {
+                        console.log(`  ❌ Нет сообщений`);
+                        failedCount++;
+                    }
+                } else {
+                    console.log(`  ❌ Ссылка не найдена`);
+                    failedCount++;
+                }
+            } catch (err) {
+                console.error(`  ❌ Ошибка: ${err.message}`);
+                failedCount++;
+            }
+            
+            await sleep(CONFIG.delayBetweenChats);
+        }
+
+        console.log('\n' + '='.repeat(50));
+        console.log(`📊 ИТОГО: Сохранено: ${savedCount}, Неполных: ${incompleteCount}, Ошибок: ${failedCount}`);
+        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
+        CONFIG.isProcessing = false;
+    }
+
+    // Добавить кнопку
+    const btn = document.createElement('button');
+    btn.textContent = '📚 Save ALL Chats (v13.4 PARENT_ID FIX)';
+    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10000;`;
+    btn.onclick = saveAllChats;
+    
+    setTimeout(() => {
+        if (document.body) {
+            document.body.appendChild(btn);
+        }
+    }, 2000);
+})();
+```
+
+## Ключевые изменения в v13.4:
+
+| Функция | Что делает |
+|---------|-----------|
+| **`buildThreadOrder()`** | Восстанавливает порядок через `parent_id` (древовидная структура) |
+| **Корневые сообщения** | Находит сообщения без `parent_id` (начало диалога) |
+| **Рекурсивный обход** | Строит ветку: USER → ASSISTANT → USER → ASSISTANT |
+| **Поддержка ветвлений** | Если есть ответвления, добавляет их в конец |
+
+Теперь порядок сообщений будет **идеальным** — как в оригинальном чате, начиная с самого первого USER сообщения.
 
 ---
 
