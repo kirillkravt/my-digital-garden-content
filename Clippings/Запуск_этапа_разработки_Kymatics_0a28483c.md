@@ -9,6 +9,953 @@ exported_at: 2026-05-25T07:26:39.271Z
 
 ## 👤 **Kirill**
 
+СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMATICS (ЭТАП 94 - СТАРТ)
+
+🎯 КОНТЕКСТ
+✅ Успешно завершен Этап 93. Выполнены задачи:
+
+93.1 ✅ Multi-agent в BPMN — 4 агента (architect, coder, integrator, analyzer) интегрированы в Process Designer
+93.2 ✅ Persistent Memory — API `/memory/*` с файловым хранилищем, поиск по релевантности
+93.3 ⏸️ Telegram Bot — перенесен на следующий этап
+93.4 ✅ Skill Marketplace — публикация, установка, теги, статистика
+93.5 ✅ Self-healing процессы — анализ ошибок LLM, стратегии восстановления
+93.6 ✅ BPMN → Executable Code — генерация Python/TypeScript кода из BPMN
+
+💰 БЮДЖЕТ ЭТАПА 93: 0 ₽
+💰 БЮДЖЕТ ЭТАПА 94 (ПЛАНОВЫЙ): 2000 ₽ (только реальные траты на платные API)
+
+⚙️ ТЕКУЩЕЕ СОСТОЯНИЕ СИСТЕМЫ (АУДИТ 23.05.2026)
+
+✅ Бэкенд:
+- 50+ API эндпоинтов (включая новые: agents, memory, marketplace, healing, codegen)
+- ChromaDB запущен (порт 8000) — используется для RAG и векторного поиска
+- Neo4j НЕ ЗАПУЩЕН (код готов, нужен запуск)
+- Файловая память работает как временное решение
+- Process Designer + WebSocket execution работают
+
+⚠️ Разрывы в пайплайне (критические для MVP):
+1. ❌ Исполнение → Память: результаты не сохраняются автоматически
+2. ❌ Память → Дизайнер: нет подсказок из памяти при создании процессов
+3. ⚠️ Только manual trigger для процессов (schedule/webhook позже)
+4. ⚠️ Компоненты нельзя перетащить в дизайнер (только узлы из палитры)
+
+📁 КЛЮЧЕВЫЕ ФАЙЛЫ
+
+Бэкенд: ai-farm/agents/batuta/
+- memory_service.py (файловая версия)
+- neo4j_sync.py, neo4j_client.py, tools/tool_graph.py — граф
+- api_memory.py, api_marketplace.py, api_self_healing.py, api_codegen.py
+- process_manager.py, process_executor.py
+
+Фронтенд: tactical-command-v3/src/
+- features/process-designer/ — Process Designer
+- features/components/ComponentsPage.tsx — Components Library
+- features/ai/AIChatSidebar.tsx — AI чат
+- pages/TerminalPage.tsx — главная страница
+
+🏛️ ЦЕЛЕВОЕ ВИДЕНИЕ 2.2
+Kymatics — единая платформа для создания и выполнения BPMN-процессов с AI-агентами.
+
+Ключевые принципы:
+- Agentic First — агенты не болтают, они делают
+- Governance by Design — HITL не опция, а стандарт
+- Local-First — данные не покидают ваш сервер
+- Open Ecosystem — marketplace skills, community
+
+Уникальное преимущество: BPMN + AI Agents + Memory (единственные на рынке)
+
+📋 ЗАДАЧИ ЭТАПА 94 (10 дней до тестируемого MVP)
+
+P0 (КРИТИЧЕСКИЕ) — СВЯЗНОСТЬ И СТАБИЛЬНОСТЬ
+
+Задача 94.1: Memory Layer — запуск Neo4j и объединение с ChromaDB
+(@🚀 Хранитель стабильности + @🧠 Специалист по знаниям)
+
+Цель: Создать единый memory слой уровня лидеров индустрии.
+
+Действия:
+- Запустить Neo4j через Docker (порты 7474, 7687)
+- Создать единый MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф)
+- Добавить temporal reasoning (valid_from/valid_to) — как у Zep
+- Перенести файловую память на ChromaDB (векторный поиск)
+
+Критерии готовности:
+- Neo4j запущен и интегрирован с существующими инструментами (`tool_graph.py`, `neo4j_sync.py`)
+- MemoryService поддерживает семантический поиск (ChromaDB) + графовые запросы (Neo4j)
+- Автосохранение результатов выполнения в память (исправлен разрыв №1)
+
+Задача 94.2: Пайплайн — связность и валидация
+(@🚀 Хранитель стабильности + @🎨 Дизайнер интерфейсов)
+
+Цель: Устранить разрывы между компонентами.
+
+Действия:
+- Добавить автосохранение результатов выполнения в память
+- Добавить подсказки из памяти при создании процесса (исправлен разрыв №2)
+- Добавить drag & drop из Components Library в Process Designer
+- Добавить полную валидацию процессов (связи, обязательные поля, циклы)
+- Добавить async execution с отслеживанием статусов
+
+Критерии готовности:
+- После выполнения процесса результат автоматически сохраняется в память
+- При создании процесса появляются подсказки из истории проекта
+- Компонент можно перетащить из Library прямо в дизайнер
+- Процесс нельзя сохранить/запустить с ошибками
+- Execution имеет статусы: pending → running → completed/failed
+
+Задача 94.3: Фронтенд — дизайн-система и чистота
+(@🎨 Дизайнер интерфейсов)
+
+Цель: Привести фронтенд к тестируемому состоянию.
+
+Действия:
+- Вынести все inline styles в CSS файлы
+- Разработать дизайн-систему (цвета, типографика, отступы, компоненты)
+- Создать библиотеку переиспользуемых UI компонентов (Button, Modal, Input, Select)
+- Исправить 67 технических долгов (TODO/FIXME/any)
+
+Критерии готовности:
+- Нет inline styles (все в CSS/модулях)
+- Дизайн-система документирована (storybook или отдельная страница)
+- UI компоненты переиспользуются во всем приложении
+- Нет предупреждений TypeScript
+
+P1 (ВЫСОКИЙ ПРИОРИТЕТ)
+
+Задача 94.4: Подготовка к выходу на рынок
+(@🚀 Хранитель стабильности)
+
+Цель: Создать минимальный пакет для демонстрации.
+
+Действия:
+- Написать демо-скрипт для видео (2-3 минуты)
+- Создать Docker Compose для быстрого старта
+- Подготовить landing page (базовая: описание, скриншоты, CTA)
+- Подготовить 3-5 примеров готовых процессов (templates)
+
+Критерии готовности:
+- Демо-скрипт готов к записи
+- `docker-compose up` запускает всю платформу
+- Landing page доступна локально
+- Примеры процессов можно импортировать одним кликом
+
+Задача 94.5: Self-healing — интеграция с памятью
+(@🧠 Специалист по знаниям)
+
+Цель: Использовать успешные кейсы из памяти для автоматического исправления.
+
+Действия:
+- Извлекать успешные паттерны из памяти
+- Предлагать их как исправления при ошибках
+- Сохранять успешные исправления обратно в память
+
+Критерии готовности:
+- При ошибке процесса LLM получает контекст из похожих успешных выполнений
+- Self-healing предлагает решения на основе истории проекта
+
+P2 (СРЕДНИЙ ПРИОРИТЕТ) — при наличии времени
+
+Задача 94.6: Performance optimization — кэширование, индексы, профайлинг
+
+Задача 94.7: Документация API (Swagger/OpenAPI)
+
+💰 БЮДЖЕТ ЭТАПА 94
+Лимит: 2000 ₽ (только реальные траты на платные API/сервисы)
+
+Задача	Бюджет
+94.1 Memory Layer	0 ₽ (локально)
+94.2 Пайплайн	0 ₽ (локально)
+94.3 Фронтенд	0 ₽ (локально)
+94.4 Go-to-market	0 ₽ (локально)
+94.5 Self-healing	0 ₽ (локальный ollama)
+94.6 Performance	0 ₽ (локально)
+94.7 Документация	0 ₽ (локально)
+
+⚠️ При достижении лимита 2000 ₽ — остановка и согласование.
+
+🚀 ПОРЯДОК ВЫПОЛНЕНИЯ (ЭТАП 94)
+
+Шаг	Задача	Ответственный	Длительность
+1	94.1 Memory Layer (Neo4j + ChromaDB)	@🚀 + @🧠	4 ч
+2	94.2 Пайплайн — связность и валидация	@🚀 + @🎨	4 ч
+3	94.3 Фронтенд — дизайн-система	@🎨	4 ч
+4	94.4 Go-to-market подготовка	@🚀	3 ч
+5	94.5 Self-healing + память	@🧠	3 ч
+6	94.6-94.7 Performance + docs	@🚀 + @🧠	время
+
+📅 План на 10 дней:
+
+Неделя 1 (P0):
+- День 1: 94.1 Memory Layer
+- День 2: 94.1 + начало 94.2
+- День 3: 94.2 Пайплайн
+- День 4: 94.2 + начало 94.3
+- День 5: 94.3 Фронтенд
+
+Неделя 2 (P1):
+- День 6: 94.3 + 94.4
+- День 7: 94.4 + 94.5
+- День 8: 94.5 + интеграционное тестирование
+- День 9: Фикс багов + доработки
+- День 10: Финальное тестирование + демо
+
+⚠️ ПРАВИЛА РАБОТЫ
+- ОДНА ЗАДАЧА ЗА РАЗ — не смешиваем
+- КОНТРОЛЬ БЮДЖЕТА — следим за расходами
+- ПОСЛЕ КАЖДОГО ИЗМЕНЕНИЯ — ТЕСТ
+- КОММИТИТЬ ПОСЛЕ КАЖДОЙ ЗАДАЧИ
+- ПРИ ДОСТИЖЕНИИ ЛИМИТА — остановка и согласование
+
+✅ СТАРТ ВЫПОЛНЕНИЯ (ЭТАП 94)
+
+@🚀 Хранитель стабильности — начинайте с Задачи 94.1 (Memory Layer). Первый шаг: запуск Neo4j через Docker.
+
+@🧠 Специалист по знаниям — подготовьте код для объединения ChromaDB и Neo4j.
+
+@🎨 Дизайнер интерфейсов — проведите аудит фронтенда и начните проектирование дизайн-системы.
+
+Жду подтверждения готовности к старту.
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично. **План принят, распределение ролей подтверждено.**
+
+Система переходит в режим активной разработки Этапа 94. Бюджет под контролем (2000₽ только на внешние API, локальный стек — бесплатно).
+
+**Директива на ближайшие 4 часа:**
+
+1.  **@🚀 Хранитель стабильности:** Запуск Neo4j. После запуска — проверить интеграцию с `neo4j_sync.py`. Результат запуска (логи, порты) — в этот канал.
+2.  **@🧠 Специалист по знаниям:** Разработать класс `UnifiedMemoryService` (обертка над ChromaDB + Neo4j). Учитывать интерфейсы из `memory_service.py`. Temporal reasoning — добавить поля `valid_from`/`valid_to` в схемы.
+3.  **@🎨 Дизайнер интерфейсов:** Аудит фронтенда: сдать отчет по 67 техдолгам (список файлов с наибольшим количеством TODO/FIXME). Определить базовые токены дизайн-системы (цвета: primary/gray/error, spacing: 4/8/16/24, шрифты).
+
+**Правило:** Работаем строго в последовательности: Memory Layer → Пайплайн → Фронтенд. Никакого "параллельного" фронтенда, пока не стабилизируется бэкенд.
+
+**Текущий статус:** `ЭТАП_94 = СТАРТ`.
+
+Исполнители, подтвердите получение задач и приступайте. Жду логи запуска Neo4j в течение 15 минут.
+
+---
+
+## 👤 **Kirill**
+
+Действуем следующим образом:
+По одному действию!
+Ты пишешь команды для терминала или инструкции
+Я выполняю команду в терминале или инструкцию
+Тест
+Только потом идем дальше
+
+---
+
+## 🤖 **DeepSeek**
+
+Принято. Работаем строго по схеме: **Команда → Исполнение → Тест → Следующий шаг.**
+
+---
+
+## Шаг 1 из 94.1 (Memory Layer — запуск Neo4j)
+
+**Действие:** Запуск Neo4j через Docker с сохранением данных на хост-машине.
+
+**Команда для терминала:**
+
+```bash
+docker run -d \
+  --name neo4j-kymatics \
+  -p 7474:7474 -p 7687:7687 \
+  -e NEO4J_AUTH=neo4j/kymatics2026 \
+  -e NEO4J_PLUGINS='["apoc"]' \
+  -v ~/neo4j-kymatics/data:/data \
+  -v ~/neo4j-kymatics/logs:/logs \
+  neo4j:5.26-enterprise
+```
+
+⚠️ Если нет лицензии Enterprise — замените на `neo4j:5.26-
+
+---
+
+## 👤 **Kirill**
+
+Нужно делать на реальном проекте, а не вымышленном. Ты даешь команды, я выполняю и возвращаю результат.
+
+---
+
+## 🤖 **DeepSeek**
+
+Хорошо. Работаем с реальным проектом.
+
+**Первая команда:**
+
+```bash
+docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+Покажи, что вернул терминал.
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Neo4j не запущен. Контейнера с именем `neo4j` нет.
+
+**Следующая команда:**
+
+Проверим, есть ли какие-либо контейнеры Neo4j (может, другое имя):
+
+```bash
+docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Нет ни одного контейнера Neo4j. Запускаем с нуля.
+
+**Команда:**
+
+```bash
+docker run -d \
+  --name neo4j-kymatics \
+  -p 7474:7474 -p 7687:7687 \
+  -e NEO4J_AUTH=neo4j/kymatics2026 \
+  -e NEO4J_PLUGINS='["apoc"]' \
+  -v ~/neo4j-kymatics/data:/data \
+  -v ~/neo4j-kymatics/logs:/logs \
+  neo4j:5.26
+```
+
+Запусти эту команду и покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+ищи внимательней есть и docker и orbstack 
+/Users/kirillkravcov/UniversalCreativeHub
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял. У тебя Orbstack (альтернатива Docker Desktop). Проверим иначе.
+
+**Команда:**
+
+```bash
+docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
+```
+
+А также посмотрим, что вообще запущено:
+
+```bash
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
+No neo4j containers found
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES     IMAGE     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял. Вообще нет запущенных контейнеров. Запускаем Neo4j.
+
+**Команда:**
+
+```bash
+docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
+```
+
+Выполни и покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+может просто docker не запущен?
+
+---
+
+## 🤖 **DeepSeek**
+
+Точно. Проверим статус Docker/Orbstack.
+
+**Команда:**
+
+```bash
+docker info 2>&1 | head -5
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
+Unable to find image 'neo4j:5.26' locally
+5.26: Pulling from library/neo4j
+cda3d70ae7d7: Pull complete 
+4709e9496477: Pull complete 
+c4697836ee82: Pull complete 
+3cb252419ff9: Pull complete 
+4f4fb700ef54: Pull complete 
+Digest: sha256:0b5d3ab6ec1b866890dbfb53bf4fe1cf039f9e03c96165599a403005b7e7bcc3
+Status: Downloaded newer image for neo4j:5.26
+a5116df7d4a72b02a74ede3eb1193acbbac1a11b739279faa40dc93432eb39fd
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker info 2>&1 | head -5
+Client:
+ Version:    28.5.2
+ Context:    orbstack
+ Debug Mode: false
+ Plugins:
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично! Neo4j скачался и запустился. Контейнер `neo4j-kymatics` создан (ID: `a5116df7d4a7`).
+
+**Теперь проверим, что контейнер работает:**
+
+```bash
+docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES            STATUS          PORTS
+neo4j-kymatics   Up 16 seconds   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ **Neo4j успешно запущен и работает!**
+
+STATUS: `Up 16 seconds`  
+Порты: `7474` (HTTP), `7687` (Bolt) — доступны.
+
+---
+
+**Тест подключения к Neo4j (через curl):**
+
+```bash
+curl -I -u neo4j:kymatics2026 http://localhost:7474
+```
+
+Покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+curl -I -u neo4j:kymatics2026 http://localhost:7474
+
+---
+
+## 🤖 **DeepSeek**
+
+Выполни эту команду в терминале и покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % curl -I -u neo4j:kymatics2026 http://localhost:7474
+HTTP/1.1 200 OK
+Date: Sat, 23 May 2026 19:03:24 GMT
+Access-Control-Allow-Origin: *
+Content-Type: application/json
+Vary: Accept
+Content-Length: 251
+
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ **Neo4j доступен, аутентификация работает.** (HTTP 200 OK)
+
+---
+
+**Шаг 94.1 продолжение: проверим существующие файлы проекта.**
+
+```bash
+cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
+```
+
+Покажи вывод — нужно убедиться, что `neo4j_client.py` и `neo4j_sync.py` на месте.
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
+total 1120
+drwxr-xr-x  91 kirillkravcov  staff   2912 May 23 17:18 .
+drwxr-xr-x  14 kirillkravcov  staff    448 May 21 11:14 ..
+-rw-r--r--   1 kirillkravcov  staff    229 May 21 08:34 .env
+drwxr-xr-x   6 kirillkravcov  staff    192 May 16 14:31 .pytest_cache
+-rwxr-xr-x   1 kirillkravcov  staff    929 Apr  6 12:05 add_embedding_endpoint.py
+-rw-r--r--   1 kirillkravcov  staff   2357 Apr 23 19:58 add_history_logging.py
+-rw-r--r--   1 kirillkravcov  staff   1115 Apr 15 07:53 add_load_tasks.py
+drwxr-xr-x   3 kirillkravcov  staff     96 May 15 21:59 ai-farm
+-rw-r--r--   1 kirillkravcov  staff   4881 May 23 13:35 api_agents.py
+-rw-r--r--   1 kirillkravcov  staff   1152 May 23 17:18 api_codegen.py
+-rw-r--r--   1 kirillkravcov  staff   2056 Apr 21 08:41 api_commands.py
+-rw-r--r--   1 kirillkravcov  staff  18228 May 23 12:38 api_components.py
+-rw-r--r--   1 kirillkravcov  staff   7258 May 23 13:21 api_components_lifecycle.py
+-rw-r--r--   1 kirillkravcov  staff   1212 May 21 16:51 api_execute.py
+-rw-r--r--   1 kirillkravcov  staff   7671 May 23 17:13 api_marketplace.py
+-rw-r--r--   1 kirillkravcov  staff   2923 May 23 14:41 api_memory.py
+-rw-r--r--   1 kirillkravcov  staff  17216 May 22 11:03 api_processes.py
+-rw-r--r--   1 kirillkravcov  staff   4864 May 15 21:52 api_projects.py
+-rw-r--r--   1 kirillkravcov  staff   5820 May 22 14:36 api_safe_execute.py
+-rw-r--r--   1 kirillkravcov  staff   1399 May 23 17:15 api_self_healing.py
+-rw-r--r--   1 kirillkravcov  staff   1634 May 12 21:24 api_skills.py
+-rw-r--r--   1 kirillkravcov  staff   8776 May 12 21:24 api_templates.py
+drwxr-xr-x   3 kirillkravcov  staff     96 May 15 18:23 api_v1
+-rw-r--r--   1 kirillkravcov  staff   8100 May 19 18:11 architect_agent.py
+-rw-r--r--   1 kirillkravcov  staff   8509 Apr 20 08:01 architect_agent.py.broken
+drwxr-xr-x  25 kirillkravcov  staff    800 May 15 21:39 backups
+drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 channels
+drwxr-xr-x   2 kirillkravcov  staff     64 May 23 14:47 chroma_data
+-rw-r--r--   1 kirillkravcov  staff   5818 May 23 17:18 code_generator.py
+-rw-r--r--   1 kirillkravcov  staff  18207 May 23 13:21 coder_agent.py
+-rw-r--r--   1 kirillkravcov  staff  11063 Apr 17 22:43 command_analyzer.py
+-rw-r--r--   1 kirillkravcov  staff   1357 Apr 21 09:09 command_executor_agent.py
+-rw-r--r--   1 kirillkravcov  staff   1403 May 21 18:13 command_safety.py
+-rw-r--r--   1 kirillkravcov  staff   7983 May 21 08:51 components_db.py
+-rw-r--r--   1 kirillkravcov  staff   8071 May 21 08:51 components_db.py.backup
+-rw-r--r--   1 kirillkravcov  staff   1495 May 18 11:49 components_schemas.py
+-rw-r--r--   1 kirillkravcov  staff   1674 May 15 18:39 config.py
+drwxr-xr-x  13 kirillkravcov  staff    416 May 17 08:52 core
+-rw-r--r--   1 kirillkravcov  staff   1650 May 18 08:55 db_unified.py
+-rw-r--r--   1 kirillkravcov  staff   4781 May 15 22:01 drafts_manager.py
+-rw-r--r--   1 kirillkravcov  staff   5023 May 22 10:59 executor_registry.py
+drwxr-xr-x   7 kirillkravcov  staff    224 May 15 18:20 executors
+-rw-r--r--   1 kirillkravcov  staff   2044 May 19 18:11 fixer_agent.py
+-rw-r--r--   1 kirillkravcov  staff   4711 May 18 09:48 git_skills.py
+-rw-r--r--   1 kirillkravcov  staff   3234 Apr 12 18:34 history_integration.py
+-rw-r--r--   1 kirillkravcov  staff   7394 Apr 20 08:02 integrator_agent.py
+-rw-r--r--   1 kirillkravcov  staff   3136 Apr 16 16:57 knowledge_pool.py
+-rw-r--r--   1 kirillkravcov  staff   5398 Apr 16 16:44 knowledge_pool_chroma_v1.py
+-rw-r--r--   1 kirillkravcov  staff   5031 Apr 16 16:58 knowledge_pool_faiss.py
+-rw-r--r--   1 kirillkravcov  staff   5282 Apr 16 16:41 knowledge_pool_v2.py
+-rw-r--r--   1 kirillkravcov  staff   4182 May 11 10:29 layout_engine.py
+drwxr-xr-x   9 kirillkravcov  staff    288 Apr 17 18:06 logs
+-rwxr-xr-x   1 kirillkravcov  staff  36455 May 23 17:18 main.py
+drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 memory
+drwxr-xr-x   3 kirillkravcov  staff     96 May 23 14:58 memory_files
+-rw-r--r--   1 kirillkravcov  staff   5295 May 23 14:57 memory_service.py
+-rw-r--r--   1 kirillkravcov  staff   1466 Apr 16 13:47 neo4j_client.py
+-rw-r--r--   1 kirillkravcov  staff    803 Apr 16 13:49 neo4j_sync.py
+drwxr-xr-x  19 kirillkravcov  staff    608 May  3 17:49 nodes
+-rw-r--r--   1 kirillkravcov  staff   3171 May  9 10:37 observability.py
+-rw-r--r--   1 kirillkravcov  staff   1072 Apr 15 07:51 patch_startup.py
+-rw-r--r--   1 kirillkravcov  staff  18540 May 19 18:11 process_designer_agent.py
+-rw-r--r--   1 kirillkravcov  staff   9651 May 12 09:07 process_executor.py
+-rw-r--r--   1 kirillkravcov  staff  17351 May 22 11:13 process_manager.py
+-rw-r--r--   1 kirillkravcov  staff   5981 May 19 08:48 process_models.py
+-rw-r--r--   1 kirillkravcov  staff   3636 Apr 28 18:41 process_validator.py
+-rw-r--r--   1 kirillkravcov  staff      0 May 23 13:14 processes.db
+-rw-r--r--   1 kirillkravcov  staff  13287 Apr 16 19:08 project_inspector.py
+drwxr-xr-x   3 kirillkravcov  staff     96 Apr 12 13:09 prompts
+-rw-r--r--   1 kirillkravcov  staff   1155 Apr 17 19:06 quick_validator.py
+-rw-r--r--   1 kirillkravcov  staff   3553 May 19 18:11 requirement_analyzer.py
+-rwxr-xr-x   1 kirillkravcov  staff     94 Mar  6 13:06 requirements.txt
+drwxr-xr-x  18 kirillkravcov  staff    576 May 19 18:11 scheduler
+-rw-r--r--   1 kirillkravcov  staff   4218 May 23 17:15 self_healing.py
+-rw-r--r--   1 kirillkravcov  staff   6551 Apr 28 18:30 skill_agent.py
+-rw-r--r--   1 kirillkravcov  staff  18222 May 18 09:54 skills_registry.py
+-rw-r--r--   1 kirillkravcov  staff   3753 Apr 16 19:21 smart_explorer.py
+-rw-r--r--   1 kirillkravcov  staff   5450 May 19 18:11 task_decomposer.py
+-rw-r--r--   1 kirillkravcov  staff      0 May 18 09:48 task_history.db
+-rw-r--r--   1 kirillkravcov  staff   5060 Apr 15 07:52 task_history.py
+-rw-r--r--   1 kirillkravcov  staff      0 Apr 17 16:37 task_processor.log
+-rw-r--r--   1 kirillkravcov  staff  12663 May 12 21:11 template_resolver.py
+-rw-r--r--   1 kirillkravcov  staff   2182 Apr 23 18:15 test_executor.py
+-rw-r--r--   1 kirillkravcov  staff    486 Apr 19 15:51 test_opik.py
+-rw-r--r--   1 kirillkravcov  staff    793 Apr 23 18:09 test_try_catch.py
+-rw-r--r--   1 kirillkravcov  staff   1818 Apr 23 19:56 test_websocket.py
+-rw-r--r--   1 kirillkravcov  staff   1064 Apr 23 20:09 test_ws.py
+drwxr-xr-x   9 kirillkravcov  staff    288 May 19 18:16 tools
+-rw-r--r--   1 kirillkravcov  staff    574 Apr 23 19:58 update_executor.py
+-rw-r--r--   1 kirillkravcov  staff   2264 Apr 20 07:59 validator_agent.py
+-rw-r--r--   1 kirillkravcov  staff   2121 May  4 15:11 websocket_logger.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично. Файлы на месте:
+- `neo4j_client.py` (1466 байт)
+- `neo4j_sync.py` (803 байта)
+- `memory_service.py` (5295 байт) — файловая версия
+
+---
+
+**Шаг 94.1: проверим содержимое `neo4j_client.py` — правильно ли настроено подключение.**
+
+```bash
+cat ai-farm/agents/batuta/neo4j_client.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_client.py
+import httpx
+from typing import Dict, Any
+
+NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
+NEO4J_AUTH = ("neo4j", "password")
+
+async def create_task_node(task_id: str, title: str, description: str, status: str = "pending"):
+    """Создать узел Task в Neo4j"""
+    query = f"""
+    MERGE (t:Task {{id: $task_id}})
+    SET t.title = $title,
+        t.description = $description,
+        t.status = $status,
+        t.updated_at = datetime()
+    RETURN t
+    """
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            NEO4J_URL,
+            auth=NEO4J_AUTH,
+            json={"statements": [{"statement": query, "parameters": {
+                "task_id": task_id,
+                "title": title,
+                "description": description,
+                "status": status
+            }}]}
+        )
+        return response.json()
+
+async def update_task_status(task_id: str, status: str):
+    """Обновить статус задачи в Neo4j"""
+    query = """
+    MATCH (t:Task {id: $task_id})
+    SET t.status = $status, t.updated_at = datetime()
+    RETURN t
+    """
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            NEO4J_URL,
+            auth=NEO4J_AUTH,
+            json={"statements": [{"statement": query, "parameters": {
+                "task_id": task_id,
+                "status": status
+            }}]}
+        )
+        return response.json()
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу проблему: в `neo4j_client.py` используется пароль `password`, но мы запустили Neo4j с паролем `kymatics2026`.
+
+**Исправляем:**
+
+```bash
+sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
+```
+
+Проверим исправление:
+
+```bash
+grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+NEO4J_AUTH = ("neo4j", "kymatics2026")
+            auth=NEO4J_AUTH,
+            auth=NEO4J_AUTH,
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ Пароль исправлен.
+
+---
+
+**Теперь проверим, что Neo4j принимает запросы от клиента (простой тест через Python):**
+
+```bash
+cd /Users/kirillkravcov/UniversalCreativeHub && python -c "
+import asyncio
+import httpx
+
+async def test():
+    url = 'http://localhost:7474/db/neo4j/tx/commit'
+    auth = ('neo4j', 'kymatics2026')
+    query = 'RETURN 1 as test'
+    
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
+        print(resp.status_code)
+        print(resp.json())
+
+asyncio.run(test())
+"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                       
+    auth = ('neo4j', 'kymatics2026')
+    query = 'RETURN 1 as test'
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
+        print(resp.status_code)
+        print(resp.json())
+
+asyncio.run(test())
+"
+200
+{'results': [{'columns': ['test'], 'data': [{'row': [1], 'meta': [None]}]}], 'errors': [], 'lastBookmarks': ['FB:kcwQzD5o5GTkTuG+mUUuHaZyxAOQ']}
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ **Neo4j работает, аутентификация корректна, запрос возвращает результат.**
+
+---
+
+**Шаг 94.1: проверим `neo4j_sync.py`:**
+
+```bash
+cat ai-farm/agents/batuta/neo4j_sync.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_sync.py
+import requests
+
+NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
+NEO4J_AUTH = ("neo4j", "password")
+
+def create_task_node_sync(task_id: str, title: str, description: str, status: str = "pending"):
+    """Создать узел Task в Neo4j (синхронная версия)"""
+    query = f"""
+    MERGE (t:Task {{id: $task_id}})
+    SET t.title = $title,
+        t.description = $description,
+        t.status = $status,
+        t.updated_at = datetime()
+    RETURN t
+    """
+    response = requests.post(
+        NEO4J_URL,
+        auth=NEO4J_AUTH,
+        json={"statements": [{"statement": query, "parameters": {
+            "task_id": task_id,
+            "title": title,
+            "description": description,
+            "status": status
+        }}]}
+    )
+    return response.json()
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу: `neo4j_sync.py` тоже использует старый пароль `password`.
+
+**Исправляем:**
+
+```bash
+sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
+```
+
+Проверим:
+
+```bash
+grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
+NEO4J_AUTH = ("neo4j", "kymatics2026")
+        auth=NEO4J_AUTH,
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ Neo4j клиенты исправлены.
+
+---
+
+**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**
+
+```bash
+head -80 ai-farm/agents/batuta/memory_service.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % head -80 ai-farm/agents/batuta/memory_service.py
+"""
+Persistent Memory Service - файловая версия (быстрая и стабильная)
+"""
+import json
+import os
+import uuid
+from datetime import datetime
+from typing import List, Dict, Any, Optional
+from pathlib import Path
+
+class MemoryService:
+    """Сервис для долговременной памяти агентов (файловая версия)"""
+    
+    def __init__(self, persist_dir: str = None):
+        if persist_dir is None:
+            persist_dir = os.path.join(os.path.dirname(__file__), "memory_files")
+        
+        self.persist_dir = Path(persist_dir)
+        self.persist_dir.mkdir(parents=True, exist_ok=True)
+        print(f"MemoryService initialized at {self.persist_dir}")
+    
+    def _get_memory_file(self, project_id: str) -> Path:
+        """Получить путь к файлу памяти проекта"""
+        safe_name = "".join(c for c in project_id if c.isalnum() or c in "._-")
+        return self.persist_dir / f"{safe_name}.json"
+    
+    def _load_memories(self, project_id: str) -> List[Dict]:
+        """Загрузить все памяти проекта"""
+        file_path = self._get_memory_file(project_id)
+        if file_path.exists():
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except:
+                return []
+        return []
+    
+    def _save_memories(self, project_id: str, memories: List[Dict]):
+        """Сохранить памяти проекта"""
+        file_path = self._get_memory_file(project_id)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(memories, f, indent=2, ensure_ascii=False, default=str)
+    
+    def add_memory(self, project_id: str, memory: str, metadata: Dict[str, Any] = None) -> str:
+        """Добавить запись в память проекта"""
+        memories = self._load_memories(project_id)
+        
+        memory_id = str(uuid.uuid4())
+        meta = metadata or {}
+        meta["timestamp"] = datetime.now().isoformat()
+        meta["project_id"] = project_id
+        
+        memories.append({
+            "id": memory_id,
+            "memory": memory,
+            "metadata": meta,
+            "created_at": datetime.now().isoformat()
+        })
+        
+        self._save_memories(project_id, memories)
+        return memory_id
+    
+    def search_memory(self, project_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """Поиск по памяти проекта (простой текстовый поиск)"""
+        memories = self._load_memories(project_id)
+        
+        query_lower = query.lower()
+        query_words = query_lower.split()
+        
+        scored = []
+        for mem in memories:
+            memory_lower = mem["memory"].lower()
+            # Считаем количество совпадений слов
+            score = 0
+            for word in query_words:
+                if word in memory_lower:
+                    score += 1
+            
+            if query_words:
+                score = score / len(query_words)
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.
+
+**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**
+
+Сначала проверим, запущен ли ChromaDB:
+
+```bash
+curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
+```
+
+---
+## 👤 **Kirill**
+
 Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок
 
 ---
@@ -4430,954 +5377,6 @@ docker run -d --name chroma-kymatics -p 8001:8000 chromadb/chroma:latest
 
 ```bash
 sleep 3 && curl -s http://localhost:8001/api/v1/heartbeat
-```
-
----
-
-## 👤 **Kirill**
-
-СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMATICS (ЭТАП 94 - СТАРТ)
-
-🎯 КОНТЕКСТ
-✅ Успешно завершен Этап 93. Выполнены задачи:
-
-93.1 ✅ Multi-agent в BPMN — 4 агента (architect, coder, integrator, analyzer) интегрированы в Process Designer
-93.2 ✅ Persistent Memory — API `/memory/*` с файловым хранилищем, поиск по релевантности
-93.3 ⏸️ Telegram Bot — перенесен на следующий этап
-93.4 ✅ Skill Marketplace — публикация, установка, теги, статистика
-93.5 ✅ Self-healing процессы — анализ ошибок LLM, стратегии восстановления
-93.6 ✅ BPMN → Executable Code — генерация Python/TypeScript кода из BPMN
-
-💰 БЮДЖЕТ ЭТАПА 93: 0 ₽
-💰 БЮДЖЕТ ЭТАПА 94 (ПЛАНОВЫЙ): 2000 ₽ (только реальные траты на платные API)
-
-⚙️ ТЕКУЩЕЕ СОСТОЯНИЕ СИСТЕМЫ (АУДИТ 23.05.2026)
-
-✅ Бэкенд:
-- 50+ API эндпоинтов (включая новые: agents, memory, marketplace, healing, codegen)
-- ChromaDB запущен (порт 8000) — используется для RAG и векторного поиска
-- Neo4j НЕ ЗАПУЩЕН (код готов, нужен запуск)
-- Файловая память работает как временное решение
-- Process Designer + WebSocket execution работают
-
-⚠️ Разрывы в пайплайне (критические для MVP):
-1. ❌ Исполнение → Память: результаты не сохраняются автоматически
-2. ❌ Память → Дизайнер: нет подсказок из памяти при создании процессов
-3. ⚠️ Только manual trigger для процессов (schedule/webhook позже)
-4. ⚠️ Компоненты нельзя перетащить в дизайнер (только узлы из палитры)
-
-📁 КЛЮЧЕВЫЕ ФАЙЛЫ
-
-Бэкенд: ai-farm/agents/batuta/
-- memory_service.py (файловая версия)
-- neo4j_sync.py, neo4j_client.py, tools/tool_graph.py — граф
-- api_memory.py, api_marketplace.py, api_self_healing.py, api_codegen.py
-- process_manager.py, process_executor.py
-
-Фронтенд: tactical-command-v3/src/
-- features/process-designer/ — Process Designer
-- features/components/ComponentsPage.tsx — Components Library
-- features/ai/AIChatSidebar.tsx — AI чат
-- pages/TerminalPage.tsx — главная страница
-
-🏛️ ЦЕЛЕВОЕ ВИДЕНИЕ 2.2
-Kymatics — единая платформа для создания и выполнения BPMN-процессов с AI-агентами.
-
-Ключевые принципы:
-- Agentic First — агенты не болтают, они делают
-- Governance by Design — HITL не опция, а стандарт
-- Local-First — данные не покидают ваш сервер
-- Open Ecosystem — marketplace skills, community
-
-Уникальное преимущество: BPMN + AI Agents + Memory (единственные на рынке)
-
-📋 ЗАДАЧИ ЭТАПА 94 (10 дней до тестируемого MVP)
-
-P0 (КРИТИЧЕСКИЕ) — СВЯЗНОСТЬ И СТАБИЛЬНОСТЬ
-
-Задача 94.1: Memory Layer — запуск Neo4j и объединение с ChromaDB
-(@🚀 Хранитель стабильности + @🧠 Специалист по знаниям)
-
-Цель: Создать единый memory слой уровня лидеров индустрии.
-
-Действия:
-- Запустить Neo4j через Docker (порты 7474, 7687)
-- Создать единый MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф)
-- Добавить temporal reasoning (valid_from/valid_to) — как у Zep
-- Перенести файловую память на ChromaDB (векторный поиск)
-
-Критерии готовности:
-- Neo4j запущен и интегрирован с существующими инструментами (`tool_graph.py`, `neo4j_sync.py`)
-- MemoryService поддерживает семантический поиск (ChromaDB) + графовые запросы (Neo4j)
-- Автосохранение результатов выполнения в память (исправлен разрыв №1)
-
-Задача 94.2: Пайплайн — связность и валидация
-(@🚀 Хранитель стабильности + @🎨 Дизайнер интерфейсов)
-
-Цель: Устранить разрывы между компонентами.
-
-Действия:
-- Добавить автосохранение результатов выполнения в память
-- Добавить подсказки из памяти при создании процесса (исправлен разрыв №2)
-- Добавить drag & drop из Components Library в Process Designer
-- Добавить полную валидацию процессов (связи, обязательные поля, циклы)
-- Добавить async execution с отслеживанием статусов
-
-Критерии готовности:
-- После выполнения процесса результат автоматически сохраняется в память
-- При создании процесса появляются подсказки из истории проекта
-- Компонент можно перетащить из Library прямо в дизайнер
-- Процесс нельзя сохранить/запустить с ошибками
-- Execution имеет статусы: pending → running → completed/failed
-
-Задача 94.3: Фронтенд — дизайн-система и чистота
-(@🎨 Дизайнер интерфейсов)
-
-Цель: Привести фронтенд к тестируемому состоянию.
-
-Действия:
-- Вынести все inline styles в CSS файлы
-- Разработать дизайн-систему (цвета, типографика, отступы, компоненты)
-- Создать библиотеку переиспользуемых UI компонентов (Button, Modal, Input, Select)
-- Исправить 67 технических долгов (TODO/FIXME/any)
-
-Критерии готовности:
-- Нет inline styles (все в CSS/модулях)
-- Дизайн-система документирована (storybook или отдельная страница)
-- UI компоненты переиспользуются во всем приложении
-- Нет предупреждений TypeScript
-
-P1 (ВЫСОКИЙ ПРИОРИТЕТ)
-
-Задача 94.4: Подготовка к выходу на рынок
-(@🚀 Хранитель стабильности)
-
-Цель: Создать минимальный пакет для демонстрации.
-
-Действия:
-- Написать демо-скрипт для видео (2-3 минуты)
-- Создать Docker Compose для быстрого старта
-- Подготовить landing page (базовая: описание, скриншоты, CTA)
-- Подготовить 3-5 примеров готовых процессов (templates)
-
-Критерии готовности:
-- Демо-скрипт готов к записи
-- `docker-compose up` запускает всю платформу
-- Landing page доступна локально
-- Примеры процессов можно импортировать одним кликом
-
-Задача 94.5: Self-healing — интеграция с памятью
-(@🧠 Специалист по знаниям)
-
-Цель: Использовать успешные кейсы из памяти для автоматического исправления.
-
-Действия:
-- Извлекать успешные паттерны из памяти
-- Предлагать их как исправления при ошибках
-- Сохранять успешные исправления обратно в память
-
-Критерии готовности:
-- При ошибке процесса LLM получает контекст из похожих успешных выполнений
-- Self-healing предлагает решения на основе истории проекта
-
-P2 (СРЕДНИЙ ПРИОРИТЕТ) — при наличии времени
-
-Задача 94.6: Performance optimization — кэширование, индексы, профайлинг
-
-Задача 94.7: Документация API (Swagger/OpenAPI)
-
-💰 БЮДЖЕТ ЭТАПА 94
-Лимит: 2000 ₽ (только реальные траты на платные API/сервисы)
-
-Задача	Бюджет
-94.1 Memory Layer	0 ₽ (локально)
-94.2 Пайплайн	0 ₽ (локально)
-94.3 Фронтенд	0 ₽ (локально)
-94.4 Go-to-market	0 ₽ (локально)
-94.5 Self-healing	0 ₽ (локальный ollama)
-94.6 Performance	0 ₽ (локально)
-94.7 Документация	0 ₽ (локально)
-
-⚠️ При достижении лимита 2000 ₽ — остановка и согласование.
-
-🚀 ПОРЯДОК ВЫПОЛНЕНИЯ (ЭТАП 94)
-
-Шаг	Задача	Ответственный	Длительность
-1	94.1 Memory Layer (Neo4j + ChromaDB)	@🚀 + @🧠	4 ч
-2	94.2 Пайплайн — связность и валидация	@🚀 + @🎨	4 ч
-3	94.3 Фронтенд — дизайн-система	@🎨	4 ч
-4	94.4 Go-to-market подготовка	@🚀	3 ч
-5	94.5 Self-healing + память	@🧠	3 ч
-6	94.6-94.7 Performance + docs	@🚀 + @🧠	время
-
-📅 План на 10 дней:
-
-Неделя 1 (P0):
-- День 1: 94.1 Memory Layer
-- День 2: 94.1 + начало 94.2
-- День 3: 94.2 Пайплайн
-- День 4: 94.2 + начало 94.3
-- День 5: 94.3 Фронтенд
-
-Неделя 2 (P1):
-- День 6: 94.3 + 94.4
-- День 7: 94.4 + 94.5
-- День 8: 94.5 + интеграционное тестирование
-- День 9: Фикс багов + доработки
-- День 10: Финальное тестирование + демо
-
-⚠️ ПРАВИЛА РАБОТЫ
-- ОДНА ЗАДАЧА ЗА РАЗ — не смешиваем
-- КОНТРОЛЬ БЮДЖЕТА — следим за расходами
-- ПОСЛЕ КАЖДОГО ИЗМЕНЕНИЯ — ТЕСТ
-- КОММИТИТЬ ПОСЛЕ КАЖДОЙ ЗАДАЧИ
-- ПРИ ДОСТИЖЕНИИ ЛИМИТА — остановка и согласование
-
-✅ СТАРТ ВЫПОЛНЕНИЯ (ЭТАП 94)
-
-@🚀 Хранитель стабильности — начинайте с Задачи 94.1 (Memory Layer). Первый шаг: запуск Neo4j через Docker.
-
-@🧠 Специалист по знаниям — подготовьте код для объединения ChromaDB и Neo4j.
-
-@🎨 Дизайнер интерфейсов — проведите аудит фронтенда и начните проектирование дизайн-системы.
-
-Жду подтверждения готовности к старту.
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично. **План принят, распределение ролей подтверждено.**
-
-Система переходит в режим активной разработки Этапа 94. Бюджет под контролем (2000₽ только на внешние API, локальный стек — бесплатно).
-
-**Директива на ближайшие 4 часа:**
-
-1.  **@🚀 Хранитель стабильности:** Запуск Neo4j. После запуска — проверить интеграцию с `neo4j_sync.py`. Результат запуска (логи, порты) — в этот канал.
-2.  **@🧠 Специалист по знаниям:** Разработать класс `UnifiedMemoryService` (обертка над ChromaDB + Neo4j). Учитывать интерфейсы из `memory_service.py`. Temporal reasoning — добавить поля `valid_from`/`valid_to` в схемы.
-3.  **@🎨 Дизайнер интерфейсов:** Аудит фронтенда: сдать отчет по 67 техдолгам (список файлов с наибольшим количеством TODO/FIXME). Определить базовые токены дизайн-системы (цвета: primary/gray/error, spacing: 4/8/16/24, шрифты).
-
-**Правило:** Работаем строго в последовательности: Memory Layer → Пайплайн → Фронтенд. Никакого "параллельного" фронтенда, пока не стабилизируется бэкенд.
-
-**Текущий статус:** `ЭТАП_94 = СТАРТ`.
-
-Исполнители, подтвердите получение задач и приступайте. Жду логи запуска Neo4j в течение 15 минут.
-
----
-
-## 👤 **Kirill**
-
-Действуем следующим образом:
-По одному действию!
-Ты пишешь команды для терминала или инструкции
-Я выполняю команду в терминале или инструкцию
-Тест
-Только потом идем дальше
-
----
-
-## 🤖 **DeepSeek**
-
-Принято. Работаем строго по схеме: **Команда → Исполнение → Тест → Следующий шаг.**
-
----
-
-## Шаг 1 из 94.1 (Memory Layer — запуск Neo4j)
-
-**Действие:** Запуск Neo4j через Docker с сохранением данных на хост-машине.
-
-**Команда для терминала:**
-
-```bash
-docker run -d \
-  --name neo4j-kymatics \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/kymatics2026 \
-  -e NEO4J_PLUGINS='["apoc"]' \
-  -v ~/neo4j-kymatics/data:/data \
-  -v ~/neo4j-kymatics/logs:/logs \
-  neo4j:5.26-enterprise
-```
-
-⚠️ Если нет лицензии Enterprise — замените на `neo4j:5.26-
-
----
-
-## 👤 **Kirill**
-
-Нужно делать на реальном проекте, а не вымышленном. Ты даешь команды, я выполняю и возвращаю результат.
-
----
-
-## 🤖 **DeepSeek**
-
-Хорошо. Работаем с реальным проектом.
-
-**Первая команда:**
-
-```bash
-docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-```
-
-Покажи, что вернул терминал.
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Neo4j не запущен. Контейнера с именем `neo4j` нет.
-
-**Следующая команда:**
-
-Проверим, есть ли какие-либо контейнеры Neo4j (может, другое имя):
-
-```bash
-docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Нет ни одного контейнера Neo4j. Запускаем с нуля.
-
-**Команда:**
-
-```bash
-docker run -d \
-  --name neo4j-kymatics \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/kymatics2026 \
-  -e NEO4J_PLUGINS='["apoc"]' \
-  -v ~/neo4j-kymatics/data:/data \
-  -v ~/neo4j-kymatics/logs:/logs \
-  neo4j:5.26
-```
-
-Запусти эту команду и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-ищи внимательней есть и docker и orbstack 
-/Users/kirillkravcov/UniversalCreativeHub
-
----
-
-## 🤖 **DeepSeek**
-
-Понял. У тебя Orbstack (альтернатива Docker Desktop). Проверим иначе.
-
-**Команда:**
-
-```bash
-docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
-```
-
-А также посмотрим, что вообще запущено:
-
-```bash
-docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
-No neo4j containers found
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
-NAMES     IMAGE     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Понял. Вообще нет запущенных контейнеров. Запускаем Neo4j.
-
-**Команда:**
-
-```bash
-docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
-```
-
-Выполни и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-может просто docker не запущен?
-
----
-
-## 🤖 **DeepSeek**
-
-Точно. Проверим статус Docker/Orbstack.
-
-**Команда:**
-
-```bash
-docker info 2>&1 | head -5
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
-Unable to find image 'neo4j:5.26' locally
-5.26: Pulling from library/neo4j
-cda3d70ae7d7: Pull complete 
-4709e9496477: Pull complete 
-c4697836ee82: Pull complete 
-3cb252419ff9: Pull complete 
-4f4fb700ef54: Pull complete 
-Digest: sha256:0b5d3ab6ec1b866890dbfb53bf4fe1cf039f9e03c96165599a403005b7e7bcc3
-Status: Downloaded newer image for neo4j:5.26
-a5116df7d4a72b02a74ede3eb1193acbbac1a11b739279faa40dc93432eb39fd
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker info 2>&1 | head -5
-Client:
- Version:    28.5.2
- Context:    orbstack
- Debug Mode: false
- Plugins:
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично! Neo4j скачался и запустился. Контейнер `neo4j-kymatics` создан (ID: `a5116df7d4a7`).
-
-**Теперь проверим, что контейнер работает:**
-
-```bash
-docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES            STATUS          PORTS
-neo4j-kymatics   Up 16 seconds   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j успешно запущен и работает!**
-
-STATUS: `Up 16 seconds`  
-Порты: `7474` (HTTP), `7687` (Bolt) — доступны.
-
----
-
-**Тест подключения к Neo4j (через curl):**
-
-```bash
-curl -I -u neo4j:kymatics2026 http://localhost:7474
-```
-
-Покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-curl -I -u neo4j:kymatics2026 http://localhost:7474
-
----
-
-## 🤖 **DeepSeek**
-
-Выполни эту команду в терминале и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % curl -I -u neo4j:kymatics2026 http://localhost:7474
-HTTP/1.1 200 OK
-Date: Sat, 23 May 2026 19:03:24 GMT
-Access-Control-Allow-Origin: *
-Content-Type: application/json
-Vary: Accept
-Content-Length: 251
-
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j доступен, аутентификация работает.** (HTTP 200 OK)
-
----
-
-**Шаг 94.1 продолжение: проверим существующие файлы проекта.**
-
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
-```
-
-Покажи вывод — нужно убедиться, что `neo4j_client.py` и `neo4j_sync.py` на месте.
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
-total 1120
-drwxr-xr-x  91 kirillkravcov  staff   2912 May 23 17:18 .
-drwxr-xr-x  14 kirillkravcov  staff    448 May 21 11:14 ..
--rw-r--r--   1 kirillkravcov  staff    229 May 21 08:34 .env
-drwxr-xr-x   6 kirillkravcov  staff    192 May 16 14:31 .pytest_cache
--rwxr-xr-x   1 kirillkravcov  staff    929 Apr  6 12:05 add_embedding_endpoint.py
--rw-r--r--   1 kirillkravcov  staff   2357 Apr 23 19:58 add_history_logging.py
--rw-r--r--   1 kirillkravcov  staff   1115 Apr 15 07:53 add_load_tasks.py
-drwxr-xr-x   3 kirillkravcov  staff     96 May 15 21:59 ai-farm
--rw-r--r--   1 kirillkravcov  staff   4881 May 23 13:35 api_agents.py
--rw-r--r--   1 kirillkravcov  staff   1152 May 23 17:18 api_codegen.py
--rw-r--r--   1 kirillkravcov  staff   2056 Apr 21 08:41 api_commands.py
--rw-r--r--   1 kirillkravcov  staff  18228 May 23 12:38 api_components.py
--rw-r--r--   1 kirillkravcov  staff   7258 May 23 13:21 api_components_lifecycle.py
--rw-r--r--   1 kirillkravcov  staff   1212 May 21 16:51 api_execute.py
--rw-r--r--   1 kirillkravcov  staff   7671 May 23 17:13 api_marketplace.py
--rw-r--r--   1 kirillkravcov  staff   2923 May 23 14:41 api_memory.py
--rw-r--r--   1 kirillkravcov  staff  17216 May 22 11:03 api_processes.py
--rw-r--r--   1 kirillkravcov  staff   4864 May 15 21:52 api_projects.py
--rw-r--r--   1 kirillkravcov  staff   5820 May 22 14:36 api_safe_execute.py
--rw-r--r--   1 kirillkravcov  staff   1399 May 23 17:15 api_self_healing.py
--rw-r--r--   1 kirillkravcov  staff   1634 May 12 21:24 api_skills.py
--rw-r--r--   1 kirillkravcov  staff   8776 May 12 21:24 api_templates.py
-drwxr-xr-x   3 kirillkravcov  staff     96 May 15 18:23 api_v1
--rw-r--r--   1 kirillkravcov  staff   8100 May 19 18:11 architect_agent.py
--rw-r--r--   1 kirillkravcov  staff   8509 Apr 20 08:01 architect_agent.py.broken
-drwxr-xr-x  25 kirillkravcov  staff    800 May 15 21:39 backups
-drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 channels
-drwxr-xr-x   2 kirillkravcov  staff     64 May 23 14:47 chroma_data
--rw-r--r--   1 kirillkravcov  staff   5818 May 23 17:18 code_generator.py
--rw-r--r--   1 kirillkravcov  staff  18207 May 23 13:21 coder_agent.py
--rw-r--r--   1 kirillkravcov  staff  11063 Apr 17 22:43 command_analyzer.py
--rw-r--r--   1 kirillkravcov  staff   1357 Apr 21 09:09 command_executor_agent.py
--rw-r--r--   1 kirillkravcov  staff   1403 May 21 18:13 command_safety.py
--rw-r--r--   1 kirillkravcov  staff   7983 May 21 08:51 components_db.py
--rw-r--r--   1 kirillkravcov  staff   8071 May 21 08:51 components_db.py.backup
--rw-r--r--   1 kirillkravcov  staff   1495 May 18 11:49 components_schemas.py
--rw-r--r--   1 kirillkravcov  staff   1674 May 15 18:39 config.py
-drwxr-xr-x  13 kirillkravcov  staff    416 May 17 08:52 core
--rw-r--r--   1 kirillkravcov  staff   1650 May 18 08:55 db_unified.py
--rw-r--r--   1 kirillkravcov  staff   4781 May 15 22:01 drafts_manager.py
--rw-r--r--   1 kirillkravcov  staff   5023 May 22 10:59 executor_registry.py
-drwxr-xr-x   7 kirillkravcov  staff    224 May 15 18:20 executors
--rw-r--r--   1 kirillkravcov  staff   2044 May 19 18:11 fixer_agent.py
--rw-r--r--   1 kirillkravcov  staff   4711 May 18 09:48 git_skills.py
--rw-r--r--   1 kirillkravcov  staff   3234 Apr 12 18:34 history_integration.py
--rw-r--r--   1 kirillkravcov  staff   7394 Apr 20 08:02 integrator_agent.py
--rw-r--r--   1 kirillkravcov  staff   3136 Apr 16 16:57 knowledge_pool.py
--rw-r--r--   1 kirillkravcov  staff   5398 Apr 16 16:44 knowledge_pool_chroma_v1.py
--rw-r--r--   1 kirillkravcov  staff   5031 Apr 16 16:58 knowledge_pool_faiss.py
--rw-r--r--   1 kirillkravcov  staff   5282 Apr 16 16:41 knowledge_pool_v2.py
--rw-r--r--   1 kirillkravcov  staff   4182 May 11 10:29 layout_engine.py
-drwxr-xr-x   9 kirillkravcov  staff    288 Apr 17 18:06 logs
--rwxr-xr-x   1 kirillkravcov  staff  36455 May 23 17:18 main.py
-drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 memory
-drwxr-xr-x   3 kirillkravcov  staff     96 May 23 14:58 memory_files
--rw-r--r--   1 kirillkravcov  staff   5295 May 23 14:57 memory_service.py
--rw-r--r--   1 kirillkravcov  staff   1466 Apr 16 13:47 neo4j_client.py
--rw-r--r--   1 kirillkravcov  staff    803 Apr 16 13:49 neo4j_sync.py
-drwxr-xr-x  19 kirillkravcov  staff    608 May  3 17:49 nodes
--rw-r--r--   1 kirillkravcov  staff   3171 May  9 10:37 observability.py
--rw-r--r--   1 kirillkravcov  staff   1072 Apr 15 07:51 patch_startup.py
--rw-r--r--   1 kirillkravcov  staff  18540 May 19 18:11 process_designer_agent.py
--rw-r--r--   1 kirillkravcov  staff   9651 May 12 09:07 process_executor.py
--rw-r--r--   1 kirillkravcov  staff  17351 May 22 11:13 process_manager.py
--rw-r--r--   1 kirillkravcov  staff   5981 May 19 08:48 process_models.py
--rw-r--r--   1 kirillkravcov  staff   3636 Apr 28 18:41 process_validator.py
--rw-r--r--   1 kirillkravcov  staff      0 May 23 13:14 processes.db
--rw-r--r--   1 kirillkravcov  staff  13287 Apr 16 19:08 project_inspector.py
-drwxr-xr-x   3 kirillkravcov  staff     96 Apr 12 13:09 prompts
--rw-r--r--   1 kirillkravcov  staff   1155 Apr 17 19:06 quick_validator.py
--rw-r--r--   1 kirillkravcov  staff   3553 May 19 18:11 requirement_analyzer.py
--rwxr-xr-x   1 kirillkravcov  staff     94 Mar  6 13:06 requirements.txt
-drwxr-xr-x  18 kirillkravcov  staff    576 May 19 18:11 scheduler
--rw-r--r--   1 kirillkravcov  staff   4218 May 23 17:15 self_healing.py
--rw-r--r--   1 kirillkravcov  staff   6551 Apr 28 18:30 skill_agent.py
--rw-r--r--   1 kirillkravcov  staff  18222 May 18 09:54 skills_registry.py
--rw-r--r--   1 kirillkravcov  staff   3753 Apr 16 19:21 smart_explorer.py
--rw-r--r--   1 kirillkravcov  staff   5450 May 19 18:11 task_decomposer.py
--rw-r--r--   1 kirillkravcov  staff      0 May 18 09:48 task_history.db
--rw-r--r--   1 kirillkravcov  staff   5060 Apr 15 07:52 task_history.py
--rw-r--r--   1 kirillkravcov  staff      0 Apr 17 16:37 task_processor.log
--rw-r--r--   1 kirillkravcov  staff  12663 May 12 21:11 template_resolver.py
--rw-r--r--   1 kirillkravcov  staff   2182 Apr 23 18:15 test_executor.py
--rw-r--r--   1 kirillkravcov  staff    486 Apr 19 15:51 test_opik.py
--rw-r--r--   1 kirillkravcov  staff    793 Apr 23 18:09 test_try_catch.py
--rw-r--r--   1 kirillkravcov  staff   1818 Apr 23 19:56 test_websocket.py
--rw-r--r--   1 kirillkravcov  staff   1064 Apr 23 20:09 test_ws.py
-drwxr-xr-x   9 kirillkravcov  staff    288 May 19 18:16 tools
--rw-r--r--   1 kirillkravcov  staff    574 Apr 23 19:58 update_executor.py
--rw-r--r--   1 kirillkravcov  staff   2264 Apr 20 07:59 validator_agent.py
--rw-r--r--   1 kirillkravcov  staff   2121 May  4 15:11 websocket_logger.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично. Файлы на месте:
-- `neo4j_client.py` (1466 байт)
-- `neo4j_sync.py` (803 байта)
-- `memory_service.py` (5295 байт) — файловая версия
-
----
-
-**Шаг 94.1: проверим содержимое `neo4j_client.py` — правильно ли настроено подключение.**
-
-```bash
-cat ai-farm/agents/batuta/neo4j_client.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_client.py
-import httpx
-from typing import Dict, Any
-
-NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
-NEO4J_AUTH = ("neo4j", "password")
-
-async def create_task_node(task_id: str, title: str, description: str, status: str = "pending"):
-    """Создать узел Task в Neo4j"""
-    query = f"""
-    MERGE (t:Task {{id: $task_id}})
-    SET t.title = $title,
-        t.description = $description,
-        t.status = $status,
-        t.updated_at = datetime()
-    RETURN t
-    """
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            NEO4J_URL,
-            auth=NEO4J_AUTH,
-            json={"statements": [{"statement": query, "parameters": {
-                "task_id": task_id,
-                "title": title,
-                "description": description,
-                "status": status
-            }}]}
-        )
-        return response.json()
-
-async def update_task_status(task_id: str, status: str):
-    """Обновить статус задачи в Neo4j"""
-    query = """
-    MATCH (t:Task {id: $task_id})
-    SET t.status = $status, t.updated_at = datetime()
-    RETURN t
-    """
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            NEO4J_URL,
-            auth=NEO4J_AUTH,
-            json={"statements": [{"statement": query, "parameters": {
-                "task_id": task_id,
-                "status": status
-            }}]}
-        )
-        return response.json()
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Вижу проблему: в `neo4j_client.py` используется пароль `password`, но мы запустили Neo4j с паролем `kymatics2026`.
-
-**Исправляем:**
-
-```bash
-sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
-```
-
-Проверим исправление:
-
-```bash
-grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
-NEO4J_AUTH = ("neo4j", "kymatics2026")
-            auth=NEO4J_AUTH,
-            auth=NEO4J_AUTH,
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ Пароль исправлен.
-
----
-
-**Теперь проверим, что Neo4j принимает запросы от клиента (простой тест через Python):**
-
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub && python -c "
-import asyncio
-import httpx
-
-async def test():
-    url = 'http://localhost:7474/db/neo4j/tx/commit'
-    auth = ('neo4j', 'kymatics2026')
-    query = 'RETURN 1 as test'
-    
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
-        print(resp.status_code)
-        print(resp.json())
-
-asyncio.run(test())
-"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                       
-    auth = ('neo4j', 'kymatics2026')
-    query = 'RETURN 1 as test'
-
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
-        print(resp.status_code)
-        print(resp.json())
-
-asyncio.run(test())
-"
-200
-{'results': [{'columns': ['test'], 'data': [{'row': [1], 'meta': [None]}]}], 'errors': [], 'lastBookmarks': ['FB:kcwQzD5o5GTkTuG+mUUuHaZyxAOQ']}
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j работает, аутентификация корректна, запрос возвращает результат.**
-
----
-
-**Шаг 94.1: проверим `neo4j_sync.py`:**
-
-```bash
-cat ai-farm/agents/batuta/neo4j_sync.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_sync.py
-import requests
-
-NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
-NEO4J_AUTH = ("neo4j", "password")
-
-def create_task_node_sync(task_id: str, title: str, description: str, status: str = "pending"):
-    """Создать узел Task в Neo4j (синхронная версия)"""
-    query = f"""
-    MERGE (t:Task {{id: $task_id}})
-    SET t.title = $title,
-        t.description = $description,
-        t.status = $status,
-        t.updated_at = datetime()
-    RETURN t
-    """
-    response = requests.post(
-        NEO4J_URL,
-        auth=NEO4J_AUTH,
-        json={"statements": [{"statement": query, "parameters": {
-            "task_id": task_id,
-            "title": title,
-            "description": description,
-            "status": status
-        }}]}
-    )
-    return response.json()
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Вижу: `neo4j_sync.py` тоже использует старый пароль `password`.
-
-**Исправляем:**
-
-```bash
-sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
-```
-
-Проверим:
-
-```bash
-grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
-NEO4J_AUTH = ("neo4j", "kymatics2026")
-        auth=NEO4J_AUTH,
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ Neo4j клиенты исправлены.
-
----
-
-**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**
-
-```bash
-head -80 ai-farm/agents/batuta/memory_service.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % head -80 ai-farm/agents/batuta/memory_service.py
-"""
-Persistent Memory Service - файловая версия (быстрая и стабильная)
-"""
-import json
-import os
-import uuid
-from datetime import datetime
-from typing import List, Dict, Any, Optional
-from pathlib import Path
-
-class MemoryService:
-    """Сервис для долговременной памяти агентов (файловая версия)"""
-    
-    def __init__(self, persist_dir: str = None):
-        if persist_dir is None:
-            persist_dir = os.path.join(os.path.dirname(__file__), "memory_files")
-        
-        self.persist_dir = Path(persist_dir)
-        self.persist_dir.mkdir(parents=True, exist_ok=True)
-        print(f"MemoryService initialized at {self.persist_dir}")
-    
-    def _get_memory_file(self, project_id: str) -> Path:
-        """Получить путь к файлу памяти проекта"""
-        safe_name = "".join(c for c in project_id if c.isalnum() or c in "._-")
-        return self.persist_dir / f"{safe_name}.json"
-    
-    def _load_memories(self, project_id: str) -> List[Dict]:
-        """Загрузить все памяти проекта"""
-        file_path = self._get_memory_file(project_id)
-        if file_path.exists():
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except:
-                return []
-        return []
-    
-    def _save_memories(self, project_id: str, memories: List[Dict]):
-        """Сохранить памяти проекта"""
-        file_path = self._get_memory_file(project_id)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(memories, f, indent=2, ensure_ascii=False, default=str)
-    
-    def add_memory(self, project_id: str, memory: str, metadata: Dict[str, Any] = None) -> str:
-        """Добавить запись в память проекта"""
-        memories = self._load_memories(project_id)
-        
-        memory_id = str(uuid.uuid4())
-        meta = metadata or {}
-        meta["timestamp"] = datetime.now().isoformat()
-        meta["project_id"] = project_id
-        
-        memories.append({
-            "id": memory_id,
-            "memory": memory,
-            "metadata": meta,
-            "created_at": datetime.now().isoformat()
-        })
-        
-        self._save_memories(project_id, memories)
-        return memory_id
-    
-    def search_memory(self, project_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """Поиск по памяти проекта (простой текстовый поиск)"""
-        memories = self._load_memories(project_id)
-        
-        query_lower = query.lower()
-        query_words = query_lower.split()
-        
-        scored = []
-        for mem in memories:
-            memory_lower = mem["memory"].lower()
-            # Считаем количество совпадений слов
-            score = 0
-            for word in query_words:
-                if word in memory_lower:
-                    score += 1
-            
-            if query_words:
-                score = score / len(query_words)
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.
-
-**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**
-
-Сначала проверим, запущен ли ChromaDB:
-
-```bash
-curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
 ```
 
 ---
