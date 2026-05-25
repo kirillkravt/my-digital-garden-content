@@ -2,7 +2,7 @@
 chat_id: 421262f0-9bec-4509-8ed0-fa11dd31b742
 title: Таблица и пример запроса C2BCredit
 message_count: 2
-exported_at: 2026-04-06T04:21:47.284Z
+exported_at: 2026-05-25T05:37:13.174Z
 ---
 
 # Таблица и пример запроса C2BCredit

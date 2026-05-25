@@ -2,7 +2,7 @@
 chat_id: 6d58fb56-582a-4e0e-9785-80e61c35939c
 title: Реализация реального времени в TouchDesigner
 message_count: 8
-exported_at: 2026-04-06T04:17:48.620Z
+exported_at: 2026-05-25T06:05:50.862Z
 ---
 
 # Реализация реального времени в TouchDesigner

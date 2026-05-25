@@ -2,7 +2,7 @@
 chat_id: c262fcb6-1035-4a2f-bb99-349ac95907a6
 title: Таймауты операций СБП в B2C
 message_count: 2
-exported_at: 2026-04-06T04:23:14.842Z
+exported_at: 2026-05-25T05:26:40.427Z
 ---
 
 # Таймауты операций СБП в B2C

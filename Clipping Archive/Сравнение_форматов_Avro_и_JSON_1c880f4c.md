@@ -2,7 +2,7 @@
 chat_id: 1c880f4c-33ff-43ec-a155-5c3134b80d99
 title: Сравнение форматов Avro и JSON
 message_count: 8
-exported_at: 2026-04-06T04:22:02.387Z
+exported_at: 2026-05-25T05:35:48.794Z
 ---
 
 # Сравнение форматов Avro и JSON

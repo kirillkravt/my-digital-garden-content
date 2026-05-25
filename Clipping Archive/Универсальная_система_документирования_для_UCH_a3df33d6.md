@@ -2,7 +2,7 @@
 chat_id: a3df33d6-ac99-468f-af1d-7b5daf5bcfdd
 title: Универсальная система документирования для UCH
 message_count: 68
-exported_at: 2026-04-06T04:13:46.247Z
+exported_at: 2026-05-25T06:32:14.374Z
 ---
 
 # Универсальная система документирования для UCH
@@ -4432,7 +4432,7 @@ New-Item -Path "C:\BA-Documents\Logs" -ItemType Directory -Force
 # 3. Проверяем создание
 Get-ChildItem "C:\BA-Documents" -Directory
 
-# 
+#
 
 ---
 

@@ -2,7 +2,7 @@
 chat_id: 1d5f32aa-1510-4d58-8382-eff32e17e9e4
 title: Интеграция StrudelREPLNode в проект
 message_count: 124
-exported_at: 2026-04-06T04:16:32.876Z
+exported_at: 2026-05-25T06:14:41.669Z
 ---
 
 # Интеграция StrudelREPLNode в проект

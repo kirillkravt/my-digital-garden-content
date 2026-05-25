@@ -2,7 +2,7 @@
 chat_id: fec0ce63-e589-4b7e-a157-43133f78b55b
 title: Сравнение Octatrack MKII и Digitakt 2
 message_count: 6
-exported_at: 2026-04-06T04:20:04.584Z
+exported_at: 2026-05-25T05:49:34.320Z
 ---
 
 # Сравнение Octatrack MKII и Digitakt 2
@@ -76,7 +76,6 @@ exported_at: 2026-04-06T04:20:04.584Z
 ## 👤 **Kirill**
 
 альтернативы octatrack
-
 
 ---
 
@@ -186,7 +185,6 @@ exported_at: 2026-04-06T04:20:04.584Z
 ## 👤 **Kirill**
 
 сравнение octatrack mk2 и push 3
-
 
 ---
 

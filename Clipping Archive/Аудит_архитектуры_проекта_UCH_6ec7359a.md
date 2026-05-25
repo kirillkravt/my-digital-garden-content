@@ -2,7 +2,7 @@
 chat_id: 6ec7359a-7c85-4dfc-b805-a67cc85478d4
 title: Аудит архитектуры проекта UCH
 message_count: 146
-exported_at: 2026-05-24T13:43:49.145Z
+exported_at: 2026-05-25T07:11:19.405Z
 ---
 
 # Аудит архитектуры проекта UCH
@@ -6421,8 +6421,7 @@ kill 37079
 
 (.venv) kirillkravcov@MacBook-Air graph-api % lsof -p 37079 | grep cwd
 Python  37079 kirillkravcov  cwd      DIR               1,17       256             6659970 /Users/kirillkravcov/UniversalCreativeHub/graph-api
-(.venv) kirillkravcov@MacBook-Air graph-api %   
-
+(.venv) kirillkravcov@MacBook-Air graph-api %
 
 ---
 

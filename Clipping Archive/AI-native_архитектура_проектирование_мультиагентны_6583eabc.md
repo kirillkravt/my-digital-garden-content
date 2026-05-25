@@ -2,7 +2,7 @@
 chat_id: 6583eabc-8721-4369-8fee-73b636efde56
 title: AI-native архитектура проектирование мультиагентных систем 2025||AI-native architecture design principles multi-agent system 2025||мультиагентная система оркестратор агентов архитектура паттерны||multi-agent orchestration framework architecture patterns 2025||human in the loop
 message_count: 55
-exported_at: 2026-05-24T13:43:33.827Z
+exported_at: 2026-05-25T07:13:05.118Z
 ---
 
 # AI-native архитектура проектирование мультиагентных систем 2025||AI-native architecture design principles multi-agent system 2025||мультиагентная система оркестратор агентов архитектура паттерны||multi-agent orchestration framework architecture patterns 2025||human in the loop
@@ -37,8 +37,6 @@ exported_at: 2026-05-24T13:43:33.827Z
 Время
 
 Централизованные АБ платформы
-
-
 
 ---
 
@@ -184,7 +182,6 @@ exported_at: 2026-05-24T13:43:33.827Z
 
 Нужен продуктовый брендинг
 
-
 ---
 
 ## 🤖 **DeepSeek**
@@ -266,7 +263,6 @@ exported_at: 2026-05-24T13:43:33.827Z
 ## 👤 **Kirill**
 
 Нравится концепция Цифровой завод / цифровое производство
-
 
 ---
 
@@ -1202,7 +1198,7 @@ Coda ближе, но кажется тут высокие риски конфл
 
 ## 👤 **Kirill**
 
-Другие аналогии. С hitl можеь 
+Другие аналогии. С hitl можеь
 
 ---
 
@@ -1673,7 +1669,7 @@ Ittea что скажешь
 
 ## 👤 **Kirill**
 
-Давай подумаем ближе к графам, связям, edges, 3d 
+Давай подумаем ближе к графам, связям, edges, 3d
 
 ---
 

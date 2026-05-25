@@ -2,7 +2,7 @@
 chat_id: aa022388-5d88-40b7-bc57-626a1640201a
 title: Vercel деплой с ошибкой и решением
 message_count: 64
-exported_at: 2026-04-06T04:17:45.594Z
+exported_at: 2026-05-25T06:04:26.430Z
 ---
 
 # Vercel деплой с ошибкой и решением

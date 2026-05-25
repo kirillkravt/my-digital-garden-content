@@ -2,7 +2,7 @@
 chat_id: 5b99b04b-0e18-4377-832c-0db8fa3567d7
 title: Код диаграммы PlantUML для B2C СБП
 message_count: 14
-exported_at: 2026-04-06T04:23:17.861Z
+exported_at: 2026-05-25T05:25:58.218Z
 ---
 
 # Код диаграммы PlantUML для B2C СБП

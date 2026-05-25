@@ -2,7 +2,7 @@
 chat_id: 0b316b16-f361-48e5-98c9-3b6c706840e5
 title: Аудит ProjectsPage для унификации
 message_count: 438
-exported_at: 2026-05-24T13:42:16.869Z
+exported_at: 2026-05-25T07:21:38.701Z
 ---
 
 # Аудит ProjectsPage для унификации
@@ -897,7 +897,6 @@ undefined
 | Шрифт | ✅ `Inter, system-ui, sans-serif` |
 | Фон панели | ✅ `rgb(15, 22, 36)` |
 | Граница | ✅ `1px solid rgb(26, 37, 56)` |
-
 
 ---
 
@@ -4072,9 +4071,6 @@ installHook.js:1 Failed to load processes: TypeError: Failed to fetch
     at listProcesses (processApi.ts:59:26)
     at loadProcessList (ProcessDesignerPage.tsx:452:28)
     at ProcessDesignerPage.tsx:645:5
-﻿
-
-
 
 ---
 
@@ -5439,7 +5435,7 @@ main.py:77: DeprecationWarning:
   @app.on_event("startup")
 INFO:     Will watch for changes in these directories: ['/Users/kirillkravcov/UniversalCreativeHub/ai-farm/agents/batuta']
 ERROR:    [Errno 48] Address already in use
-kirillkravcov@MacBook-Air batuta % 
+kirillkravcov@MacBook-Air batuta %
 
 ---
 
@@ -10968,7 +10964,6 @@ export const BottomPanel: React.FC = () => {
               borderBottom: activeTab === tab.id ? '2px solid var(--k-accent-ocean)' : '2px solid transparent',
               transition: 'all 0.15s ease'
 
-
 ---
 
 ## 👤 **Kirill**
@@ -11029,7 +11024,6 @@ import { CanvasToolbar } from './components/CanvasToolbar';
 <div className="canvas-terminal-container">
   <CanvasToolbar 
     onSave={() => console.log('Save')}
-   
 
 ---
 

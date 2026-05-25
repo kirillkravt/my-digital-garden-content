@@ -2,7 +2,7 @@
 chat_id: 88d7e4a8-f216-4383-966d-5372fbbd6002
 title: Реализация загрузки фидов MVD FINCERT
 message_count: 4
-exported_at: 2026-04-06T04:20:58.965Z
+exported_at: 2026-05-25T05:42:50.610Z
 ---
 
 # Реализация загрузки фидов MVD FINCERT

@@ -2,7 +2,7 @@
 chat_id: b0aef753-deb6-498f-aeb9-8ec3e31ba2b9
 title: Отображение ASCII-диаграмм в Obsidian
 message_count: 12
-exported_at: 2026-04-06T04:14:52.931Z
+exported_at: 2026-05-25T06:25:57.261Z
 ---
 
 # Отображение ASCII-диаграмм в Obsidian

@@ -2,7 +2,7 @@
 chat_id: ba6a8e90-d071-46b9-a26f-a32afd0fd23d
 title: Исправление API синхронизации багов
 message_count: 330
-exported_at: 2026-05-24T13:41:52.214Z
+exported_at: 2026-05-25T07:24:32.395Z
 ---
 
 # Исправление API синхронизации багов
@@ -3384,7 +3384,6 @@ class Component(BaseModel):
 @router.get("/list")
 async def list_components(
     status: Optional[str] = Query(None, description="Filter by status"),
-
 
 ---
 
@@ -11198,9 +11197,7 @@ sqlite3 /Users/kirillkravcov/UniversalCreativeHub/data/k
 kirillkravcov@Mac UniversalCreativeHub % sqlite3 /Users/kirillkravcov/UniversalCreativeHub/data/kymatics.db "SELECT COUNT(*) as total FROM components;"
 0
 kirillkravcov@Mac UniversalCreativeHub % sqlite3 /Users/kirillkravcov/UniversalCreativeHub/data/kymatics.db "SELECT * FROM components LIMIT 5;"
-kirillkravcov@Mac UniversalCreativeHub % 
-
-
+kirillkravcov@Mac UniversalCreativeHub %
 
 ---
 

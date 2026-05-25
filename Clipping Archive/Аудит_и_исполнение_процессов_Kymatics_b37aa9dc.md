@@ -2,7 +2,7 @@
 chat_id: b37aa9dc-85e7-433a-aec7-d1f8a03ad812
 title: Аудит и исполнение процессов Kymatics
 message_count: 302
-exported_at: 2026-05-24T13:42:29.136Z
+exported_at: 2026-05-25T07:20:35.298Z
 ---
 
 # Аудит и исполнение процессов Kymatics
@@ -3583,9 +3583,6 @@ installHook.js:1 FileTree - files:
 (5) [Array(2), Array(2), Array(2), Array(2), Array(2)]
 5
 installHook.js:1 Encountered two children with the same key, `1777895702384`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
-﻿
-
-
 
 ---
 

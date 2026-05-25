@@ -2,7 +2,7 @@
 chat_id: 975cd06e-7006-4046-ae68-f3c4257a4a33
 title: Аудит и унификация UI Kymatics
 message_count: 330
-exported_at: 2026-05-24T13:42:22.997Z
+exported_at: 2026-05-25T07:21:17.551Z
 ---
 
 # Аудит и унификация UI Kymatics
@@ -9089,7 +9089,7 @@ kirillkravcov@MacBook-Air tactical-command-v3 % sed -n '690,705p' src/features/p
         <div className="canvas-terminal-container">
           <CanvasToolbar
             onLayout={handleAutoLayout}
-kirillkravcov@MacBook-Air tactical-command-v3 % 
+kirillkravcov@MacBook-Air tactical-command-v3 %
 
 ---
 

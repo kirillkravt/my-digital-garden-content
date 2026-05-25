@@ -2,7 +2,7 @@
 chat_id: b6976592-185c-4364-b9f7-b9f24fb409b3
 title: Python upgrade and service restart
 message_count: 268
-exported_at: 2026-05-24T13:44:16.801Z
+exported_at: 2026-05-25T07:08:30.240Z
 ---
 
 # Python upgrade and service restart
@@ -4224,7 +4224,6 @@ echo "✅ Файл rag_search.py создан"
 [2026-04-06 09:23:44] INFO: ⏳ Запланирована индексация code (изменен rag_search.py)
 [2026-04-06 09:23:49] INFO: 🔄 Запуск индексации code (изменено 1 файлов)
 [2026-04-06 09:23:50] ERROR: ❌ Ошибка индексации code: /Users/kirillkravcov/UniversalCreativeHub/.venv/lib/python3.8/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled w
-
 
 ---
 

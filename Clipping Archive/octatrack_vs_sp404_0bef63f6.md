@@ -1,16 +1,17 @@
 ---
 chat_id: 0bef63f6-83ae-468d-8d60-2b2e7ec69caa
 title: octatrack vs sp404
+
 message_count: 12
-exported_at: 2026-04-06T04:20:01.561Z
+exported_at: 2026-05-25T05:49:55.423Z
 ---
 
 # octatrack vs sp404
 
+
 ## 👤 **Kirill**
 
 octatrack vs sp404
-
 
 ---
 
@@ -28,7 +29,7 @@ Here’s a detailed breakdown to help you understand which one might be right fo
 
 ## 👤 **Kirill**
 
-сравнение на русском 
+сравнение на русском
 
 ---
 
@@ -120,7 +121,6 @@ Here’s a detailed breakdown to help you understand which one might be right fo
 ## 👤 **Kirill**
 
 более лучший секвенсер, альтернатива этим двум
-
 
 ---
 

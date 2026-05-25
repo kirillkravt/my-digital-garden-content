@@ -2,7 +2,7 @@
 chat_id: 23a7f5a0-e263-462e-b25e-8d22f99764aa
 title: Анализ и исправление ошибки Strudel в проекте
 message_count: 28
-exported_at: 2026-04-06T04:16:20.770Z
+exported_at: 2026-05-25T06:16:06.174Z
 ---
 
 # Анализ и исправление ошибки Strudel в проекте

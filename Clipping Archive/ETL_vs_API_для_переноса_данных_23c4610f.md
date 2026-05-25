@@ -2,7 +2,7 @@
 chat_id: 23c4610f-3b5f-4bb9-b1bb-b3b9c1e4a29e
 title: ETL vs API для переноса данных
 message_count: 6
-exported_at: 2026-04-06T04:22:44.667Z
+exported_at: 2026-05-25T05:30:32.424Z
 ---
 
 # ETL vs API для переноса данных

@@ -2,7 +2,7 @@
 chat_id: 53408e9a-119b-4a08-a1f3-93237b22c8d0
 title: Дополнение описания DeepSeek 13.md
 message_count: 6
-exported_at: 2026-04-06T04:14:19.601Z
+exported_at: 2026-05-25T06:29:46.571Z
 ---
 
 # Дополнение описания DeepSeek 13.md

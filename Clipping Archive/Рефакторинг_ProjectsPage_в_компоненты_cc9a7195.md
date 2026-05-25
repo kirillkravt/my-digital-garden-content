@@ -2,7 +2,7 @@
 chat_id: cc9a7195-3d98-41eb-ba9e-3ecdc84c7391
 title: Рефакторинг ProjectsPage в компоненты
 message_count: 422
-exported_at: 2026-05-24T13:41:42.968Z
+exported_at: 2026-05-25T07:25:35.803Z
 ---
 
 # Рефакторинг ProjectsPage в компоненты
@@ -11005,7 +11005,7 @@ zsh: command not found: #
 /Users/kirillkravcov/UniversalCreativeHub/tactical-command-v3/src/features/projects/store/fileStore.ts:  root: FileNode | null;
 /Users/kirillkravcov/UniversalCreativeHub/tactical-command-v3/src/features/projects/store/fileStore.ts:      root: null,
 /Users/kirillkravcov/UniversalCreativeHub/tactical-command-v3/src/features/projects/store/fileStore.ts:            root: { id: 'root', name: 'my-project', path: projectPath, type: 'directory', parentPath: null, children: nodes },
-(.venv) kirillkravcov@Mac batuta % 
+(.venv) kirillkravcov@Mac batuta %
 
 ---
 
@@ -18949,7 +18949,6 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({
             <div style={{ padding: '12px', color: 'var(--k-text-secondary)' }}>
               No projects found
 
-
 ---
 
 ## 👤 **Kirill**
@@ -20800,7 +20799,6 @@ interface Task {
 interface Process {
   id: string;
   name: string;
- 
 
 ---
 

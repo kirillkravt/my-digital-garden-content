@@ -2,7 +2,7 @@
 chat_id: c59ce6a5-f881-4d51-982e-7b90ff837d73
 title: Отладка звука в StrudelREPLNode
 message_count: 128
-exported_at: 2026-04-06T04:16:17.730Z
+exported_at: 2026-05-25T06:16:27.297Z
 ---
 
 # Отладка звука в StrudelREPLNode

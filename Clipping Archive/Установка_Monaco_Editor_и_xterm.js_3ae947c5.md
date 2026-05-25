@@ -2,7 +2,7 @@
 chat_id: 3ae947c5-9269-4a16-b6e6-20a84b4ecb51
 title: Установка Monaco Editor и xterm.js
 message_count: 268
-exported_at: 2026-05-24T13:42:32.216Z
+exported_at: 2026-05-25T07:20:14.130Z
 ---
 
 # Установка Monaco Editor и xterm.js

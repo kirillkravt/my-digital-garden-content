@@ -2,7 +2,7 @@
 chat_id: 464f2ba4-4159-4b01-866a-c364003a5263
 title: Выбор ЦАП для Beyerdynamic DT 770 Pro
 message_count: 8
-exported_at: 2026-04-06T04:20:22.707Z
+exported_at: 2026-05-25T05:47:48.875Z
 ---
 
 # Выбор ЦАП для Beyerdynamic DT 770 Pro
@@ -143,7 +143,6 @@ exported_at: 2026-04-06T04:20:22.707Z
 ## 👤 **Kirill**
 
 добавь совместимость с samsung смартфонами
-
 
 ---
 

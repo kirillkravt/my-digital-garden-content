@@ -2,7 +2,7 @@
 chat_id: a83acdf7-65db-4148-8b26-b05b91742496
 title: Исправление багов и настройка инфраструктуры
 message_count: 54
-exported_at: 2026-04-06T04:11:27.013Z
+exported_at: 2026-05-25T06:48:46.810Z
 ---
 
 # Исправление багов и настройка инфраструктуры
@@ -7631,7 +7631,6 @@ DeepSeek, скорее всего, использует ленивую загр�
     'use strict';
 
     const NODE_RED_URL = 'http://localhost:1880/save-clipping';
-   
 
 ---
 
@@ -8732,8 +8731,6 @@ DeepSeek Clipping to Obsidian v9.3 (Final).user.js:202 ✅ Found 1 chats
         localStorage.setItem('deepseek_clipping_versions', JSON.stringify(chatVersions));
     }
 
-   
-
 ---
 
 ## 👤 **Kirill**
@@ -8931,7 +8928,6 @@ DeepSeek Clipping to Obsidian v9.3 (Final).user.js:202 ✅ Found 1 chats
             }
 
             function finish() {
-
 
 ---
 

@@ -2,7 +2,7 @@
 chat_id: 733db1b0-a0e2-4245-8568-ff0d842249dc
 title: Бюджетный сет на Octatrack и Faderfox
 message_count: 2
-exported_at: 2026-04-06T04:20:07.602Z
+exported_at: 2026-05-25T05:49:13.221Z
 ---
 
 # Бюджетный сет на Octatrack и Faderfox
@@ -20,8 +20,6 @@ faderfox
 3. какой сиквенсер использовать 
 
 подбери самый бюджетный вариант
-
-
 
 ---
 

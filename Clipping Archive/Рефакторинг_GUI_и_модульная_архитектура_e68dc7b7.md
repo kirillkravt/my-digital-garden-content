@@ -2,7 +2,7 @@
 chat_id: e68dc7b7-8c25-492f-93b2-68ae9e1d1e3c
 title: Рефакторинг GUI и модульная архитектура
 message_count: 102
-exported_at: 2026-04-06T04:12:06.370Z
+exported_at: 2026-05-25T06:34:21.064Z
 ---
 
 # Рефакторинг GUI и модульная архитектура
@@ -642,7 +642,6 @@ try {
     $psi.FileName = "powershell.exe"
     $psi.Arguments = "-ExecutionPolicy Bypass -NoProfile -File `"$mainScript`" -TicketNumber `"$($documentData.TicketNumber)`" -TaskName `"$($documentData.TaskName)`" -DocType `"$($documentData.DocType)`" -Customer `"$($documentData.Customer)`" -Version `"$($documentData.Version)`" -BARequestNumber `"$($documentData.BARequestNumber)`" -JiraTaskNumber `"$($documentData.JiraTaskNumber)`" -Author `"$($documentData.Author)`""
     $psi.WorkingDirectory = $scriptDir
-   
 
 ---
 
@@ -9323,7 +9322,7 @@ $folderName = "${TicketNumber}-${Customer}_${DocType}_${shortName}"
 3. При необходимости дорабатываете в онлайн-редакторе
 4. Экспортируете в PPTX для финальной версии
 
-Плюс Gamma сейчас считается лидером среди нейросетей для презентаций по качеству и скорости [citation:1][citation:4].This response is AI-generated, for reference only.
+Плюс Gamma сейчас считается лидером среди нейросетей для презентаций по качеству и скорости [citation:1][citation:4].Этот ответ сгенерирован AI, только для справки.
 
 ---
 

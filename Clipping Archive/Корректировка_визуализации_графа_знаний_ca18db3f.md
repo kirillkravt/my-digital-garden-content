@@ -2,7 +2,7 @@
 chat_id: ca18db3f-2d13-4ae4-a645-f8f55826ebc4
 title: Корректировка визуализации графа знаний
 message_count: 66
-exported_at: 2026-04-06T04:11:11.812Z
+exported_at: 2026-05-25T06:50:32.445Z
 ---
 
 # Корректировка визуализации графа знаний
@@ -2910,7 +2910,6 @@ curl -s "http://localhost:8004/graph/visualization?limit=200" | jq '. | {node_co
             backdrop-filter: blur(10px);
             border: 1px solid #4466aa;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-
 
 ---
 
@@ -8299,7 +8298,7 @@ showNodeInfo @ graph3d.html:298
 4graph3d.html:602 Uncaught TypeError: graph.autoRotate is not a function
     at HTMLCanvasElement.<anonymous> (graph3d.html:602:31)
 
-Верни 2,3,4 как было. Не нужно менять 
+Верни 2,3,4 как было. Не нужно менять
 
 ---
 
@@ -9140,7 +9139,7 @@ linkWidth: 1.8 (ярче)
 
 linkOpacity: 0.45"
 
-При авто вращении графа, который включается с задержкой (не приближать, а оставлять текущее расстояние до камеры) Уменьшить скорость вращения в 2 раза. Должно быть плавно 
+При авто вращении графа, который включается с задержкой (не приближать, а оставлять текущее расстояние до камеры) Уменьшить скорость вращения в 2 раза. Должно быть плавно
 
 ---
 

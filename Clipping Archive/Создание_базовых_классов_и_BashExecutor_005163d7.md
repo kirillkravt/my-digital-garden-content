@@ -2,7 +2,7 @@
 chat_id: 005163d7-aadf-434a-b4ed-58237fffa955
 title: Создание базовых классов и BashExecutor
 message_count: 372
-exported_at: 2026-05-24T13:41:58.378Z
+exported_at: 2026-05-25T07:23:45.567Z
 ---
 
 # Создание базовых классов и BashExecutor

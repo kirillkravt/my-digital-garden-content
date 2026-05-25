@@ -2,7 +2,7 @@
 chat_id: 5ec6c8d1-6bb9-422a-932e-424ab7bdc1d1
 title: Artemis MQ: высокопроизводительный брокер сообщений
 message_count: 4
-exported_at: 2026-04-06T04:21:32.180Z
+exported_at: 2026-05-25T05:38:58.599Z
 ---
 
 # Artemis MQ: высокопроизводительный брокер сообщений

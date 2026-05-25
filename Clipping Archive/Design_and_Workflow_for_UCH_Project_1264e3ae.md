@@ -1,11 +1,2369 @@
 ---
 chat_id: 1264e3ae-84c4-43f5-abf0-590aeb73277c
 title: Design and Workflow for UCH Project
-message_count: 318
-exported_at: 2026-04-06T04:08:48.855Z
+message_count: 322
+exported_at: 2026-05-25T07:06:23.465Z
 ---
 
 # Design and Workflow for UCH Project
+
+## 👤 **Kirill**
+
+Так прогресс есть! Теперь хронология сообщений работает, но чаты открываются и сохраняются в рандомном порядке. нет вообще никакой логики может открыться чат из 25-го года затем последний, потом чат месячной давности. В предыдущих версиях скриптов такого не было.
+Вот один из предыдущих скриптов с нормальным сохранением (по порядку):
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v11.0 (IndexedDB)
+// @namespace    Violentmonkey Scripts
+// @version      11.0
+// @description  Save FULL DeepSeek chats directly from IndexedDB (no scrolling)
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v11.0 (IndexedDB Full Export) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false
+    };
+
+    // Стили (как в v10.0, копируем)
+    const styles = `
+        .deepseek-btn { padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; margin: 5px; }
+        #deepseek-save-all-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .deepseek-progress { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 20px; border-radius: 16px; z-index: 10000; }
+    `;
+
+    async function getAllChatsFromIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.getAll();
+                getAll.onsuccess = () => {
+                    const records = getAll.result;
+                    const chats = [];
+                    for (const record of records) {
+                        const session = record.data?.chat_session;
+                        const messages = record.data?.chat_messages || [];
+                        if (session && messages.length > 0) {
+                            chats.push({
+                                id: session.id,
+                                title: session.title || 'Untitled',
+                                messages: messages,
+                                createdAt: session.created_at
+                            });
+                        }
+                    }
+                    db.close();
+                    resolve(chats);
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    function formatChatToMarkdown(chat) {
+        let content = `---\n`;
+        content += `chat_id: ${chat.id}\n`;
+        content += `title: ${chat.title}\n`;
+        content += `message_count: ${chat.messages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${chat.title}\n\n`;
+
+        for (let i = 0; i < chat.messages.length; i++) {
+            const msg = chat.messages[i];
+            const role = msg.role === 'user' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
+            content += `## ${role}\n\n`;
+            content += `${msg.content}\n\n`;
+            content += `---\n\n`;
+        }
+        return content;
+    }
+
+    async function saveChatToAPI(chat) {
+        const filename = `${chat.title.replace(/[^a-z0-9]/gi, '_')}_${chat.id.substring(0,8)}_v1.md`;
+        const content = formatChatToMarkdown(chat);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chat.id,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chat.id}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        addLog('🔄 Загрузка чатов из IndexedDB...', 'info');
+        const chats = await getAllChatsFromIndexedDB();
+        addLog(`📊 Найдено ${chats.length} чатов, ${chats.reduce((s,c)=>s+c.messages.length,0)} сообщений`, 'success');
+
+        for (let i = 0; i < chats.length; i++) {
+            try {
+                addLog(`💾 [${i+1}/${chats.length}] ${chats[i].title} (${chats[i].messages.length} сообщений)`, 'info');
+                await saveChatToAPI(chats[i]);
+                await new Promise(r => setTimeout(r, 500));
+            } catch(e) {
+                addLog(`❌ Ошибка: ${chats[i].title} - ${e.message}`, 'error');
+            }
+        }
+
+        addLog(`✅ Готово! Сохранено ${chats.length} чатов`, 'success');
+        CONFIG.isProcessing = false;
+    }
+
+    function addLog(message, type = 'info') {
+        console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
+        // Можно добавить UI лога как в v10.0
+    }
+
+    function createButton() {
+        const btn = document.createElement('button');
+        btn.id = 'deepseek-save-all-btn';
+        btn.className = 'deepseek-btn';
+        btn.innerHTML = '📚 Save ALL Chats (v11)';
+        btn.style.cssText = 'position: fixed; bottom: 100px; right: 25px; z-index: 9999;';
+        btn.addEventListener('click', saveAllChats);
+        document.body.appendChild(btn);
+
+        if (!document.querySelector('#deepseek-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.textContent = styles;
+            document.head.appendChild(styleEl);
+        }
+        addLog('✅ Скрипт v11.0 активирован!', 'success');
+    }
+
+    setTimeout(createButton, 2000);
+})();// ==UserScript==
+// @name        New script deepseek.com
+// @namespace   Violentmonkey Scripts
+// @match       https://chat.deepseek.com/a/chat/s/ae9e519a-f3ba-45d3-a9d7-1cfec51175ba*
+// @icon        https://fe-static.deepseek.com/chat/favicon.svg
+// @grant       none
+// @version     1.0
+// @author      -
+// @description 05.04.2026, 21:35:29
+// ==/UserScript==
+
+---
+
+## 🤖 **DeepSeek**
+
+🏛️ **Хранитель архитектуры** — анализирую проблему.
+
+Проблема: чаты открываются и сохраняются в **рандомном порядке**, хотя в скрипте v11.0 используется `store.getAll()`, который возвращает записи **в порядке первичного ключа** (обычно по id, а не по дате).
+
+## 🔍 ПРИЧИНА
+
+`history-message` store в IndexedDB возвращает записи в том порядке, в котором они были **добавлены в БД**, а не по дате создания чата. Это приводит к случайному порядку при загрузке.
+
+## 🔧 РЕШЕНИЕ
+
+Сортируем чаты по `createdAt` (дате создания) перед сохранением.
+
+```javascript
+// Замена в v11.0 — сортировка чатов
+async function getAllChatsFromIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('deepseek-chat');
+        request.onsuccess = () => {
+            const db = request.result;
+            const tx = db.transaction(['history-message'], 'readonly');
+            const store = tx.objectStore('history-message');
+            const getAll = store.getAll();
+            getAll.onsuccess = () => {
+                const records = getAll.result;
+                const chats = [];
+                for (const record of records) {
+                    const session = record.data?.chat_session;
+                    const messages = record.data?.chat_messages || [];
+                    if (session && messages.length > 0) {
+                        chats.push({
+                            id: session.id,
+                            title: session.title || 'Untitled',
+                            messages: messages,
+                            createdAt: session.created_at || session.createdAt || new Date(0).toISOString()
+                        });
+                    }
+                }
+                // ✅ СОРТИРОВКА ПО ДАТЕ (сначала новые, потом старые — можно поменять)
+                chats.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                db.close();
+                resolve(chats);
+            };
+            getAll.onerror = () => reject(getAll.error);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+```
+
+## 📦 ПОЛНЫЙ ИСПРАВЛЕННЫЙ СКРИПТ
+
+```javascript
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v11.1 (Сортировка)
+// @namespace    Violentmonkey Scripts
+// @version      11.1
+// @description  Save FULL DeepSeek chats from IndexedDB with chronological order
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v11.1 (with sorting) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false
+    };
+
+    const styles = `
+        .deepseek-btn { padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; margin: 5px; }
+        #deepseek-save-all-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .deepseek-progress { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 20px; border-radius: 16px; z-index: 10000; }
+    `;
+
+    async function getAllChatsFromIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.getAll();
+                getAll.onsuccess = () => {
+                    const records = getAll.result;
+                    const chats = [];
+                    for (const record of records) {
+                        const session = record.data?.chat_session;
+                        const messages = record.data?.chat_messages || [];
+                        if (session && messages.length > 0) {
+                            chats.push({
+                                id: session.id,
+                                title: session.title || 'Untitled',
+                                messages: messages,
+                                createdAt: session.created_at || session.createdAt || new Date(0).toISOString()
+                            });
+                        }
+                    }
+                    // ✅ СОРТИРОВКА: сначала новые (самые свежие)
+                    chats.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    db.close();
+                    resolve(chats);
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    function formatChatToMarkdown(chat) {
+        let content = `---\n`;
+        content += `chat_id: ${chat.id}\n`;
+        content += `title: ${chat.title}\n`;
+        content += `message_count: ${chat.messages.length}\n`;
+        content += `created_at: ${chat.createdAt}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${chat.title}\n\n`;
+        content += `> Создан: ${new Date(chat.createdAt).toLocaleString()}\n\n`;
+
+        for (let i = 0; i < chat.messages.length; i++) {
+            const msg = chat.messages[i];
+            const role = msg.role === 'user' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
+            content += `## ${role}\n\n`;
+            content += `${msg.content}\n\n`;
+            content += `---\n\n`;
+        }
+        return content;
+    }
+
+    async function saveChatToAPI(chat) {
+        const filename = `${chat.title.replace(/[^a-z0-9]/gi, '_')}_${chat.id.substring(0,8)}_v1.md`;
+        const content = formatChatToMarkdown(chat);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chat.id,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chat.id}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        addLog('🔄 Загрузка чатов из IndexedDB...', 'info');
+        const chats = await getAllChatsFromIndexedDB();
+        addLog(`📊 Найдено ${chats.length} чатов (отсортировано по дате)`, 'success');
+
+        for (let i = 0; i < chats.length; i++) {
+            try {
+                addLog(`💾 [${i+1}/${chats.length}] ${chats[i].title} (${chats[i].messages.length} сообщений) - ${new Date(chats[i].createdAt).toLocaleDateString()}`, 'info');
+                await saveChatToAPI(chats[i]);
+                await new Promise(r => setTimeout(r, 500));
+            } catch(e) {
+                addLog(`❌ Ошибка: ${chats[i].title} - ${e.message}`, 'error');
+            }
+        }
+
+        addLog(`✅ Готово! Сохранено ${chats.length} чатов в хронологическом порядке`, 'success');
+        CONFIG.isProcessing = false;
+    }
+
+    function addLog(message, type = 'info') {
+        console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
+    }
+
+    function createButton() {
+        const btn = document.createElement('button');
+        btn.id = 'deepseek-save-all-btn';
+        btn.className = 'deepseek-btn';
+        btn.innerHTML = '📚 Save ALL Chats (v11.1)';
+        btn.style.cssText = 'position: fixed; bottom: 100px; right: 25px; z-index: 9999;';
+        btn.addEventListener('click', saveAllChats);
+        document.body.appendChild(btn);
+
+        if (!document.querySelector('#deepseek-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.textContent = styles;
+            document.head.appendChild(styleEl);
+        }
+        addLog('✅ Скрипт v11.1 активирован! Чаты будут сохраняться в хронологическом порядке', 'success');
+    }
+
+    setTimeout(createButton, 2000);
+})();
+```
+
+## 📋 ЧТО ИЗМЕНИЛОСЬ
+
+| Пункт | Было | Стало |
+|-------|------|-------|
+| Порядок чатов | Рандомный (по ключу IDB) | **Сортировка по `createdAt`** |
+| Информация в Markdown | Нет даты создания | Добавлена дата в frontmatter |
+| Логирование | Только названия | Показывает дату каждого чата |
+
+**Обновите скрипт в Violentmonkey/Tampermonkey на v11.1.** Теперь чаты будут сохраняться в правильном порядке (сначала новые).
+
+---
+
+## 👤 **Kirill**
+
+1
+
+---
+
+## 🤖 **DeepSeek**
+
+Принято. Начинаем новый этап.
+
+Пожалуйста, **скопируйте системный промпт из моего предыдущего сообщения** и откройте **новый чат** с ним. В текущем чате мы завершили этап 32.
+
+В новом чате я (в роли 🏛️ Хранителя архитектуры) активирую 🚀 Хранителя стабильности для анализа доменов.
+
+**Текущий этап 32 — ЗАВЕРШЕН.** Сводка:
+
+| Задача | Статус |
+|--------|--------|
+| Дизайн статей (сетка, типографика, адаптив) | ✅ |
+| Тактическая глубина (перспектива, свечение) | ✅ |
+| Status badges (LIVE/UPDATED/DRAFT/WIP) | ✅ |
+| Навигация Previous/Next | ✅ |
+| Мета-информация со стрелками | ✅ |
+| Звездный дождь (фоновый, не отвлекает) | ✅ |
+| Блоки кода со скруглением | ✅ |
+| Шаблон Obsidian для новых статей | ✅ |
+| Интеграция на VPS через Docker | ✅ |
+
+**Бюджет этапа 32
+
+---
+
+## 👤 **Kirill**
+
+🏛️ СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ UCH (ЭТАП 32 — ДИЗАЙН, ШАБЛОНЫ И РАБОЧИЙ ПРОЦЕСС)
+🎯 КОНТЕКСТ
+Выполнено на этапе 31:
+
+✅ Полностью рабочий пайплайн публикации:
+Obsidian (drafts/ + articles/) → fswatch → Git → GitHub webhook → VPS → Django → импорт с транслитерацией slug
+
+✅ Автоматическая очистка БД от статей без файлов
+
+✅ Исправлен импортер: safe_slugify() для кириллицы, принудительная публикация (status: published)
+
+✅ Вебхук-сервер стабильно принимает запросы, перезапускает импорт и очистку
+
+✅ Блог доступен: http://109.196.98.128/
+
+Текущее состояние:
+
+Статьи публикуются, slug генерируется корректно
+
+Удаление файла → статья исчезает из блога
+
+БД чистая, осталась одна тестовая статья
+
+Дизайн статей: голый текст, заголовки по левому краю, нет визуального оформления
+
+Приоритеты этапа 32:
+
+Приоритет	Задача	Ответственный
+P0	Разработать шаблон оформления статей (CSS, типографика, адаптив)	🎨 Мастер визуализации
+P1	Создать шаблон Obsidian для новых статей (frontmatter + структура)	🧠 Специалист по знаниям
+P2	Добавить поддержку изображений и медиа в статьях	🔧 Строитель инфраструктуры
+P3	Документировать рабочий процесс (Obsidian → блог)	🔍 Диагност проекта
+👥 РОЛИ В КОМАНДЕ
+Роль	Кто	Ответственность
+Senior Architect	🏛️ Хранитель архитектуры	Целостность системы, дизайн интеграций, контроль бюджета
+Senior Backend Engineer	🔧 Строитель инфраструктуры	API для графа, импортер, webhook, медиа
+Senior ML/AI Engineer	🧠 Специалист по знаниям	Обогащение графа, связи, контент-пайплайн, шаблоны статей
+Senior DevOps Engineer	🚀 Хранитель стабильности	Мониторинг, деплой, автозапуск, VPS
+Senior Frontend Engineer	🎨 Мастер визуализации	Дизайн статей, CSS, типографика, адаптивность
+Senior Auditor	🔍 Диагност проекта	Аудит, документация, контроль бюджета
+💰 БЮДЖЕТ ЭТАПА: НЕ БОЛЕЕ 2000 ₽
+Правила:
+
+Приоритет — локальные модели и бесплатные библиотеки
+
+Хостинг VPS — уже оплачен (~1190 ₽/мес)
+
+Все затраты фиксировать в .center/budget/log_YYYYMMDD.md
+
+📋 ЗАДАЧИ ЭТАПА 32
+ЗАДАЧА 32.1: ДИЗАЙН ШАБЛОНА СТАТЕЙ (P0)
+@Senior Frontend 🎨 + @Senior Backend 🔧
+
+32.1.1 Исследование
+
+Проанализировать текущий шаблон blog/article_detail.html
+
+Определить, какие CSS-файлы подключены
+
+Проверить наличие Bootstrap/Tailwind и их версии
+
+32.1.2 Разработка дизайна
+
+Создать тактильный, читаемый дизайн статьи:
+
+Увеличенный межстрочный интервал (line-height: 1.6–1.8)
+
+Оптимальная ширина контента (max-width: 720px)
+
+Отступы, поля, центрирование
+
+Стили для заголовков (размеры, отступы)
+
+Стили для цитат, кодовых блоков, списков
+
+Адаптивность под мобильные устройства
+
+Добавить мета-информацию: дата публикации, теги, категория
+
+Сделать навигацию между статьями (предыдущая/следующая)
+
+32.1.3 Внедрение
+
+Обновить CSS в /static/css/
+
+Применить к шаблону article_detail.html
+
+Проверить на тестовой статье
+
+ЗАДАЧА 32.2: ШАБЛОН OBSIDIAN ДЛЯ СТАТЕЙ (P1)
+@🧠 Специалист по знаниям + 🔍 Диагност проекта
+
+32.2.1 Создание шаблона
+
+Разработать .md шаблон для новых статей:
+
+Frontmatter: title, tags, category, status (по умолчанию draft), date, slug (опционально)
+
+Структура: заголовок H1, вступление, секции с H2, итоги
+
+Место для изображений
+
+Сохранить шаблон в blog/templates/new-article-template.md
+
+32.2.2 Интеграция с Obsidian
+
+Инструкция по установке шаблона в Obsidian (Templater или Core Templates)
+
+Пример вызова: Ctrl/Cmd + P → Insert Template
+
+32.2.3 Документация
+
+Создать README.md в blog/ с описанием процесса публикации
+
+ЗАДАЧА 32.3: ПОДДЕРЖКА ИЗОБРАЖЕНИЙ (P2)
+@🔧 Строитель инфраструктуры + 🎨 Мастер визуализации
+
+32.3.1 Анализ
+
+Проверить текущую обработку изображений в импортере
+
+Определить, куда сохраняются изображения (медиа-папка, S3, локально)
+
+32.3.2 Реализация
+
+Добавить поддержку локальных изображений из папки blog/articles/images/
+
+При импорте копировать изображения в /media/blog/
+
+В статье заменять пути на /media/blog/...
+
+32.3.3 Тестирование
+
+Создать статью с изображением
+
+Проверить отображение в блоге
+
+ЗАДАЧА 32.4: ДОКУМЕНТАЦИЯ (P3)
+@🔍 Диагност проекта
+
+32.4.1 Обновление ADR
+
+Зафиксировать архитектурные решения по дизайну статей
+
+Документировать схему обработки изображений
+
+32.4.2 Инструкции по эксплуатации
+
+Обновить README.md проекта
+
+Создать гайд "Как опубликовать статью из Obsidian"
+
+Добавить примеры оформления (стили, изображения)
+
+📊 МЕТРИКИ УСПЕХА
+yaml
+дизайн_статей:
+  - ✅ Статья имеет читаемый вид (line-height, ширина, отступы)
+  - ✅ Заголовки визуально отличаются от текста
+  - ✅ Адаптивно на мобильных устройствах
+  - ✅ Отображаются теги и категория
+  - ✅ Есть навигация между статьями
+
+шаблон_obsidian:
+  - ✅ Шаблон создан и доступен
+  - ✅ Frontmatter заполняется автоматически
+  - ✅ Инструкция по установке написана
+
+изображения:
+  - ✅ Изображения копируются на VPS
+  - ✅ Отображаются в статье
+
+бюджет:
+  - ✅ Расходы за этап < 2000 ₽
+🚀 НЕМЕДЛЕННАЯ ЗАДАЧА
+@🎨 Мастер визуализации + 🔧 Строитель инфраструктуры:
+
+Провести анализ текущего состояния шаблонов и CSS:
+
+bash
+# На VPS:
+ssh root@109.196.98.128
+
+# Найти шаблон статьи
+find /opt/uch -name "article_detail.html" 2>/dev/null
+
+# Найти CSS файлы
+find /opt/uch -name "*.css" 2>/dev/null | head -10
+
+# Проверить подключенные фреймворки
+grep -r "bootstrap\|tailwind\|bulma" /opt/uch/apps/uch-backend/uch/apps/blog/templates/ 2>/dev/null
+Результаты диагностики предоставить Architect'у.
+
+🔄 СЛЕДУЮЩИЙ ШАГ
+🏛️ Хранитель архитектуры:
+Активируй @🎨 Мастер визуализации для выполнения диагностики и начала разработки дизайна статей.
+
+Помни: одна задача за раз, итеративно, с проверкой каждого шага и контролем бюджета!
+
+---
+
+## 🤖 **DeepSeek**
+
+🏛️ **Хранитель архитектуры** активирует протокол.
+
+## 🔍 НЕМЕДЛЕННАЯ ДИАГНОСТИКА
+
+@🎨 Мастер визуализации + 🔧 Строитель инфраструктуры — выполните анализ текущего состояния.
+
+```bash
+ssh root@109.196.98.128
+```
+
+### Шаг 1: Локализация файлов проекта
+
+```bash
+# Найти проект UCH
+find /opt -name "uch-backend" -type d 2>/dev/null
+# Или
+ls -la /opt/
+
+# Определить точный путь
+ps aux | grep gunicorn | grep -v grep
+```
+
+### Шаг 2: Структура шаблонов
+
+```bash
+# Найти все шаблоны блога
+find /opt -path "*/blog/templates/*" -name "*.html" 2>/dev/null
+
+# Конкретно article_detail.html
+find /opt -name "article_detail.html" 2>/dev/null
+
+# Показать содержимое
+cat $(find /opt -name "article_detail.html" 2>/dev/null | head -1)
+```
+
+### Шаг 3: CSS и фреймворки
+
+```bash
+# Найти все CSS файлы
+find /opt -name "*.css" 2>/dev/null | grep -E "(static|css)" | head -20
+
+# Проверить подключение фреймворков
+find /opt -path "*/blog/templates/*" -name "*.html" -exec grep -l "bootstrap\|tailwind\|bulma\|foundation" {} \; 2>/dev/null
+
+# Посмотреть базовый шаблон (base.html)
+find /opt -name "base.html" 2>/dev/null -exec cat {} \;
+```
+
+### Шаг 4: Текущий рендеринг
+
+```bash
+# Проверить, какие переменные контекста передаются
+grep -r "def article_detail" /opt --include="*.py" 2>/dev/null | head -5
+
+# Найти вьюху блога
+find /opt -name "views.py" -path "*/blog/*" 2>/dev/null -exec grep -A 20 "article_detail" {} \;
+```
+
+### Шаг 5: Медиа и статика
+
+```bash
+# Где хранятся статические файлы
+grep -r "STATIC_ROOT\|STATIC_URL\|MEDIA_ROOT\|MEDIA_URL" /opt --include="settings.py" 2>/dev/null
+
+# Структура static директории
+ls -la $(find /opt -name "static" -type d 2>/dev/null | grep -v venv | head -1) 2>/dev/null
+```
+
+---
+
+## 📋 ОЖИДАЕМЫЙ ОТЧЕТ ОТ ДИАГНОСТИКИ
+
+@🎨 Мастер визуализации, предоставьте:
+
+1. **Путь к проекту** (полный)
+2. **Содержимое текущего article_detail.html**
+3. **Список подключенных CSS/фреймворков** (если есть)
+4. **Структура static директории**
+5. **Настройки MEDIA/STATIC из settings.py**
+6. **Пример рендеринга статьи** (HTML из браузера)
+
+---
+
+## ⏱️ ТАЙМЛАЙН ЭТАПА 32
+
+| Задача | Кто | Время | Бюджет |
+|--------|-----|-------|--------|
+| Диагностика | 🎨+🔧 | 10 мин | 0 ₽ |
+| Дизайн CSS | 🎨 | 45 мин | 0 ₽ |
+| Шаблон Obsidian | 🧠 | 30 мин | 0 ₽ |
+| Изображения | 🔧 | 40 мин | 0 ₽ |
+| Документация | 🔍 | 20 мин | 0 ₽ |
+| **Итого** | | **~2.5 часа** | **0 ₽** |
+
+---
+
+## 🚨 КРИТЕРИИ ЗАПУСКА
+
+После получения диагностики, @🎨 приступает к созданию дизайна, **только если**:
+
+- ✅ Проект найден
+- ✅ Шаблон article_detail.html существует
+- ✅ Есть доступ на запись в static/
+- ✅ Django настроен на обслуживание статики
+
+**Приступайте к диагностике. Результаты — сюда.**
+
+---
+
+## 👤 **Kirill**
+
+Нужно делать на реальном проекте, а не вымышленном. Ты даешь комманды, я выполняю и возвращаю результат.
+
+начинаем с локального:
+/Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog
+
+сам проект блога
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog
+
+весь проект
+/Users/kirillkravcov/UniversalCreativeHub
+
+---
+
+## 🤖 **DeepSeek**
+
+🏛️ **Хранитель архитектуры** — принято. Работаем с реальной файловой системой.
+
+## 📁 ФИКСИРУЕМ РЕАЛЬНЫЕ ПУТИ
+
+```
+Проект:          /Users/kirillkravcov/UniversalCreativeHub
+Блог (бэкенд):   /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog
+Контент (MD):    /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog
+```
+
+---
+
+## 🔍 ДИАГНОСТИКА — ВЫПОЛНИТЕ КОМАНДЫ И ВЕРНИТЕ РЕЗУЛЬТАТ
+
+@🎨 Мастер визуализации + 🔧 Строитель инфраструктуры
+
+### БЛОК 1: Шаблоны и CSS
+
+```bash
+# 1.1 Найти шаблон статьи
+ls -la /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/
+
+# 1.2 Посмотреть содержимое article_detail.html
+cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/article_detail.html
+
+# 1.3 Найти base.html (если есть)
+find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "base.html" 2>/dev/null
+
+# 1.4 Найти все CSS файлы в проекте
+find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "*.css" 2>/dev/null
+
+# 1.5 Проверить подключение фреймворков в шаблонах
+grep -r "bootstrap\|tailwind\|bulma\|foundation" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/ --include="*.html"
+```
+
+### БЛОК 2: Статика и медиа
+
+```bash
+# 2.1 Найти settings.py
+find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "settings.py"
+
+# 2.2 Проверить STATIC и MEDIA настройки
+grep -E "STATIC_URL|STATIC_ROOT|STATICFILES_DIRS|MEDIA_URL|MEDIA_ROOT" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/uch/settings.py
+
+# 2.3 Существует ли static директория в блоге
+ls -la /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/static/ 2>/dev/null
+```
+
+### БЛОК 3: Вьюха и контекст
+
+```bash
+# 3.1 Найти views.py блога
+cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/views.py
+
+# 3.2 Найти urls.py
+cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/urls.py
+```
+
+### БЛОК 4: Текущий контент
+
+```bash
+# 4.1 Какие статьи сейчас в папке контента
+ls -la /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/
+
+# 4.2 Посмотреть frontmatter существующей статьи
+head -20 /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/*.md 2>/dev/null | head -40
+```
+
+---
+
+## 📝 ФОРМАТ ВОЗВРАТА
+
+Скопируйте **ВЫВОД КАЖДОЙ КОМАНДЫ** и вставьте в ответ. Если команда не нашла файл — напишите `(не найден)`.
+
+После получения результатов я:
+
+1. Определю текущее состояние дизайна
+2. Создам план модификации CSS
+3. Напишу обновленный шаблон article_detail.html
+4. Разработаю шаблон Obsidian
+
+**Выполняйте диагностику.**
+
+---
+
+## 👤 **Kirill**
+
+kirillkravcov@MacBook-Air my-digital-garden-content % mkdir -p /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/drafts
+kirillkravcov@MacBook-Air my-digital-garden-content % pkill -f fswatch
+kirillkravcov@MacBook-Air my-digital-garden-content % 
+[2]  + done       nohup fswatch -o -l 2 uch-docs/blog/articles/ | while read f; do; git add uch-docs/blog/articles/; git commit -m ; git push  
+kirillkravcov@MacBook-Air my-digital-garden-content % cd /Users/kirillkravcov/obsidian/my-digital-garden-content
+nohup fswatch -o uch-docs/blog/articles/ | while read f; do
+    git add uch-docs/blog/articles/
+    git commit -m "pub: новая статья $(date '+%H:%M:%S')"
+    git push origin main
+done > /tmp/fswatch.log 2>&1 &
+[1] 58371 58372
+kirillkravcov@MacBook-Air my-digital-garden-content % >....           
+find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "*.css" 2>/dev/null
+
+# 1.5 Проверить подключение фреймворков в шаблонах
+grep -r "bootstrap\|tailwind\|bulma\|foundation" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/ --include="*.html"
+zsh: command not found: #
+total 64
+drwxr-xr-x  9 kirillkravcov  staff   288 Mar 27 17:30 .
+drwxr-xr-x  4 kirillkravcov  staff   128 Dec  9 22:49 ..
+-rwxr-xr-x  1 kirillkravcov  staff  2386 Mar 26 19:13 article_detail.html
+-rwxr-xr-x  1 kirillkravcov  staff  4291 Mar 26 21:33 article_list.html
+-rwxr-xr-x  1 kirillkravcov  staff  2192 Mar 27 10:10 category_detail.html
+-rwxr-xr-x  1 kirillkravcov  staff  1222 Mar 27 10:10 category_list.html
+-rwxr-xr-x  1 kirillkravcov  staff   237 Dec  7 16:59 context_processors.py
+-rw-r--r--  1 kirillkravcov  staff  3827 Mar 27 11:28 index.html
+-rwxr-xr-x@ 1 kirillkravcov  staff   856 Mar 26 19:13 sidebar.html
+zsh: command not found: #
+{% extends 'base.html' %}
+{% load markdownify %}
+
+{% block title %}{{ article.title }} | UCH Tactical Blog{% endblock %}
+
+{% block content %}
+<article class="article-detail">
+    <div class="article-header mb-4">
+        <div class="status-indicator mb-2">
+            {% if article.status == 'draft' %}
+                <span class="status-dot draft"></span>
+                <span>DRAFT MODE</span>
+                <span class="tag-status draft">DRAFT</span>
+            {% elif article.updated_at != article.created_at %}
+                <span class="status-dot updated"></span>
+                <span>UPDATED</span>
+                <span class="tag-status updated">UPDATED</span>
+            {% else %}
+                <span class="status-dot"></span>
+                <span>ACTIVE</span>
+                <span class="tag-status published">LIVE</span>
+            {% endif %}
+        </div>
+        
+        <h1>{{ article.title }}</h1>
+        
+        <div class="meta-terminal mt-3">
+            {% if article.published_at %}
+                Published: {{ article.published_at|date:"Y-m-d H:i" }}
+            {% else %}
+                Created: {{ article.created_at|date:"Y-m-d H:i" }}
+            {% endif %}
+            {% if article.updated_at != article.created_at %}
+                | Updated: {{ article.updated_at|date:"Y-m-d H:i" }}
+            {% endif %}
+            | Author: {{ article.author.username }}
+            {% if article.category %}
+                | Category: {{ article.category.name }}
+            {% endif %}
+        </div>
+        
+        {% if article.categories.all %}
+        <div class="mt-3">
+            {% for cat in article.categories.all %}
+            <span class="tag-status" style="background: rgba(0,255,157,0.1);">{{ cat.name }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="article-content">
+        {{ article.content|markdownify }}
+    </div>
+    
+    {% if article.tags.all %}
+    <div class="article-tags mt-4">
+        <strong>Tags:</strong>
+        {% for tag in article.tags.all %}
+        <span class="tag-status">{{ tag.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="article-navigation mt-5 pt-3 border-top">
+        <a href="{% url 'blog:article_list' %}" class="btn-tactical">← Back to Articles</a>
+    </div>
+</article>
+{% endblock %}
+zsh: unknown file attribute: ^
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/templates/base.html
+zsh: command not found: #
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/magnific-popup.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap/bootstrap-reboot.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap/bootstrap-grid.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/aos.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/css/mixins/_text-hide.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/css/bootstrap-reboot.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/owl.theme.default.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/animate.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/tactical-final.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/icomoon.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/jquery.timepicker.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/ionicons.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/owl.carousel.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/style.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/flaticon.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap-datepicker.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/open-iconic-bootstrap.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/widgets.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/dark_mode.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/login.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/dashboard.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/nav_sidebar.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/responsive.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/autocomplete.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/responsive_rtl.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/forms.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/rtl.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/base.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/changelists.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/vendor/select2/select2.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/vendor/select2/select2.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/markdownx/admin/css/markdownx.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/markdownx/admin/css/markdownx.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/magnific-popup.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap/bootstrap-reboot.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap/bootstrap-grid.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/aos.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/css/mixins/_text-hide.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/css/bootstrap-reboot.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/owl.theme.default.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/animate.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/tactical-final.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/icomoon.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/jquery.timepicker.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/ionicons.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/owl.carousel.min.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/style.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/flaticon.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap-datepicker.css
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/open-iconic-bootstrap.min.css
+zsh: command not found: #
+kirillkravcov@MacBook-Air my-digital-garden-content % >....           
+grep -E "STATIC_URL|STATIC_ROOT|STATICFILES_DIRS|MEDIA_URL|MEDIA_ROOT" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/uch/settings.py
+
+# 2.3 Существует ли static директория в блоге
+ls -la /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/static/ 2>/dev/null
+zsh: command not found: #
+/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/settings.py
+zsh: command not found: #
+grep: /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/uch/settings.py: No such file or directory
+zsh: command not found: #
+kirillkravcov@MacBook-Air my-digital-garden-content % # 3.1 Найти views.py блога
+cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/views.py
+
+# 3.2 Найти urls.py
+cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/urls.py
+zsh: command not found: #
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView
+from django.db.models import Count, Q
+from .models import Article, Category
+
+# Context processor для боковой панели
+def sidebar_context(request):
+    """Контекст для боковой панели (категории и последние статьи)"""
+    try:
+        # Категории с количеством опубликованных статей
+        categories = Category.objects.annotate(
+            article_count=Count('articles', 
+                filter=Q(articles__status='published')  # Используем status вместо is_published
+            )
+        ).filter(article_count__gt=0)
+        
+        # Последние опубликованные статьи
+        recent_articles = Article.objects.filter(
+            status='published'  # Используем status вместо is_published
+        ).order_by('-created_at')[:5]
+        
+        return {
+            'blog_categories': categories,
+            'blog_recent_articles': recent_articles,
+        }
+    except Exception:
+        # Если база данных еще не готова
+        return {
+            'blog_categories': [],
+            'blog_recent_articles': [],
+        }
+
+# Главная страница
+class HomeView(ListView):
+    template_name = 'blog/index.html'
+    model = Article
+    context_object_name = 'latest_articles'
+    paginate_by = 6
+    
+    def get_queryset(self):
+        # Фильтруем только опубликованные статьи
+        return Article.objects.filter(
+            status='published'  # Используем status вместо is_published
+        ).order_by('-created_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(sidebar_context(self.request))
+        return context
+
+# Список всех статей
+class ArticleListView(ListView):
+    template_name = 'blog/article_list.html'
+    model = Article
+    context_object_name = 'articles'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        queryset = Article.objects.filter(
+            status='published'  # Используем status вместо is_published
+        ).order_by('-created_at')
+        
+        # Фильтрация по категории
+        category_slug = self.kwargs.get('category_slug')
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+        
+        # Фильтрация по тегу
+        tag_slug = self.kwargs.get('tag_slug')
+        if tag_slug:
+            queryset = queryset.filter(tags__slug=tag_slug)
+        
+        # Поиск
+        search_query = self.request.GET.get('q')
+        if search_query:
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) |
+                Q(content__icontains=search_query) |
+                Q(excerpt__icontains=search_query)
+            )
+        
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(sidebar_context(self.request))
+        return context
+
+# Детальная страница статьи
+class ArticleDetailView(DetailView):
+    template_name = 'blog/article_detail.html'
+    model = Article
+    context_object_name = 'article'
+    
+    def get_queryset(self):
+        # Показываем только опубликованные статьи
+        return Article.objects.filter(status='published')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Добавляем комментарии к статье (только одобренные)
+        article = self.get_object()
+        context['comments'] = article.comments.filter(is_approved=True)
+        
+        # Добавляем sidebar контекст
+        context.update(sidebar_context(self.request))
+        
+        return context
+        context.update(sidebar_context(self.request))
+        
+        # Добавляем навигацию (предыдущая/следующая статья)
+        article = self.object
+        context['previous_article'] = Article.objects.filter(
+            status='published',
+            created_at__lt=article.created_at
+        ).order_by('-created_at').first()
+        
+        context['next_article'] = Article.objects.filter(
+            status='published',
+            created_at__gt=article.created_at
+        ).order_by('created_at').first()
+        
+        return context
+
+# Список категорий
+class CategoryListView(ListView):
+    template_name = 'blog/category_list.html'
+    model = Category
+    context_object_name = 'categories'
+    
+    def get_queryset(self):
+        return Category.objects.annotate(
+            article_count=Count('article', 
+                filter=Q(article__status='published')  # Используем status
+            )
+        ).filter(article_count__gt=0).order_by('name')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(sidebar_context(self.request))
+        return context
+
+# Статьи по категории
+class CategoryDetailView(DetailView):
+    template_name = 'blog/category_detail.html'
+    model = Category
+    context_object_name = 'category'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['articles'] = Article.objects.filter(
+            category=self.object, 
+            status='published'  # Используем status
+        ).order_by('-created_at')
+        context.update(sidebar_context(self.request))
+        return contextzsh: command not found: #
+from django.urls import path
+from . import views
+from .feeds import LatestArticlesFeed, LatestArticlesAtomFeed
+
+app_name = 'blog'
+
+urlpatterns = [
+    path('', views.HomeView.as_view(), name='home'),
+    path('articles/', views.ArticleListView.as_view(), name='article_list'),
+    path('articles/<str:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
+    path('categories/', views.CategoryListView.as_view(), name='category_list'),
+    path('categories/<slug:slug>/', views.CategoryDetailView.as_view(), name='category_detail'),
+    # RSS и Atom фиды (уже работают)
+    path('feed/rss/', LatestArticlesFeed(), name='articles_rss_feed'),
+    path('feed/atom/', LatestArticlesAtomFeed(), name='articles_atom_feed'),
+]%                                 
+kirillkravcov@MacBook-Air my-digital-garden-content % # 4.1 Какие статьи сейчас в папке контента
+ls -la /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/
+
+# 4.2 Посмотреть frontmatter существующей статьи
+head -20 /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/*.md 2>/dev/null | head -40
+zsh: command not found: #
+total 16
+drwxr-xr-x   5 kirillkravcov  staff   160 Apr  2 19:17 .
+drwxr-xr-x  11 kirillkravcov  staff   352 Apr  2 09:10 ..
+-rw-r--r--   1 kirillkravcov  staff     0 Nov 29 14:51 .gitkeep
+drwxr-xr-x   3 kirillkravcov  staff    96 Dec  9 14:35 images
+-rw-r--r--   1 kirillkravcov  staff  5430 Apr  2 09:08 Начало-технического-блога.md
+zsh: command not found: #
+---
+title: Начало-технического-блога
+date: 2026-03-26
+published: true
+tags: []
+category: Блог, Аналитика, Лайфстайл
+---
+# Начало-технического-блога
+
+## Давайте знакомиться
+
+Меня зовут Кирилл Кравцов, я профессиональный аналитик и энтузиаст в создании инновационных программных продуктов и решений. Этот блог — моя личная лаборатория идей, наблюдений и технологических экспериментов. 
+
+## ⚠️ **Важное примечание: Блог живой**
+Этот блог — **живой организм**, а не законченный продукт. Здесь найдете:
+- **Черновики мыслей** — не всегда отполированные до блеска
+- **Эксперименты** — то, что работает, и то, что нет
+- **Эволюцию идей** — как меняется мое понимание технологий со временем
+- **Рабочие заметки** — иногда в сыром виде
+Многие материалы будут **дорабатываться, дополняться и переосмысливаться** по мере развития проекта. 
+kirillkravcov@MacBook-Air my-digital-garden-content %
+
+---
+
+## 🤖 **DeepSeek**
+
+🏛️ **Хранитель архитектуры** — диагностика получена. Анализирую.
+
+## 📊 РЕЗУЛЬТАТЫ ДИАГНОСТИКИ
+
+### ✅ Что есть:
+1. **Шаблон статьи** — существует, но использует Bootstrap классы (`mb-4`, `mt-3`, `border-top`)
+2. **CSS фреймворк** — Bootstrap присутствует в `/static/css/bootstrap.min.css`
+3. **Свой CSS** — `tactical-final.css` (тактильный стиль)
+4. **Вьюха** — уже передает `previous_article` и `next_article` (навигация готова)
+5. **Контент** — одна тестовая статья с frontmatter
+
+### ⚠️ Проблемы:
+1. **Нет собственного CSS для статей** — все стили от Bootstrap
+2. **Статья выглядит как типовой блог** — нет тактильного оформления
+3. **Изображения** — папка `images/` есть, но не обрабатывается
+4. **Шаблон Obsidian** — отсутствует
+
+---
+
+## 🎯 ПЛАН ДЕЙСТВИЙ
+
+### Задача 32.1: Дизайн статей (P0)
+
+Создадим **отдельный CSS для статей** поверх Bootstrap:
+
+```css
+/* /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/article-typography.css */
+```
+
+**Особенности:**
+- Читаемая ширина: `max-width: 720px`
+- Межстрочный интервал: `line-height: 1.8`
+- Крупный шрифт: `font-size: 1.125rem` на десктопе
+- Адаптивные отступы
+- Стили для кода, цитат, изображений
+
+**Создайте файл:**
+
+```bash
+cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/article-typography.css << 'EOF'
+/* ========================================
+   ARTICLE TYPOGRAPHY & READABILITY
+   Тактильный дизайн для чтения
+   ======================================== */
+
+/* Основной контейнер статьи */
+.article-detail {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Типографика */
+.article-detail .article-content {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #1a1a1a;
+}
+
+/* Заголовки внутри статьи */
+.article-detail .article-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-detail .article-content h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.article-detail .article-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.article-detail .article-content h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Параграфы */
+.article-detail .article-content p {
+    margin-bottom: 1.5rem;
+}
+
+/* Ссылки */
+.article-detail .article-content a {
+    color: #3b82f6;
+    text-decoration: none;
+    border-bottom: 1px solid #93c5fd;
+    transition: all 0.2s;
+}
+
+.article-detail .article-content a:hover {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+/* Списки */
+.article-detail .article-content ul,
+.article-detail .article-content ol {
+    margin: 1.25rem 0;
+    padding-left: 1.75rem;
+}
+
+.article-detail .article-content li {
+    margin: 0.5rem 0;
+    line-height: 1.7;
+}
+
+/* Цитаты */
+.article-detail .article-content blockquote {
+    margin: 1.75rem 0;
+    padding: 0.75rem 1.5rem;
+    border-left: 4px solid #3b82f6;
+    background: #f8fafc;
+    font-style: italic;
+    color: #334155;
+}
+
+/* Кодовые блоки */
+.article-detail .article-content pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1.25rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.article-detail .article-content code {
+    background: #f1f5f9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.875em;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+}
+
+.article-detail .article-content pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* Изображения */
+.article-detail .article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Таблицы */
+.article-detail .article-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.article-detail .article-content th,
+.article-detail .article-content td {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.article-detail .article-content th {
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+/* Метки статуса (DRAFT/UPDATED) */
+.article-detail .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.article-detail .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+}
+
+.article-detail .status-dot.draft {
+    background: #f59e0b;
+}
+
+.article-detail .status-dot.updated {
+    background: #8b5cf6;
+}
+
+.article-detail .tag-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(59,130,246,0.1);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+
+/* Мета-информация (терминальный стиль) */
+.article-detail .meta-terminal {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.875rem;
+    color: #6b7280;
+    padding: 0.75rem 0;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Навигация между статьями */
+.article-detail .article-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e5e7eb;
+}
+
+.article-detail .nav-prev,
+.article-detail .nav-next {
+    flex: 1;
+}
+
+.article-detail .nav-prev {
+    text-align: left;
+}
+
+.article-detail .nav-next {
+    text-align: right;
+}
+
+.article-detail .nav-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.article-detail .nav-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .article-detail {
+        padding: 1rem;
+    }
+    
+    .article-detail .article-content {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+    
+    .article-detail .article-content h1 {
+        font-size: 1.875rem;
+    }
+    
+    .article-detail .article-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .article-detail .article-navigation {
+        flex-direction: column;
+    }
+    
+    .article-detail .nav-prev,
+    .article-detail .nav-next {
+        text-align: center;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .article-detail .article-content {
+        color: #e5e7eb;
+    }
+    
+    .article-detail .article-content blockquote {
+        background: #1e293b;
+        border-left-color: #60a5fa;
+        color: #cbd5e1;
+    }
+    
+    .article-detail .article-content code {
+        background: #334155;
+        color: #f1f5f9;
+    }
+    
+    .article-detail .meta-terminal {
+        color: #9ca3af;
+        border-color: #374151;
+    }
+    
+    .article-detail .article-navigation {
+        border-top-color: #374151;
+    }
+}
+EOF
+```
+
+### Обновление шаблона статьи:
+
+```bash
+cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/article_detail.html << 'EOF'
+{% extends 'base.html' %}
+{% load markdownify %}
+
+{% block title %}{{ article.title }} | UCH Tactical Blog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/article-typography.css">
+{% endblock %}
+
+{% block content %}
+<article class="article-detail">
+    <div class="article-header">
+        <div class="status-indicator mb-3">
+            {% if article.status == 'draft' %}
+                <span class="status-dot draft"></span>
+                <span>DRAFT MODE</span>
+                <span class="tag-status draft">DRAFT</span>
+            {% elif article.updated_at != article.created_at %}
+                <span class="status-dot updated"></span>
+                <span>UPDATED</span>
+                <span class="tag-status updated">UPDATED</span>
+            {% else %}
+                <span class="status-dot"></span>
+                <span>ACTIVE</span>
+                <span class="tag-status published">LIVE</span>
+            {% endif %}
+        </div>
+        
+        <h1>{{ article.title }}</h1>
+        
+        <div class="meta-terminal">
+            {% if article.published_at %}
+                📅 Published: {{ article.published_at|date:"Y-m-d H:i" }}
+            {% else %}
+                📅 Created: {{ article.created_at|date:"Y-m-d H:i" }}
+            {% endif %}
+            {% if article.updated_at != article.created_at %}
+                | 🔄 Updated: {{ article.updated_at|date:"Y-m-d H:i" }}
+            {% endif %}
+            | 👤 Author: {{ article.author.username }}
+            {% if article.category %}
+                | 📂 Category: {{ article.category.name }}
+            {% endif %}
+        </div>
+        
+        {% if article.categories.all %}
+        <div class="mt-3">
+            {% for cat in article.categories.all %}
+            <span class="tag-status" style="background: rgba(0,255,157,0.1);">#{{ cat.name }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="article-content">
+        {{ article.content|markdownify }}
+    </div>
+    
+    {% if article.tags.all %}
+    <div class="article-tags mt-4 pt-3">
+        <strong>🏷️ Tags:</strong>
+        {% for tag in article.tags.all %}
+        <span class="tag-status">{{ tag.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Навигация между статьями -->
+    <div class="article-navigation">
+        <div class="nav-prev">
+            {% if previous_article %}
+            <span class="nav-label">← Previous</span>
+            <a href="{% url 'blog:article_detail' slug=previous_article.slug %}" class="nav-title">
+                {{ previous_article.title|truncatechars:50 }}
+            </a>
+            {% endif %}
+        </div>
+        
+        <div class="nav-next">
+            {% if next_article %}
+            <span class="nav-label">Next →</span>
+            <a href="{% url 'blog:article_detail' slug=next_article.slug %}" class="nav-title">
+                {{ next_article.title|truncatechars:50 }}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="text-center mt-5 pt-3">
+        <a href="{% url 'blog:article_list' %}" class="btn-tactical">← Back to Articles</a>
+    </div>
+</article>
+{% endblock %}
+EOF
+```
+
+---
+
+## 📝 ДАЛЬНЕЙШИЕ ШАГИ
+
+@kirillkravcov, выполните:
+
+1. **Создайте CSS файл** (команда выше)
+2. **Обновите шаблон статьи** (команда выше)
+3. **Перезапустите Django**:
+```bash
+cd /Users/kirillkravcov/UniversalCreativeHub/uch-backend
+python manage.py collectstatic --noinput
+# Перезапустите сервер (Ctrl+C и снова)
+python manage.py runserver
+```
+
+4. **Проверьте результат**: http://localhost:8000/blog/articles/nachalo-tekhnicheskogo-bloga/
+
+После проверки — продолжим с **шаблоном Obsidian** и **обработкой изображений**.
+
+**Приступайте.**
+
+---
+
+## 👤 **Kirill**
+
+так теперь очень аккуратно нужно проверить вс что работает и не делать что уже сделано. 1. tactical стиль это не тактильный а тактический) 2. Сейчас сам блог именно в кастомном тактическом стиле. Единственнное что нужно, это на самой странице статьи чтобы не только статья работала, а еще и визуал. Тут можно подумать и попробовать нподелать прототипы. У меня пока идеи добавлять ненавязчивую фоновую анимацию (какие нибудь частицы в пространстве). Предложи идеи по улучшению визуала, но пидерживаясь уже имеющего тактического стиля
+
+---
+
+## 🤖 **DeepSeek**
+
+🏛️ **Хранитель архитектуры** — принял уточнение. Прошу прощения за терминологическую ошибку: **ТАКТИЧЕСКИЙ**, а не тактильный.
+
+## 🎯 АНАЛИЗ ТЕКУЩЕГО ТАКТИЧЕСКОГО СТИЛЯ
+
+Прежде чем предлагать изменения, давайте посмотрим, что уже есть:
+
+```bash
+# Посмотреть текущий tactical-final.css
+cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/tactical-final.css | head -100
+
+# Посмотреть как выглядят другие страницы (index, list)
+open http://localhost:8000/
+```
+
+**Каковы визуальные маркеры тактического стиля?**
+- Цветовая схема? (черный/зеленый/серый/хаки?)
+- Шрифты? (monospace, военные, технологичные?)
+- Эффекты? (терминал, матрица, тактическая сетка?)
+- Анимации? (мерцание, сканирование, радар?)
+
+---
+
+## 💡 ПРЕДЛОЖЕНИЯ ПО УЛУЧШЕНИЮ ВИЗУАЛА СТАТЬИ
+
+### Вариант 1: **Терминальный режим** (самый безопасный)
+```css
+- Фон: черный с легким шумом (noise texture)
+- Текст: зеленый/янтарный как на старых дисплеях
+- Эффект печати (cursor blink)
+- Боковые скобки > в цитатах
+- Код как команды в терминале
+```
+
+### Вариант 2: **Тактическая карта** (средняя сложность)
+```css
+- Фон: сетка как на военных картах (grid с координатами)
+- Анимация: движущиеся точки/радар по краям
+- Заголовки как метки на карте (стиль "topographic")
+- Разделители: пунктирные линии как маршруты
+- Статусы: мигающие индикаторы
+```
+
+### Вариант 3: **HUD / Кабина пилота** (сложная)
+```css
+- Элементы интерфейса как в авиации/космосе
+- Угловые скобки в стиле прицела (corner brackets)
+- Горизонтальные линии с данными телеметрии
+- Анимация: сканирующая линия сверху вниз
+- Градиенты как подсветка приборов
+```
+
+### Вариант 4: **Минимальный тактический** (рекомендую)
+```css
+- Тонкая сетка на фоне (opacity 0.05)
+- Легкое мерцание (slow pulse)
+- Тактическая цветовая схема: #1a1a1a фон, #d4d4d4 текст
+- Акценты: #00ff9d (тактический зеленый) или #ff6b00
+- Бордеры: угловые скобки вместо стандартных линий
+- Эффект "голографического" свечения на заголовках
+```
+
+---
+
+## 🎨 ПРЕДЛОЖЕНИЕ ПО КОНКРЕТНОЙ РЕАЛИЗАЦИИ
+
+Я предлагаю **гибрид Варианта 2 и 4** — тактическая карта с элементами HUD, но без перегрузки.
+
+### Новый CSS для статьи (поверх существующего):
+
+```css
+/* Добавить к существующему tactical-final.css */
+.article-detail {
+    position: relative;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(0, 255, 157, 0.2);
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.05);
+}
+
+/* Тактическая сетка на фоне */
+.article-detail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 255, 157, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 157, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Частицы (простая анимация) */
+.article-detail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(0,255,157,0.02) 0%, transparent 50%);
+    animation: tacticalPulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes tacticalPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
+
+/* Угловые скобки для заголовков */
+.article-detail .article-content h2 {
+    position: relative;
+    padding-left: 1rem;
+}
+
+.article-detail .article-content h2::before {
+    content: '[>';
+    position: absolute;
+    left: -0.5rem;
+    color: #00ff9d;
+    opacity: 0.6;
+    font-family: monospace;
+}
+
+/* Эффект сканирования при ховере */
+.article-detail:hover .article-content {
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.1);
+    transition: all 0.3s;
+}
+
+/* Тактический курсор на ссылках */
+.article-detail .article-content a {
+    cursor: crosshair;
+    transition: all 0.2s;
+}
+
+/* Мигающий индикатор статуса */
+.article-detail .status-dot {
+    animation: blink 1.5s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+```
+
+---
+
+## 🔄 ПРЕДЛОЖЕНИЕ ПО РАБОЧЕМУ ПРОЦЕССУ
+
+Чтобы не сломать существующий дизайн:
+
+1. **Создайте тестовую ветку**:
+```bash
+cd /Users/kirillkravcov/UniversalCreativeHub/uch-backend
+git checkout -b feature/tactical-article-enhancement
+```
+
+2. **Создайте отдельный CSS-файл** (не трогайте tactical-final.css):
+```bash
+touch static/css/article-tactical-enhancement.css
+```
+
+3. **Подключите его в шаблоне статьи** после основного CSS
+
+4. **Экспериментируйте** — легко откатить удалив файл
+
+---
+
+## ❓ ВОПРОСЫ ДЛЯ УТОЧНЕНИЯ
+
+@kirillkravcov, ответьте:
+
+1. **Какие цвета используются в тактическом стиле сейчас?** (покажите hex-коды)
+2. **Есть ли уже анимации на других страницах?**
+3. **Какой уровень сложности вас устраивает?** (минимальный/умеренный/сложный)
+4. **Хотите ли вы интерактивные элементы** (при наведении, клике)?
+
+После ответов — я предоставлю **готовый код** под ваш конкретный стиль.
+
+---
+
+## 👤 **Kirill**
+
+дать весь файл?
+l-garden-content % cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/tactical-final.css | head -100
+/* ============================================
+   TACTICAL BLOG - ФИНАЛЬНАЯ ВЕРСИЯ
+   ============================================ */
+
+:root {
+    --tactical-bg: #0a0e1a;
+    --tactical-bg-secondary: #0f1320;
+    --tactical-bg-card: #111827;
+    --tactical-bg-overlay: rgba(15, 19, 32, 0.3);
+    --tactical-accent: #00ff9d;
+    --tactical-accent-dim: rgba(0, 255, 157, 0.2);
+    --tactical-text: #e5e7eb;
+    --tactical-text-muted: #9ca3af;
+    --tactical-border: #1f2937;
+    --tactical-warning: #f59e0b;
+    --tactical-updated: #3b82f6;
+    --tactical-draft: #6b7280;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--tactical-bg);
+    color: var(--tactical-text);
+    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Подложка под блоками */
+.style-section {
+    background: var(--tactical-bg-overlay);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* ========== ШАПКА ========== */
+.tactical-header {
+    border-bottom: 2px solid var(--tactical-accent);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tactical-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+    color: var(--tactical-accent);
+}
+
+.tactical-header h1 span {
+    color: var(--tactical-accent);
+}
+
+.cursor-blink {
+    display: inline-block;
+    width: 10px;
+    height: 15px;
+    background: var(--tactical-accent);
+    animation: blink 1s step-end infinite;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.status-badge {
+    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(100, 116, 139, 0.2);
+    border: 1px solid rgba(100, 116, 139, 0.4);
+    border-radius: 20px;
+    color: #9ca3af;
+    letter-spacing: 0.5px;
+}
+.status-badge {
+    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(100, 116, 139, 0.2);
+    border: 1px solid rgba(100, 116, 139, 0.4);
+    border-radius: 20px;
+    color: #9ca3af;
+    letter-spacing: 0.5px;
+}
+.status-badge {
+    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+kirillkravcov@MacBook-Air my-digital-garden-content %
+
+---
+
+## 🤖 **DeepSeek**
+
+🏛️ **Хранитель архитектуры** — спасибо за CSS. Вижу тактический стиль.
+
+## 🎨 АНАЛИЗ ТАКТИЧЕСКОГО СТИЛЯ
+
+**Цветовая схема:**
+- `--tactical-accent: #00ff9d` (неоново-зеленый)
+- `--tactical-bg: #0a0e1a` (темно-синий/черный)
+- `--tactical-text: #e5e7eb` (светло-серый)
+
+**Элементы:**
+- Мигающий курсор (`.cursor-blink`)
+- Терминальный стиль
+- Военная эстетика
+
+---
+
+## 💡 ПРЕДЛОЖЕНИЕ ПО УЛУЧШЕНИЮ СТАТЬИ
+
+**Создайте новый файл** (не трогаем существующий):
+
+```bash
+cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/article-tactical.css << 'EOF'
+/* ============================================
+   TACTICAL ARTICLE ENHANCEMENT
+   Дополнительные стили для страницы статьи
+   Сохраняя тактическую эстетику
+   ============================================ */
+
+/* Контейнер статьи с тактическим фоном */
+.article-detail {
+    position: relative;
+    background: var(--tactical-bg-card, #111827);
+    border: 1px solid var(--tactical-border, #1f2937);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+/* Тактическая сетка на фоне */
+.article-detail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(var(--tactical-accent-dim, rgba(0,255,157,0.03)) 1px, transparent 1px),
+        linear-gradient(90deg, var(--tactical-accent-dim, rgba(0,255,157,0.03)) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Анимированные частицы (тактические точки) */
+.article-detail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, var(--tactical-accent-dim) 0%, transparent 60%);
+    animation: tacticalPulse 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes tacticalPulse {
+    0%, 100% { 
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.5;
+        transform: scale(1.05);
+    }
+}
+
+/* Контент поверх фона */
+.article-detail > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Заголовки с тактическими маркерами */
+.article-detail h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--tactical-text) 0%, var(--tactical-accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+}
+
+/* H2 с угловыми скобками (тактический стиль) */
+.article-detail .article-content h2 {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    border-left: 3px solid var(--tactical-accent);
+}
+
+.article-detail .article-content h2::before {
+    content: '►';
+    position: absolute;
+    left: -0.8rem;
+    color: var(--tactical-accent);
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* H3 с тактическим стилем */
+.article-detail .article-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--tactical-accent);
+    font-size: 1.35rem;
+}
+
+/* Терминальный стиль для кода */
+.article-detail .article-content pre {
+    background: #0a0e1a;
+    border: 1px solid var(--tactical-accent-dim);
+    border-left: 3px solid var(--tactical-accent);
+    box-shadow: 0 0 10px rgba(0,255,157,0.1);
+}
+
+/* Мигающий курсор для индикаторов */
+.article-detail .status-dot {
+    animation: tacticalBlink 1.5s step-end infinite;
+}
+
+@keyframes tacticalBlink {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 5px var(--tactical-accent);
+    }
+    50% { 
+        opacity: 0.3;
+        box-shadow: none;
+    }
+}
+
+/* Тактическая рамка при наведении */
+.article-detail:hover {
+    box-shadow: 0 0 20px var(--tactical-accent-dim);
+    transition: all 0.3s ease;
+}
+
+/* Мета-информация в стиле терминала */
+.article-detail .meta-terminal {
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.75rem;
+    border-radius: 4px;
+    border-left: 3px solid var(--tactical-accent);
+    font-size: 0.85rem;
+}
+
+/* Навигация между статьями */
+.article-detail .article-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--tactical-border);
+}
+
+.article-detail .nav-prev,
+.article-detail .nav-next {
+    flex: 1;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.article-detail .nav-prev:hover,
+.article-detail .nav-next:hover {
+    background: var(--tactical-accent-dim);
+    transform: translateX(var(--translate, 0));
+}
+
+.article-detail .nav-prev:hover {
+    --translate: -5px;
+}
+
+.article-detail .nav-next:hover {
+    --translate: 5px;
+}
+
+.article-detail .nav-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--tactical-accent);
+    font-family: monospace;
+}
+
+.article-detail .nav-title {
+    font-size: 0.9rem;
+    color: var(--tactical-text);
+    text-decoration: none;
+}
+
+/* Кнопка "Back to Articles" в тактическом стиле */
+.article-detail .btn-tactical {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--tactical-accent);
+    color: var(--tactical-accent);
+    text-decoration: none;
+    font-family: monospace;
+    transition: all 0.2s;
+}
+
+.article-detail .btn-tactical:hover {
+    background: var(--tactical-accent);
+    color: var(--tactical-bg);
+    box-shadow: 0 0 10px var(--tactical-accent);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .article-detail {
+        padding: 1rem;
+    }
+    
+    .article-detail h1 {
+        font-size: 1.75rem;
+    }
+    
+    .article-detail .article-content h2 {
+        font-size: 1.35rem;
+    }
+    
+    .article-detail .article-navigation {
+        flex-direction: column;
+    }
+}
+EOF
+```
+
+---
+
+## 🔧 ОБНОВЛЕНИЕ ШАБЛОНА СТАТЬИ
+
+```bash
+cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/article_detail.html << 'EOF'
+{% extends 'base.html' %}
+{% load markdownify %}
+
+{% block title %}{{ article.title }} | UCH Tactical Blog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/article-tactical.css">
+{% endblock %}
+
+{% block content %}
+<article class="article-detail">
+    <div class="article-header">
+        <div class="status-indicator mb-3">
+            {% if article.status == 'draft' %}
+                <span class="status-dot draft"></span>
+                <span>[DRAFT MODE]</span>
+                <span class="tag-status draft">DRAFT</span>
+            {% elif article.updated_at != article.created_at %}
+                <span class="status-dot updated"></span>
+                <span>[UPDATED]</span>
+                <span class="tag-status updated">UPDATED</span>
+            {% else %}
+                <span class="status-dot"></span>
+                <span>[ACTIVE]</span>
+                <span class="tag-status published">LIVE</span>
+            {% endif %}
+        </div>
+        
+        <h1>{{ article.title }}</h1>
+        
+        <div class="meta-terminal">
+            📅 {{ article.published_at|date:"Y-m-d H:i"|default:article.created_at|date:"Y-m-d H:i" }}
+            {% if article.updated_at != article.created_at %}
+            | 🔄 {{ article.updated_at|date:"Y-m-d H:i" }}
+            {% endif %}
+            | 👤 {{ article.author.username }}
+            {% if article.category %}
+            | 📁 {{ article.category.name }}
+            {% endif %}
+        </div>
+        
+        {% if article.categories.all %}
+        <div class="mt-3">
+            {% for cat in article.categories.all %}
+            <span class="tag-status">#{{ cat.name }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="article-content">
+        {{ article.content|markdownify }}
+    </div>
+    
+    {% if article.tags.all %}
+    <div class="article-tags mt-4 pt-3">
+        🏷️ Tags:
+        {% for tag in article.tags.all %}
+        <span class="tag-status">{{ tag.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Навигация между статьями -->
+    <div class="article-navigation">
+        <div class="nav-prev">
+            {% if previous_article %}
+            <div class="nav-label">← PREVIOUS</div>
+            <a href="{% url 'blog:article_detail' slug=previous_article.slug %}" class="nav-title">
+                {{ previous_article.title|truncatechars:60 }}
+            </a>
+            {% endif %}
+        </div>
+        
+        <div class="nav-next">
+            {% if next_article %}
+            <div class="nav-label">NEXT →</div>
+            <a href="{% url 'blog:article_detail' slug=next_article.slug %}" class="nav-title">
+                {{ next_article.title|truncatechars:60 }}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="text-center mt-4 pt-3">
+        <a href="{% url 'blog:article_list' %}" class="btn-tactical">
+            ← BACK TO ARTICLES
+        </a>
+    </div>
+</article>
+{% endblock %}
+EOF
+```
+
+---
+
+## ✅ ПРОВЕРКА
+
+```bash
+# 1. Собрать статику
+cd /Users/kirillkravcov/UniversalCreativeHub/uch-backend
+python manage.py collectstatic --noinput
+
+# 2. Перезапустить сервер
+# Ctrl+C, затем:
+python manage.py runserver
+
+# 3. Проверить статью
+open http://localhost:8000/blog/articles/nachalo-tekhnicheskogo-bloga/
+```
+
+---
+
+## 🎯 ОЖИДАЕМЫЙ РЕЗУЛЬТАТ
+
+- ✅ Тактическая сетка на фоне
+- ✅ Пульсирующие частицы
+- ✅ Мигающий индикатор статуса
+- ✅ Заголовки с зелеными маркерами
+- ✅ Эффект свечения при наведении
+- ✅ Терминальный стиль мета-информации
+
+**Выполните команды и покажите скриншот результата.** Если эффект слишком сильный — откат простым удалением `article-tactical.css`.
+
+---
 
 ## 👤 **Kirill**
 
@@ -16676,1946 +19034,6 @@ yaml
 ```
 
 **Скопируйте этот промпт и начните новый чат.** Все задачи распределены, бюджет контролируется.
-
----
-
-## 👤 **Kirill**
-
-🏛️ СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ UCH (ЭТАП 32 — ДИЗАЙН, ШАБЛОНЫ И РАБОЧИЙ ПРОЦЕСС)
-🎯 КОНТЕКСТ
-Выполнено на этапе 31:
-
-✅ Полностью рабочий пайплайн публикации:
-Obsidian (drafts/ + articles/) → fswatch → Git → GitHub webhook → VPS → Django → импорт с транслитерацией slug
-
-✅ Автоматическая очистка БД от статей без файлов
-
-✅ Исправлен импортер: safe_slugify() для кириллицы, принудительная публикация (status: published)
-
-✅ Вебхук-сервер стабильно принимает запросы, перезапускает импорт и очистку
-
-✅ Блог доступен: http://109.196.98.128/
-
-Текущее состояние:
-
-Статьи публикуются, slug генерируется корректно
-
-Удаление файла → статья исчезает из блога
-
-БД чистая, осталась одна тестовая статья
-
-Дизайн статей: голый текст, заголовки по левому краю, нет визуального оформления
-
-Приоритеты этапа 32:
-
-Приоритет	Задача	Ответственный
-P0	Разработать шаблон оформления статей (CSS, типографика, адаптив)	🎨 Мастер визуализации
-P1	Создать шаблон Obsidian для новых статей (frontmatter + структура)	🧠 Специалист по знаниям
-P2	Добавить поддержку изображений и медиа в статьях	🔧 Строитель инфраструктуры
-P3	Документировать рабочий процесс (Obsidian → блог)	🔍 Диагност проекта
-👥 РОЛИ В КОМАНДЕ
-Роль	Кто	Ответственность
-Senior Architect	🏛️ Хранитель архитектуры	Целостность системы, дизайн интеграций, контроль бюджета
-Senior Backend Engineer	🔧 Строитель инфраструктуры	API для графа, импортер, webhook, медиа
-Senior ML/AI Engineer	🧠 Специалист по знаниям	Обогащение графа, связи, контент-пайплайн, шаблоны статей
-Senior DevOps Engineer	🚀 Хранитель стабильности	Мониторинг, деплой, автозапуск, VPS
-Senior Frontend Engineer	🎨 Мастер визуализации	Дизайн статей, CSS, типографика, адаптивность
-Senior Auditor	🔍 Диагност проекта	Аудит, документация, контроль бюджета
-💰 БЮДЖЕТ ЭТАПА: НЕ БОЛЕЕ 2000 ₽
-Правила:
-
-Приоритет — локальные модели и бесплатные библиотеки
-
-Хостинг VPS — уже оплачен (~1190 ₽/мес)
-
-Все затраты фиксировать в .center/budget/log_YYYYMMDD.md
-
-📋 ЗАДАЧИ ЭТАПА 32
-ЗАДАЧА 32.1: ДИЗАЙН ШАБЛОНА СТАТЕЙ (P0)
-@Senior Frontend 🎨 + @Senior Backend 🔧
-
-32.1.1 Исследование
-
-Проанализировать текущий шаблон blog/article_detail.html
-
-Определить, какие CSS-файлы подключены
-
-Проверить наличие Bootstrap/Tailwind и их версии
-
-32.1.2 Разработка дизайна
-
-Создать тактильный, читаемый дизайн статьи:
-
-Увеличенный межстрочный интервал (line-height: 1.6–1.8)
-
-Оптимальная ширина контента (max-width: 720px)
-
-Отступы, поля, центрирование
-
-Стили для заголовков (размеры, отступы)
-
-Стили для цитат, кодовых блоков, списков
-
-Адаптивность под мобильные устройства
-
-Добавить мета-информацию: дата публикации, теги, категория
-
-Сделать навигацию между статьями (предыдущая/следующая)
-
-32.1.3 Внедрение
-
-Обновить CSS в /static/css/
-
-Применить к шаблону article_detail.html
-
-Проверить на тестовой статье
-
-ЗАДАЧА 32.2: ШАБЛОН OBSIDIAN ДЛЯ СТАТЕЙ (P1)
-@🧠 Специалист по знаниям + 🔍 Диагност проекта
-
-32.2.1 Создание шаблона
-
-Разработать .md шаблон для новых статей:
-
-Frontmatter: title, tags, category, status (по умолчанию draft), date, slug (опционально)
-
-Структура: заголовок H1, вступление, секции с H2, итоги
-
-Место для изображений
-
-Сохранить шаблон в blog/templates/new-article-template.md
-
-32.2.2 Интеграция с Obsidian
-
-Инструкция по установке шаблона в Obsidian (Templater или Core Templates)
-
-Пример вызова: Ctrl/Cmd + P → Insert Template
-
-32.2.3 Документация
-
-Создать README.md в blog/ с описанием процесса публикации
-
-ЗАДАЧА 32.3: ПОДДЕРЖКА ИЗОБРАЖЕНИЙ (P2)
-@🔧 Строитель инфраструктуры + 🎨 Мастер визуализации
-
-32.3.1 Анализ
-
-Проверить текущую обработку изображений в импортере
-
-Определить, куда сохраняются изображения (медиа-папка, S3, локально)
-
-32.3.2 Реализация
-
-Добавить поддержку локальных изображений из папки blog/articles/images/
-
-При импорте копировать изображения в /media/blog/
-
-В статье заменять пути на /media/blog/...
-
-32.3.3 Тестирование
-
-Создать статью с изображением
-
-Проверить отображение в блоге
-
-ЗАДАЧА 32.4: ДОКУМЕНТАЦИЯ (P3)
-@🔍 Диагност проекта
-
-32.4.1 Обновление ADR
-
-Зафиксировать архитектурные решения по дизайну статей
-
-Документировать схему обработки изображений
-
-32.4.2 Инструкции по эксплуатации
-
-Обновить README.md проекта
-
-Создать гайд "Как опубликовать статью из Obsidian"
-
-Добавить примеры оформления (стили, изображения)
-
-📊 МЕТРИКИ УСПЕХА
-yaml
-дизайн_статей:
-  - ✅ Статья имеет читаемый вид (line-height, ширина, отступы)
-  - ✅ Заголовки визуально отличаются от текста
-  - ✅ Адаптивно на мобильных устройствах
-  - ✅ Отображаются теги и категория
-  - ✅ Есть навигация между статьями
-
-шаблон_obsidian:
-  - ✅ Шаблон создан и доступен
-  - ✅ Frontmatter заполняется автоматически
-  - ✅ Инструкция по установке написана
-
-изображения:
-  - ✅ Изображения копируются на VPS
-  - ✅ Отображаются в статье
-
-бюджет:
-  - ✅ Расходы за этап < 2000 ₽
-🚀 НЕМЕДЛЕННАЯ ЗАДАЧА
-@🎨 Мастер визуализации + 🔧 Строитель инфраструктуры:
-
-Провести анализ текущего состояния шаблонов и CSS:
-
-bash
-# На VPS:
-ssh root@109.196.98.128
-
-# Найти шаблон статьи
-find /opt/uch -name "article_detail.html" 2>/dev/null
-
-# Найти CSS файлы
-find /opt/uch -name "*.css" 2>/dev/null | head -10
-
-# Проверить подключенные фреймворки
-grep -r "bootstrap\|tailwind\|bulma" /opt/uch/apps/uch-backend/uch/apps/blog/templates/ 2>/dev/null
-Результаты диагностики предоставить Architect'у.
-
-🔄 СЛЕДУЮЩИЙ ШАГ
-🏛️ Хранитель архитектуры:
-Активируй @🎨 Мастер визуализации для выполнения диагностики и начала разработки дизайна статей.
-
-Помни: одна задача за раз, итеративно, с проверкой каждого шага и контролем бюджета!
-
----
-
-## 🤖 **DeepSeek**
-
-🏛️ **Хранитель архитектуры** активирует протокол.
-
-## 🔍 НЕМЕДЛЕННАЯ ДИАГНОСТИКА
-
-@🎨 Мастер визуализации + 🔧 Строитель инфраструктуры — выполните анализ текущего состояния.
-
-```bash
-ssh root@109.196.98.128
-```
-
-### Шаг 1: Локализация файлов проекта
-
-```bash
-# Найти проект UCH
-find /opt -name "uch-backend" -type d 2>/dev/null
-# Или
-ls -la /opt/
-
-# Определить точный путь
-ps aux | grep gunicorn | grep -v grep
-```
-
-### Шаг 2: Структура шаблонов
-
-```bash
-# Найти все шаблоны блога
-find /opt -path "*/blog/templates/*" -name "*.html" 2>/dev/null
-
-# Конкретно article_detail.html
-find /opt -name "article_detail.html" 2>/dev/null
-
-# Показать содержимое
-cat $(find /opt -name "article_detail.html" 2>/dev/null | head -1)
-```
-
-### Шаг 3: CSS и фреймворки
-
-```bash
-# Найти все CSS файлы
-find /opt -name "*.css" 2>/dev/null | grep -E "(static|css)" | head -20
-
-# Проверить подключение фреймворков
-find /opt -path "*/blog/templates/*" -name "*.html" -exec grep -l "bootstrap\|tailwind\|bulma\|foundation" {} \; 2>/dev/null
-
-# Посмотреть базовый шаблон (base.html)
-find /opt -name "base.html" 2>/dev/null -exec cat {} \;
-```
-
-### Шаг 4: Текущий рендеринг
-
-```bash
-# Проверить, какие переменные контекста передаются
-grep -r "def article_detail" /opt --include="*.py" 2>/dev/null | head -5
-
-# Найти вьюху блога
-find /opt -name "views.py" -path "*/blog/*" 2>/dev/null -exec grep -A 20 "article_detail" {} \;
-```
-
-### Шаг 5: Медиа и статика
-
-```bash
-# Где хранятся статические файлы
-grep -r "STATIC_ROOT\|STATIC_URL\|MEDIA_ROOT\|MEDIA_URL" /opt --include="settings.py" 2>/dev/null
-
-# Структура static директории
-ls -la $(find /opt -name "static" -type d 2>/dev/null | grep -v venv | head -1) 2>/dev/null
-```
-
----
-
-## 📋 ОЖИДАЕМЫЙ ОТЧЕТ ОТ ДИАГНОСТИКИ
-
-@🎨 Мастер визуализации, предоставьте:
-
-1. **Путь к проекту** (полный)
-2. **Содержимое текущего article_detail.html**
-3. **Список подключенных CSS/фреймворков** (если есть)
-4. **Структура static директории**
-5. **Настройки MEDIA/STATIC из settings.py**
-6. **Пример рендеринга статьи** (HTML из браузера)
-
----
-
-## ⏱️ ТАЙМЛАЙН ЭТАПА 32
-
-| Задача | Кто | Время | Бюджет |
-|--------|-----|-------|--------|
-| Диагностика | 🎨+🔧 | 10 мин | 0 ₽ |
-| Дизайн CSS | 🎨 | 45 мин | 0 ₽ |
-| Шаблон Obsidian | 🧠 | 30 мин | 0 ₽ |
-| Изображения | 🔧 | 40 мин | 0 ₽ |
-| Документация | 🔍 | 20 мин | 0 ₽ |
-| **Итого** | | **~2.5 часа** | **0 ₽** |
-
----
-
-## 🚨 КРИТЕРИИ ЗАПУСКА
-
-После получения диагностики, @🎨 приступает к созданию дизайна, **только если**:
-
-- ✅ Проект найден
-- ✅ Шаблон article_detail.html существует
-- ✅ Есть доступ на запись в static/
-- ✅ Django настроен на обслуживание статики
-
-**Приступайте к диагностике. Результаты — сюда.**
-
----
-
-## 👤 **Kirill**
-
-Нужно делать на реальном проекте, а не вымышленном. Ты даешь комманды, я выполняю и возвращаю результат.
-
-начинаем с локального:
-/Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog
-
-сам проект блога
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog
-
-весь проект
-/Users/kirillkravcov/UniversalCreativeHub
-
----
-
-## 🤖 **DeepSeek**
-
-🏛️ **Хранитель архитектуры** — принято. Работаем с реальной файловой системой.
-
-## 📁 ФИКСИРУЕМ РЕАЛЬНЫЕ ПУТИ
-
-```
-Проект:          /Users/kirillkravcov/UniversalCreativeHub
-Блог (бэкенд):   /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog
-Контент (MD):    /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog
-```
-
----
-
-## 🔍 ДИАГНОСТИКА — ВЫПОЛНИТЕ КОМАНДЫ И ВЕРНИТЕ РЕЗУЛЬТАТ
-
-@🎨 Мастер визуализации + 🔧 Строитель инфраструктуры
-
-### БЛОК 1: Шаблоны и CSS
-
-```bash
-# 1.1 Найти шаблон статьи
-ls -la /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/
-
-# 1.2 Посмотреть содержимое article_detail.html
-cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/article_detail.html
-
-# 1.3 Найти base.html (если есть)
-find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "base.html" 2>/dev/null
-
-# 1.4 Найти все CSS файлы в проекте
-find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "*.css" 2>/dev/null
-
-# 1.5 Проверить подключение фреймворков в шаблонах
-grep -r "bootstrap\|tailwind\|bulma\|foundation" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/ --include="*.html"
-```
-
-### БЛОК 2: Статика и медиа
-
-```bash
-# 2.1 Найти settings.py
-find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "settings.py"
-
-# 2.2 Проверить STATIC и MEDIA настройки
-grep -E "STATIC_URL|STATIC_ROOT|STATICFILES_DIRS|MEDIA_URL|MEDIA_ROOT" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/uch/settings.py
-
-# 2.3 Существует ли static директория в блоге
-ls -la /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/static/ 2>/dev/null
-```
-
-### БЛОК 3: Вьюха и контекст
-
-```bash
-# 3.1 Найти views.py блога
-cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/views.py
-
-# 3.2 Найти urls.py
-cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/urls.py
-```
-
-### БЛОК 4: Текущий контент
-
-```bash
-# 4.1 Какие статьи сейчас в папке контента
-ls -la /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/
-
-# 4.2 Посмотреть frontmatter существующей статьи
-head -20 /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/*.md 2>/dev/null | head -40
-```
-
----
-
-## 📝 ФОРМАТ ВОЗВРАТА
-
-Скопируйте **ВЫВОД КАЖДОЙ КОМАНДЫ** и вставьте в ответ. Если команда не нашла файл — напишите `(не найден)`.
-
-После получения результатов я:
-
-1. Определю текущее состояние дизайна
-2. Создам план модификации CSS
-3. Напишу обновленный шаблон article_detail.html
-4. Разработаю шаблон Obsidian
-
-**Выполняйте диагностику.**
-
----
-
-## 👤 **Kirill**
-
-kirillkravcov@MacBook-Air my-digital-garden-content % mkdir -p /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/drafts
-kirillkravcov@MacBook-Air my-digital-garden-content % pkill -f fswatch
-kirillkravcov@MacBook-Air my-digital-garden-content % 
-[2]  + done       nohup fswatch -o -l 2 uch-docs/blog/articles/ | while read f; do; git add uch-docs/blog/articles/; git commit -m ; git push  
-kirillkravcov@MacBook-Air my-digital-garden-content % cd /Users/kirillkravcov/obsidian/my-digital-garden-content
-nohup fswatch -o uch-docs/blog/articles/ | while read f; do
-    git add uch-docs/blog/articles/
-    git commit -m "pub: новая статья $(date '+%H:%M:%S')"
-    git push origin main
-done > /tmp/fswatch.log 2>&1 &
-[1] 58371 58372
-kirillkravcov@MacBook-Air my-digital-garden-content % >....           
-find /Users/kirillkravcov/UniversalCreativeHub/uch-backend -name "*.css" 2>/dev/null
-
-# 1.5 Проверить подключение фреймворков в шаблонах
-grep -r "bootstrap\|tailwind\|bulma\|foundation" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/ --include="*.html"
-zsh: command not found: #
-total 64
-drwxr-xr-x  9 kirillkravcov  staff   288 Mar 27 17:30 .
-drwxr-xr-x  4 kirillkravcov  staff   128 Dec  9 22:49 ..
--rwxr-xr-x  1 kirillkravcov  staff  2386 Mar 26 19:13 article_detail.html
--rwxr-xr-x  1 kirillkravcov  staff  4291 Mar 26 21:33 article_list.html
--rwxr-xr-x  1 kirillkravcov  staff  2192 Mar 27 10:10 category_detail.html
--rwxr-xr-x  1 kirillkravcov  staff  1222 Mar 27 10:10 category_list.html
--rwxr-xr-x  1 kirillkravcov  staff   237 Dec  7 16:59 context_processors.py
--rw-r--r--  1 kirillkravcov  staff  3827 Mar 27 11:28 index.html
--rwxr-xr-x@ 1 kirillkravcov  staff   856 Mar 26 19:13 sidebar.html
-zsh: command not found: #
-{% extends 'base.html' %}
-{% load markdownify %}
-
-{% block title %}{{ article.title }} | UCH Tactical Blog{% endblock %}
-
-{% block content %}
-<article class="article-detail">
-    <div class="article-header mb-4">
-        <div class="status-indicator mb-2">
-            {% if article.status == 'draft' %}
-                <span class="status-dot draft"></span>
-                <span>DRAFT MODE</span>
-                <span class="tag-status draft">DRAFT</span>
-            {% elif article.updated_at != article.created_at %}
-                <span class="status-dot updated"></span>
-                <span>UPDATED</span>
-                <span class="tag-status updated">UPDATED</span>
-            {% else %}
-                <span class="status-dot"></span>
-                <span>ACTIVE</span>
-                <span class="tag-status published">LIVE</span>
-            {% endif %}
-        </div>
-        
-        <h1>{{ article.title }}</h1>
-        
-        <div class="meta-terminal mt-3">
-            {% if article.published_at %}
-                Published: {{ article.published_at|date:"Y-m-d H:i" }}
-            {% else %}
-                Created: {{ article.created_at|date:"Y-m-d H:i" }}
-            {% endif %}
-            {% if article.updated_at != article.created_at %}
-                | Updated: {{ article.updated_at|date:"Y-m-d H:i" }}
-            {% endif %}
-            | Author: {{ article.author.username }}
-            {% if article.category %}
-                | Category: {{ article.category.name }}
-            {% endif %}
-        </div>
-        
-        {% if article.categories.all %}
-        <div class="mt-3">
-            {% for cat in article.categories.all %}
-            <span class="tag-status" style="background: rgba(0,255,157,0.1);">{{ cat.name }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="article-content">
-        {{ article.content|markdownify }}
-    </div>
-    
-    {% if article.tags.all %}
-    <div class="article-tags mt-4">
-        <strong>Tags:</strong>
-        {% for tag in article.tags.all %}
-        <span class="tag-status">{{ tag.name }}</span>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <div class="article-navigation mt-5 pt-3 border-top">
-        <a href="{% url 'blog:article_list' %}" class="btn-tactical">← Back to Articles</a>
-    </div>
-</article>
-{% endblock %}
-zsh: unknown file attribute: ^
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/templates/base.html
-zsh: command not found: #
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/magnific-popup.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap/bootstrap-reboot.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap/bootstrap-grid.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/aos.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/css/mixins/_text-hide.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/css/bootstrap-reboot.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/owl.theme.default.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/animate.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/tactical-final.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/icomoon.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/jquery.timepicker.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/ionicons.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/owl.carousel.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/style.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/flaticon.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/bootstrap-datepicker.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/css/open-iconic-bootstrap.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/widgets.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/dark_mode.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/login.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/dashboard.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/nav_sidebar.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/responsive.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/autocomplete.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/responsive_rtl.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/forms.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/rtl.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/base.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/changelists.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/vendor/select2/select2.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/admin/css/vendor/select2/select2.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/markdownx/admin/css/markdownx.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/staticfiles/markdownx/admin/css/markdownx.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/magnific-popup.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap/bootstrap-reboot.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap/bootstrap-grid.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/aos.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/css/mixins/_text-hide.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/css/bootstrap-reboot.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/owl.theme.default.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/animate.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/tactical-final.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/icomoon.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/jquery.timepicker.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/ionicons.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/owl.carousel.min.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/style.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/flaticon.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/bootstrap-datepicker.css
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/open-iconic-bootstrap.min.css
-zsh: command not found: #
-kirillkravcov@MacBook-Air my-digital-garden-content % >....           
-grep -E "STATIC_URL|STATIC_ROOT|STATICFILES_DIRS|MEDIA_URL|MEDIA_ROOT" /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/uch/settings.py
-
-# 2.3 Существует ли static директория в блоге
-ls -la /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/static/ 2>/dev/null
-zsh: command not found: #
-/Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/settings.py
-zsh: command not found: #
-grep: /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/uch/settings.py: No such file or directory
-zsh: command not found: #
-kirillkravcov@MacBook-Air my-digital-garden-content % # 3.1 Найти views.py блога
-cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/views.py
-
-# 3.2 Найти urls.py
-cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/urls.py
-zsh: command not found: #
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView
-from django.db.models import Count, Q
-from .models import Article, Category
-
-# Context processor для боковой панели
-def sidebar_context(request):
-    """Контекст для боковой панели (категории и последние статьи)"""
-    try:
-        # Категории с количеством опубликованных статей
-        categories = Category.objects.annotate(
-            article_count=Count('articles', 
-                filter=Q(articles__status='published')  # Используем status вместо is_published
-            )
-        ).filter(article_count__gt=0)
-        
-        # Последние опубликованные статьи
-        recent_articles = Article.objects.filter(
-            status='published'  # Используем status вместо is_published
-        ).order_by('-created_at')[:5]
-        
-        return {
-            'blog_categories': categories,
-            'blog_recent_articles': recent_articles,
-        }
-    except Exception:
-        # Если база данных еще не готова
-        return {
-            'blog_categories': [],
-            'blog_recent_articles': [],
-        }
-
-# Главная страница
-class HomeView(ListView):
-    template_name = 'blog/index.html'
-    model = Article
-    context_object_name = 'latest_articles'
-    paginate_by = 6
-    
-    def get_queryset(self):
-        # Фильтруем только опубликованные статьи
-        return Article.objects.filter(
-            status='published'  # Используем status вместо is_published
-        ).order_by('-created_at')
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(sidebar_context(self.request))
-        return context
-
-# Список всех статей
-class ArticleListView(ListView):
-    template_name = 'blog/article_list.html'
-    model = Article
-    context_object_name = 'articles'
-    paginate_by = 10
-    
-    def get_queryset(self):
-        queryset = Article.objects.filter(
-            status='published'  # Используем status вместо is_published
-        ).order_by('-created_at')
-        
-        # Фильтрация по категории
-        category_slug = self.kwargs.get('category_slug')
-        if category_slug:
-            queryset = queryset.filter(category__slug=category_slug)
-        
-        # Фильтрация по тегу
-        tag_slug = self.kwargs.get('tag_slug')
-        if tag_slug:
-            queryset = queryset.filter(tags__slug=tag_slug)
-        
-        # Поиск
-        search_query = self.request.GET.get('q')
-        if search_query:
-            queryset = queryset.filter(
-                Q(title__icontains=search_query) |
-                Q(content__icontains=search_query) |
-                Q(excerpt__icontains=search_query)
-            )
-        
-        return queryset
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(sidebar_context(self.request))
-        return context
-
-# Детальная страница статьи
-class ArticleDetailView(DetailView):
-    template_name = 'blog/article_detail.html'
-    model = Article
-    context_object_name = 'article'
-    
-    def get_queryset(self):
-        # Показываем только опубликованные статьи
-        return Article.objects.filter(status='published')
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Добавляем комментарии к статье (только одобренные)
-        article = self.get_object()
-        context['comments'] = article.comments.filter(is_approved=True)
-        
-        # Добавляем sidebar контекст
-        context.update(sidebar_context(self.request))
-        
-        return context
-        context.update(sidebar_context(self.request))
-        
-        # Добавляем навигацию (предыдущая/следующая статья)
-        article = self.object
-        context['previous_article'] = Article.objects.filter(
-            status='published',
-            created_at__lt=article.created_at
-        ).order_by('-created_at').first()
-        
-        context['next_article'] = Article.objects.filter(
-            status='published',
-            created_at__gt=article.created_at
-        ).order_by('created_at').first()
-        
-        return context
-
-# Список категорий
-class CategoryListView(ListView):
-    template_name = 'blog/category_list.html'
-    model = Category
-    context_object_name = 'categories'
-    
-    def get_queryset(self):
-        return Category.objects.annotate(
-            article_count=Count('article', 
-                filter=Q(article__status='published')  # Используем status
-            )
-        ).filter(article_count__gt=0).order_by('name')
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(sidebar_context(self.request))
-        return context
-
-# Статьи по категории
-class CategoryDetailView(DetailView):
-    template_name = 'blog/category_detail.html'
-    model = Category
-    context_object_name = 'category'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['articles'] = Article.objects.filter(
-            category=self.object, 
-            status='published'  # Используем status
-        ).order_by('-created_at')
-        context.update(sidebar_context(self.request))
-        return contextzsh: command not found: #
-from django.urls import path
-from . import views
-from .feeds import LatestArticlesFeed, LatestArticlesAtomFeed
-
-app_name = 'blog'
-
-urlpatterns = [
-    path('', views.HomeView.as_view(), name='home'),
-    path('articles/', views.ArticleListView.as_view(), name='article_list'),
-    path('articles/<str:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
-    path('categories/', views.CategoryListView.as_view(), name='category_list'),
-    path('categories/<slug:slug>/', views.CategoryDetailView.as_view(), name='category_detail'),
-    # RSS и Atom фиды (уже работают)
-    path('feed/rss/', LatestArticlesFeed(), name='articles_rss_feed'),
-    path('feed/atom/', LatestArticlesAtomFeed(), name='articles_atom_feed'),
-]%                                 
-kirillkravcov@MacBook-Air my-digital-garden-content % # 4.1 Какие статьи сейчас в папке контента
-ls -la /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/
-
-# 4.2 Посмотреть frontmatter существующей статьи
-head -20 /Users/kirillkravcov/obsidian/my-digital-garden-content/uch-docs/blog/articles/*.md 2>/dev/null | head -40
-zsh: command not found: #
-total 16
-drwxr-xr-x   5 kirillkravcov  staff   160 Apr  2 19:17 .
-drwxr-xr-x  11 kirillkravcov  staff   352 Apr  2 09:10 ..
--rw-r--r--   1 kirillkravcov  staff     0 Nov 29 14:51 .gitkeep
-drwxr-xr-x   3 kirillkravcov  staff    96 Dec  9 14:35 images
--rw-r--r--   1 kirillkravcov  staff  5430 Apr  2 09:08 Начало-технического-блога.md
-zsh: command not found: #
----
-title: Начало-технического-блога
-date: 2026-03-26
-published: true
-tags: []
-category: Блог, Аналитика, Лайфстайл
----
-# Начало-технического-блога
-
-## Давайте знакомиться
-
-Меня зовут Кирилл Кравцов, я профессиональный аналитик и энтузиаст в создании инновационных программных продуктов и решений. Этот блог — моя личная лаборатория идей, наблюдений и технологических экспериментов. 
-
-## ⚠️ **Важное примечание: Блог живой**
-Этот блог — **живой организм**, а не законченный продукт. Здесь найдете:
-- **Черновики мыслей** — не всегда отполированные до блеска
-- **Эксперименты** — то, что работает, и то, что нет
-- **Эволюцию идей** — как меняется мое понимание технологий со временем
-- **Рабочие заметки** — иногда в сыром виде
-Многие материалы будут **дорабатываться, дополняться и переосмысливаться** по мере развития проекта. 
-kirillkravcov@MacBook-Air my-digital-garden-content %
-
----
-
-## 🤖 **DeepSeek**
-
-🏛️ **Хранитель архитектуры** — диагностика получена. Анализирую.
-
-## 📊 РЕЗУЛЬТАТЫ ДИАГНОСТИКИ
-
-### ✅ Что есть:
-1. **Шаблон статьи** — существует, но использует Bootstrap классы (`mb-4`, `mt-3`, `border-top`)
-2. **CSS фреймворк** — Bootstrap присутствует в `/static/css/bootstrap.min.css`
-3. **Свой CSS** — `tactical-final.css` (тактильный стиль)
-4. **Вьюха** — уже передает `previous_article` и `next_article` (навигация готова)
-5. **Контент** — одна тестовая статья с frontmatter
-
-### ⚠️ Проблемы:
-1. **Нет собственного CSS для статей** — все стили от Bootstrap
-2. **Статья выглядит как типовой блог** — нет тактильного оформления
-3. **Изображения** — папка `images/` есть, но не обрабатывается
-4. **Шаблон Obsidian** — отсутствует
-
----
-
-## 🎯 ПЛАН ДЕЙСТВИЙ
-
-### Задача 32.1: Дизайн статей (P0)
-
-Создадим **отдельный CSS для статей** поверх Bootstrap:
-
-```css
-/* /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/article-typography.css */
-```
-
-**Особенности:**
-- Читаемая ширина: `max-width: 720px`
-- Межстрочный интервал: `line-height: 1.8`
-- Крупный шрифт: `font-size: 1.125rem` на десктопе
-- Адаптивные отступы
-- Стили для кода, цитат, изображений
-
-**Создайте файл:**
-
-```bash
-cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/article-typography.css << 'EOF'
-/* ========================================
-   ARTICLE TYPOGRAPHY & READABILITY
-   Тактильный дизайн для чтения
-   ======================================== */
-
-/* Основной контейнер статьи */
-.article-detail {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
-}
-
-/* Типографика */
-.article-detail .article-content {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-    font-size: 1.125rem;
-    line-height: 1.8;
-    color: #1a1a1a;
-}
-
-/* Заголовки внутри статьи */
-.article-detail .article-content h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-top: 2.5rem;
-    margin-bottom: 1.25rem;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-}
-
-.article-detail .article-content h2 {
-    font-size: 1.875rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-.article-detail .article-content h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.article-detail .article-content h4 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Параграфы */
-.article-detail .article-content p {
-    margin-bottom: 1.5rem;
-}
-
-/* Ссылки */
-.article-detail .article-content a {
-    color: #3b82f6;
-    text-decoration: none;
-    border-bottom: 1px solid #93c5fd;
-    transition: all 0.2s;
-}
-
-.article-detail .article-content a:hover {
-    color: #2563eb;
-    border-bottom-color: #2563eb;
-}
-
-/* Списки */
-.article-detail .article-content ul,
-.article-detail .article-content ol {
-    margin: 1.25rem 0;
-    padding-left: 1.75rem;
-}
-
-.article-detail .article-content li {
-    margin: 0.5rem 0;
-    line-height: 1.7;
-}
-
-/* Цитаты */
-.article-detail .article-content blockquote {
-    margin: 1.75rem 0;
-    padding: 0.75rem 1.5rem;
-    border-left: 4px solid #3b82f6;
-    background: #f8fafc;
-    font-style: italic;
-    color: #334155;
-}
-
-/* Кодовые блоки */
-.article-detail .article-content pre {
-    background: #1e293b;
-    color: #e2e8f0;
-    padding: 1.25rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 1.5rem 0;
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-
-.article-detail .article-content code {
-    background: #f1f5f9;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.875em;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-}
-
-.article-detail .article-content pre code {
-    background: none;
-    padding: 0;
-    color: inherit;
-}
-
-/* Изображения */
-.article-detail .article-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-/* Таблицы */
-.article-detail .article-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-}
-
-.article-detail .article-content th,
-.article-detail .article-content td {
-    border: 1px solid #e5e7eb;
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.article-detail .article-content th {
-    background: #f8fafc;
-    font-weight: 600;
-}
-
-/* Метки статуса (DRAFT/UPDATED) */
-.article-detail .status-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.article-detail .status-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #10b981;
-}
-
-.article-detail .status-dot.draft {
-    background: #f59e0b;
-}
-
-.article-detail .status-dot.updated {
-    background: #8b5cf6;
-}
-
-.article-detail .tag-status {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    background: rgba(59,130,246,0.1);
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin-right: 0.5rem;
-}
-
-/* Мета-информация (терминальный стиль) */
-.article-detail .meta-terminal {
-    font-family: 'SF Mono', Monaco, monospace;
-    font-size: 0.875rem;
-    color: #6b7280;
-    padding: 0.75rem 0;
-    border-top: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-/* Навигация между статьями */
-.article-detail .article-navigation {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 2px solid #e5e7eb;
-}
-
-.article-detail .nav-prev,
-.article-detail .nav-next {
-    flex: 1;
-}
-
-.article-detail .nav-prev {
-    text-align: left;
-}
-
-.article-detail .nav-next {
-    text-align: right;
-}
-
-.article-detail .nav-label {
-    display: block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #6b7280;
-    margin-bottom: 0.25rem;
-}
-
-.article-detail .nav-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #3b82f6;
-    text-decoration: none;
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 768px) {
-    .article-detail {
-        padding: 1rem;
-    }
-    
-    .article-detail .article-content {
-        font-size: 1rem;
-        line-height: 1.7;
-    }
-    
-    .article-detail .article-content h1 {
-        font-size: 1.875rem;
-    }
-    
-    .article-detail .article-content h2 {
-        font-size: 1.5rem;
-    }
-    
-    .article-detail .article-navigation {
-        flex-direction: column;
-    }
-    
-    .article-detail .nav-prev,
-    .article-detail .nav-next {
-        text-align: center;
-    }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .article-detail .article-content {
-        color: #e5e7eb;
-    }
-    
-    .article-detail .article-content blockquote {
-        background: #1e293b;
-        border-left-color: #60a5fa;
-        color: #cbd5e1;
-    }
-    
-    .article-detail .article-content code {
-        background: #334155;
-        color: #f1f5f9;
-    }
-    
-    .article-detail .meta-terminal {
-        color: #9ca3af;
-        border-color: #374151;
-    }
-    
-    .article-detail .article-navigation {
-        border-top-color: #374151;
-    }
-}
-EOF
-```
-
-### Обновление шаблона статьи:
-
-```bash
-cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/article_detail.html << 'EOF'
-{% extends 'base.html' %}
-{% load markdownify %}
-
-{% block title %}{{ article.title }} | UCH Tactical Blog{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="/static/css/article-typography.css">
-{% endblock %}
-
-{% block content %}
-<article class="article-detail">
-    <div class="article-header">
-        <div class="status-indicator mb-3">
-            {% if article.status == 'draft' %}
-                <span class="status-dot draft"></span>
-                <span>DRAFT MODE</span>
-                <span class="tag-status draft">DRAFT</span>
-            {% elif article.updated_at != article.created_at %}
-                <span class="status-dot updated"></span>
-                <span>UPDATED</span>
-                <span class="tag-status updated">UPDATED</span>
-            {% else %}
-                <span class="status-dot"></span>
-                <span>ACTIVE</span>
-                <span class="tag-status published">LIVE</span>
-            {% endif %}
-        </div>
-        
-        <h1>{{ article.title }}</h1>
-        
-        <div class="meta-terminal">
-            {% if article.published_at %}
-                📅 Published: {{ article.published_at|date:"Y-m-d H:i" }}
-            {% else %}
-                📅 Created: {{ article.created_at|date:"Y-m-d H:i" }}
-            {% endif %}
-            {% if article.updated_at != article.created_at %}
-                | 🔄 Updated: {{ article.updated_at|date:"Y-m-d H:i" }}
-            {% endif %}
-            | 👤 Author: {{ article.author.username }}
-            {% if article.category %}
-                | 📂 Category: {{ article.category.name }}
-            {% endif %}
-        </div>
-        
-        {% if article.categories.all %}
-        <div class="mt-3">
-            {% for cat in article.categories.all %}
-            <span class="tag-status" style="background: rgba(0,255,157,0.1);">#{{ cat.name }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="article-content">
-        {{ article.content|markdownify }}
-    </div>
-    
-    {% if article.tags.all %}
-    <div class="article-tags mt-4 pt-3">
-        <strong>🏷️ Tags:</strong>
-        {% for tag in article.tags.all %}
-        <span class="tag-status">{{ tag.name }}</span>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <!-- Навигация между статьями -->
-    <div class="article-navigation">
-        <div class="nav-prev">
-            {% if previous_article %}
-            <span class="nav-label">← Previous</span>
-            <a href="{% url 'blog:article_detail' slug=previous_article.slug %}" class="nav-title">
-                {{ previous_article.title|truncatechars:50 }}
-            </a>
-            {% endif %}
-        </div>
-        
-        <div class="nav-next">
-            {% if next_article %}
-            <span class="nav-label">Next →</span>
-            <a href="{% url 'blog:article_detail' slug=next_article.slug %}" class="nav-title">
-                {{ next_article.title|truncatechars:50 }}
-            </a>
-            {% endif %}
-        </div>
-    </div>
-    
-    <div class="text-center mt-5 pt-3">
-        <a href="{% url 'blog:article_list' %}" class="btn-tactical">← Back to Articles</a>
-    </div>
-</article>
-{% endblock %}
-EOF
-```
-
----
-
-## 📝 ДАЛЬНЕЙШИЕ ШАГИ
-
-@kirillkravcov, выполните:
-
-1. **Создайте CSS файл** (команда выше)
-2. **Обновите шаблон статьи** (команда выше)
-3. **Перезапустите Django**:
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub/uch-backend
-python manage.py collectstatic --noinput
-# Перезапустите сервер (Ctrl+C и снова)
-python manage.py runserver
-```
-
-4. **Проверьте результат**: http://localhost:8000/blog/articles/nachalo-tekhnicheskogo-bloga/
-
-После проверки — продолжим с **шаблоном Obsidian** и **обработкой изображений**.
-
-**Приступайте.**
-
----
-
-## 👤 **Kirill**
-
-так теперь очень аккуратно нужно проверить вс что работает и не делать что уже сделано. 1. tactical стиль это не тактильный а тактический) 2. Сейчас сам блог именно в кастомном тактическом стиле. Единственнное что нужно, это на самой странице статьи чтобы не только статья работала, а еще и визуал. Тут можно подумать и попробовать нподелать прототипы. У меня пока идеи добавлять ненавязчивую фоновую анимацию (какие нибудь частицы в пространстве). Предложи идеи по улучшению визуала, но пидерживаясь уже имеющего тактического стиля
-
----
-
-## 🤖 **DeepSeek**
-
-🏛️ **Хранитель архитектуры** — принял уточнение. Прошу прощения за терминологическую ошибку: **ТАКТИЧЕСКИЙ**, а не тактильный.
-
-## 🎯 АНАЛИЗ ТЕКУЩЕГО ТАКТИЧЕСКОГО СТИЛЯ
-
-Прежде чем предлагать изменения, давайте посмотрим, что уже есть:
-
-```bash
-# Посмотреть текущий tactical-final.css
-cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/tactical-final.css | head -100
-
-# Посмотреть как выглядят другие страницы (index, list)
-open http://localhost:8000/
-```
-
-**Каковы визуальные маркеры тактического стиля?**
-- Цветовая схема? (черный/зеленый/серый/хаки?)
-- Шрифты? (monospace, военные, технологичные?)
-- Эффекты? (терминал, матрица, тактическая сетка?)
-- Анимации? (мерцание, сканирование, радар?)
-
----
-
-## 💡 ПРЕДЛОЖЕНИЯ ПО УЛУЧШЕНИЮ ВИЗУАЛА СТАТЬИ
-
-### Вариант 1: **Терминальный режим** (самый безопасный)
-```css
-- Фон: черный с легким шумом (noise texture)
-- Текст: зеленый/янтарный как на старых дисплеях
-- Эффект печати (cursor blink)
-- Боковые скобки > в цитатах
-- Код как команды в терминале
-```
-
-### Вариант 2: **Тактическая карта** (средняя сложность)
-```css
-- Фон: сетка как на военных картах (grid с координатами)
-- Анимация: движущиеся точки/радар по краям
-- Заголовки как метки на карте (стиль "topographic")
-- Разделители: пунктирные линии как маршруты
-- Статусы: мигающие индикаторы
-```
-
-### Вариант 3: **HUD / Кабина пилота** (сложная)
-```css
-- Элементы интерфейса как в авиации/космосе
-- Угловые скобки в стиле прицела (corner brackets)
-- Горизонтальные линии с данными телеметрии
-- Анимация: сканирующая линия сверху вниз
-- Градиенты как подсветка приборов
-```
-
-### Вариант 4: **Минимальный тактический** (рекомендую)
-```css
-- Тонкая сетка на фоне (opacity 0.05)
-- Легкое мерцание (slow pulse)
-- Тактическая цветовая схема: #1a1a1a фон, #d4d4d4 текст
-- Акценты: #00ff9d (тактический зеленый) или #ff6b00
-- Бордеры: угловые скобки вместо стандартных линий
-- Эффект "голографического" свечения на заголовках
-```
-
----
-
-## 🎨 ПРЕДЛОЖЕНИЕ ПО КОНКРЕТНОЙ РЕАЛИЗАЦИИ
-
-Я предлагаю **гибрид Варианта 2 и 4** — тактическая карта с элементами HUD, но без перегрузки.
-
-### Новый CSS для статьи (поверх существующего):
-
-```css
-/* Добавить к существующему tactical-final.css */
-.article-detail {
-    position: relative;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(2px);
-    border: 1px solid rgba(0, 255, 157, 0.2);
-    box-shadow: 0 0 20px rgba(0, 255, 157, 0.05);
-}
-
-/* Тактическая сетка на фоне */
-.article-detail::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(rgba(0, 255, 157, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 157, 0.03) 1px, transparent 1px);
-    background-size: 30px 30px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Частицы (простая анимация) */
-.article-detail::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 20% 50%, rgba(0,255,157,0.02) 0%, transparent 50%);
-    animation: tacticalPulse 8s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@keyframes tacticalPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
-}
-
-/* Угловые скобки для заголовков */
-.article-detail .article-content h2 {
-    position: relative;
-    padding-left: 1rem;
-}
-
-.article-detail .article-content h2::before {
-    content: '[>';
-    position: absolute;
-    left: -0.5rem;
-    color: #00ff9d;
-    opacity: 0.6;
-    font-family: monospace;
-}
-
-/* Эффект сканирования при ховере */
-.article-detail:hover .article-content {
-    box-shadow: 0 0 30px rgba(0, 255, 157, 0.1);
-    transition: all 0.3s;
-}
-
-/* Тактический курсор на ссылках */
-.article-detail .article-content a {
-    cursor: crosshair;
-    transition: all 0.2s;
-}
-
-/* Мигающий индикатор статуса */
-.article-detail .status-dot {
-    animation: blink 1.5s step-end infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-```
-
----
-
-## 🔄 ПРЕДЛОЖЕНИЕ ПО РАБОЧЕМУ ПРОЦЕССУ
-
-Чтобы не сломать существующий дизайн:
-
-1. **Создайте тестовую ветку**:
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub/uch-backend
-git checkout -b feature/tactical-article-enhancement
-```
-
-2. **Создайте отдельный CSS-файл** (не трогайте tactical-final.css):
-```bash
-touch static/css/article-tactical-enhancement.css
-```
-
-3. **Подключите его в шаблоне статьи** после основного CSS
-
-4. **Экспериментируйте** — легко откатить удалив файл
-
----
-
-## ❓ ВОПРОСЫ ДЛЯ УТОЧНЕНИЯ
-
-@kirillkravcov, ответьте:
-
-1. **Какие цвета используются в тактическом стиле сейчас?** (покажите hex-коды)
-2. **Есть ли уже анимации на других страницах?**
-3. **Какой уровень сложности вас устраивает?** (минимальный/умеренный/сложный)
-4. **Хотите ли вы интерактивные элементы** (при наведении, клике)?
-
-После ответов — я предоставлю **готовый код** под ваш конкретный стиль.
-
----
-
-## 👤 **Kirill**
-
-дать весь файл?
-l-garden-content % cat /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/tactical-final.css | head -100
-/* ============================================
-   TACTICAL BLOG - ФИНАЛЬНАЯ ВЕРСИЯ
-   ============================================ */
-
-:root {
-    --tactical-bg: #0a0e1a;
-    --tactical-bg-secondary: #0f1320;
-    --tactical-bg-card: #111827;
-    --tactical-bg-overlay: rgba(15, 19, 32, 0.3);
-    --tactical-accent: #00ff9d;
-    --tactical-accent-dim: rgba(0, 255, 157, 0.2);
-    --tactical-text: #e5e7eb;
-    --tactical-text-muted: #9ca3af;
-    --tactical-border: #1f2937;
-    --tactical-warning: #f59e0b;
-    --tactical-updated: #3b82f6;
-    --tactical-draft: #6b7280;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background: var(--tactical-bg);
-    color: var(--tactical-text);
-    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-}
-
-/* Подложка под блоками */
-.style-section {
-    background: var(--tactical-bg-overlay);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-/* ========== ШАПКА ========== */
-.tactical-header {
-    border-bottom: 2px solid var(--tactical-accent);
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.tactical-header h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-    color: var(--tactical-accent);
-}
-
-.tactical-header h1 span {
-    color: var(--tactical-accent);
-}
-
-.cursor-blink {
-    display: inline-block;
-    width: 10px;
-    height: 15px;
-    background: var(--tactical-accent);
-    animation: blink 1s step-end infinite;
-    margin-left: 4px;
-    vertical-align: middle;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-.status-badge {
-    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-    background: rgba(100, 116, 139, 0.2);
-    border: 1px solid rgba(100, 116, 139, 0.4);
-    border-radius: 20px;
-    color: #9ca3af;
-    letter-spacing: 0.5px;
-}
-.status-badge {
-    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-    background: rgba(100, 116, 139, 0.2);
-    border: 1px solid rgba(100, 116, 139, 0.4);
-    border-radius: 20px;
-    color: #9ca3af;
-    letter-spacing: 0.5px;
-}
-.status-badge {
-    font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-kirillkravcov@MacBook-Air my-digital-garden-content %
-
----
-
-## 🤖 **DeepSeek**
-
-🏛️ **Хранитель архитектуры** — спасибо за CSS. Вижу тактический стиль.
-
-## 🎨 АНАЛИЗ ТАКТИЧЕСКОГО СТИЛЯ
-
-**Цветовая схема:**
-- `--tactical-accent: #00ff9d` (неоново-зеленый)
-- `--tactical-bg: #0a0e1a` (темно-синий/черный)
-- `--tactical-text: #e5e7eb` (светло-серый)
-
-**Элементы:**
-- Мигающий курсор (`.cursor-blink`)
-- Терминальный стиль
-- Военная эстетика
-
----
-
-## 💡 ПРЕДЛОЖЕНИЕ ПО УЛУЧШЕНИЮ СТАТЬИ
-
-**Создайте новый файл** (не трогаем существующий):
-
-```bash
-cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/static/css/article-tactical.css << 'EOF'
-/* ============================================
-   TACTICAL ARTICLE ENHANCEMENT
-   Дополнительные стили для страницы статьи
-   Сохраняя тактическую эстетику
-   ============================================ */
-
-/* Контейнер статьи с тактическим фоном */
-.article-detail {
-    position: relative;
-    background: var(--tactical-bg-card, #111827);
-    border: 1px solid var(--tactical-border, #1f2937);
-    border-radius: 8px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    overflow: hidden;
-}
-
-/* Тактическая сетка на фоне */
-.article-detail::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(var(--tactical-accent-dim, rgba(0,255,157,0.03)) 1px, transparent 1px),
-        linear-gradient(90deg, var(--tactical-accent-dim, rgba(0,255,157,0.03)) 1px, transparent 1px);
-    background-size: 30px 30px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Анимированные частицы (тактические точки) */
-.article-detail::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 20% 30%, var(--tactical-accent-dim) 0%, transparent 60%);
-    animation: tacticalPulse 10s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@keyframes tacticalPulse {
-    0%, 100% { 
-        opacity: 0.2;
-        transform: scale(1);
-    }
-    50% { 
-        opacity: 0.5;
-        transform: scale(1.05);
-    }
-}
-
-/* Контент поверх фона */
-.article-detail > * {
-    position: relative;
-    z-index: 1;
-}
-
-/* Заголовки с тактическими маркерами */
-.article-detail h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--tactical-text) 0%, var(--tactical-accent) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 1rem;
-}
-
-/* H2 с угловыми скобками (тактический стиль) */
-.article-detail .article-content h2 {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 1.75rem;
-    border-left: 3px solid var(--tactical-accent);
-}
-
-.article-detail .article-content h2::before {
-    content: '►';
-    position: absolute;
-    left: -0.8rem;
-    color: var(--tactical-accent);
-    font-size: 1rem;
-    opacity: 0.8;
-}
-
-/* H3 с тактическим стилем */
-.article-detail .article-content h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: var(--tactical-accent);
-    font-size: 1.35rem;
-}
-
-/* Терминальный стиль для кода */
-.article-detail .article-content pre {
-    background: #0a0e1a;
-    border: 1px solid var(--tactical-accent-dim);
-    border-left: 3px solid var(--tactical-accent);
-    box-shadow: 0 0 10px rgba(0,255,157,0.1);
-}
-
-/* Мигающий курсор для индикаторов */
-.article-detail .status-dot {
-    animation: tacticalBlink 1.5s step-end infinite;
-}
-
-@keyframes tacticalBlink {
-    0%, 100% { 
-        opacity: 1;
-        box-shadow: 0 0 5px var(--tactical-accent);
-    }
-    50% { 
-        opacity: 0.3;
-        box-shadow: none;
-    }
-}
-
-/* Тактическая рамка при наведении */
-.article-detail:hover {
-    box-shadow: 0 0 20px var(--tactical-accent-dim);
-    transition: all 0.3s ease;
-}
-
-/* Мета-информация в стиле терминала */
-.article-detail .meta-terminal {
-    font-family: 'Courier New', monospace;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 0.75rem;
-    border-radius: 4px;
-    border-left: 3px solid var(--tactical-accent);
-    font-size: 0.85rem;
-}
-
-/* Навигация между статьями */
-.article-detail .article-navigation {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px dashed var(--tactical-border);
-}
-
-.article-detail .nav-prev,
-.article-detail .nav-next {
-    flex: 1;
-    padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    transition: all 0.2s;
-}
-
-.article-detail .nav-prev:hover,
-.article-detail .nav-next:hover {
-    background: var(--tactical-accent-dim);
-    transform: translateX(var(--translate, 0));
-}
-
-.article-detail .nav-prev:hover {
-    --translate: -5px;
-}
-
-.article-detail .nav-next:hover {
-    --translate: 5px;
-}
-
-.article-detail .nav-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--tactical-accent);
-    font-family: monospace;
-}
-
-.article-detail .nav-title {
-    font-size: 0.9rem;
-    color: var(--tactical-text);
-    text-decoration: none;
-}
-
-/* Кнопка "Back to Articles" в тактическом стиле */
-.article-detail .btn-tactical {
-    display: inline-block;
-    padding: 0.5rem 1.5rem;
-    background: transparent;
-    border: 1px solid var(--tactical-accent);
-    color: var(--tactical-accent);
-    text-decoration: none;
-    font-family: monospace;
-    transition: all 0.2s;
-}
-
-.article-detail .btn-tactical:hover {
-    background: var(--tactical-accent);
-    color: var(--tactical-bg);
-    box-shadow: 0 0 10px var(--tactical-accent);
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .article-detail {
-        padding: 1rem;
-    }
-    
-    .article-detail h1 {
-        font-size: 1.75rem;
-    }
-    
-    .article-detail .article-content h2 {
-        font-size: 1.35rem;
-    }
-    
-    .article-detail .article-navigation {
-        flex-direction: column;
-    }
-}
-EOF
-```
-
----
-
-## 🔧 ОБНОВЛЕНИЕ ШАБЛОНА СТАТЬИ
-
-```bash
-cat > /Users/kirillkravcov/UniversalCreativeHub/uch-backend/uch/apps/blog/templates/blog/article_detail.html << 'EOF'
-{% extends 'base.html' %}
-{% load markdownify %}
-
-{% block title %}{{ article.title }} | UCH Tactical Blog{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="/static/css/article-tactical.css">
-{% endblock %}
-
-{% block content %}
-<article class="article-detail">
-    <div class="article-header">
-        <div class="status-indicator mb-3">
-            {% if article.status == 'draft' %}
-                <span class="status-dot draft"></span>
-                <span>[DRAFT MODE]</span>
-                <span class="tag-status draft">DRAFT</span>
-            {% elif article.updated_at != article.created_at %}
-                <span class="status-dot updated"></span>
-                <span>[UPDATED]</span>
-                <span class="tag-status updated">UPDATED</span>
-            {% else %}
-                <span class="status-dot"></span>
-                <span>[ACTIVE]</span>
-                <span class="tag-status published">LIVE</span>
-            {% endif %}
-        </div>
-        
-        <h1>{{ article.title }}</h1>
-        
-        <div class="meta-terminal">
-            📅 {{ article.published_at|date:"Y-m-d H:i"|default:article.created_at|date:"Y-m-d H:i" }}
-            {% if article.updated_at != article.created_at %}
-            | 🔄 {{ article.updated_at|date:"Y-m-d H:i" }}
-            {% endif %}
-            | 👤 {{ article.author.username }}
-            {% if article.category %}
-            | 📁 {{ article.category.name }}
-            {% endif %}
-        </div>
-        
-        {% if article.categories.all %}
-        <div class="mt-3">
-            {% for cat in article.categories.all %}
-            <span class="tag-status">#{{ cat.name }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="article-content">
-        {{ article.content|markdownify }}
-    </div>
-    
-    {% if article.tags.all %}
-    <div class="article-tags mt-4 pt-3">
-        🏷️ Tags:
-        {% for tag in article.tags.all %}
-        <span class="tag-status">{{ tag.name }}</span>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <!-- Навигация между статьями -->
-    <div class="article-navigation">
-        <div class="nav-prev">
-            {% if previous_article %}
-            <div class="nav-label">← PREVIOUS</div>
-            <a href="{% url 'blog:article_detail' slug=previous_article.slug %}" class="nav-title">
-                {{ previous_article.title|truncatechars:60 }}
-            </a>
-            {% endif %}
-        </div>
-        
-        <div class="nav-next">
-            {% if next_article %}
-            <div class="nav-label">NEXT →</div>
-            <a href="{% url 'blog:article_detail' slug=next_article.slug %}" class="nav-title">
-                {{ next_article.title|truncatechars:60 }}
-            </a>
-            {% endif %}
-        </div>
-    </div>
-    
-    <div class="text-center mt-4 pt-3">
-        <a href="{% url 'blog:article_list' %}" class="btn-tactical">
-            ← BACK TO ARTICLES
-        </a>
-    </div>
-</article>
-{% endblock %}
-EOF
-```
-
----
-
-## ✅ ПРОВЕРКА
-
-```bash
-# 1. Собрать статику
-cd /Users/kirillkravcov/UniversalCreativeHub/uch-backend
-python manage.py collectstatic --noinput
-
-# 2. Перезапустить сервер
-# Ctrl+C, затем:
-python manage.py runserver
-
-# 3. Проверить статью
-open http://localhost:8000/blog/articles/nachalo-tekhnicheskogo-bloga/
-```
-
----
-
-## 🎯 ОЖИДАЕМЫЙ РЕЗУЛЬТАТ
-
-- ✅ Тактическая сетка на фоне
-- ✅ Пульсирующие частицы
-- ✅ Мигающий индикатор статуса
-- ✅ Заголовки с зелеными маркерами
-- ✅ Эффект свечения при наведении
-- ✅ Терминальный стиль мета-информации
-
-**Выполните команды и покажите скриншот результата.** Если эффект слишком сильный — откат простым удалением `article-tactical.css`.
 
 ---
 

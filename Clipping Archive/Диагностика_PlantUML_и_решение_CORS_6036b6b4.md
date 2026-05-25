@@ -2,7 +2,7 @@
 chat_id: 6036b6b4-0a83-4131-9e4f-33dbf8484cec
 title: Диагностика PlantUML и решение CORS
 message_count: 162
-exported_at: 2026-04-06T04:10:26.110Z
+exported_at: 2026-05-25T06:55:49.511Z
 ---
 
 # Диагностика PlantUML и решение CORS
@@ -7180,7 +7180,6 @@ window.addEventListener('resize', () => {
             background: #1e1e1e;
             min-height: 0; /* важно для flex */
         }
-
 
 ---
 

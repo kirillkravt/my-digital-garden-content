@@ -2,7 +2,7 @@
 chat_id: 644ba3ff-4c68-4abc-8078-7fe030bbb5ae
 title: Интеграция LLM с анализатором кода
 message_count: 130
-exported_at: 2026-04-06T04:12:12.446Z
+exported_at: 2026-05-25T06:44:12.308Z
 ---
 
 # Интеграция LLM с анализатором кода
@@ -380,7 +380,6 @@ Docstring:
     
     @staticmethod
     def changelog_prompt(context: Dict[str, Any]) -> str:
-       
 
 ---
 
@@ -1718,7 +1717,6 @@ README должен включать:
 - Список новых функций
 
 ### Changed
-
 
 ---
 

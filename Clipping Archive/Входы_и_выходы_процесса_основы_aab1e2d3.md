@@ -2,7 +2,7 @@
 chat_id: aab1e2d3-fc38-4f73-af4e-6962d5dacec2
 title: Входы и выходы процесса: основы
 message_count: 2
-exported_at: 2026-04-06T04:22:38.628Z
+exported_at: 2026-05-25T05:31:14.612Z
 ---
 
 # Входы и выходы процесса: основы

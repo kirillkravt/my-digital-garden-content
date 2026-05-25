@@ -2,7 +2,7 @@
 chat_id: 320c0c89-2445-4212-96be-4080b27b67df
 title: Выбор LLM раннера для MacBook Air M4
 message_count: 104
-exported_at: 2026-04-06T04:12:15.480Z
+exported_at: 2026-05-25T06:43:51.189Z
 ---
 
 # Выбор LLM раннера для MacBook Air M4

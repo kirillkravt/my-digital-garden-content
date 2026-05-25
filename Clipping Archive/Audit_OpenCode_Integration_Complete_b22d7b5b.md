@@ -2,7 +2,7 @@
 chat_id: b22d7b5b-550b-4766-9563-5ba93c85f2c6
 title: Audit OpenCode Integration Complete
 message_count: 40
-exported_at: 2026-04-06T04:09:49.581Z
+exported_at: 2026-05-25T07:00:24.271Z
 ---
 
 # Audit OpenCode Integration Complete

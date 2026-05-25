@@ -2,7 +2,7 @@
 chat_id: a75b0538-3ef6-4355-9458-de40512ac683
 title: Исправление ошибок в docs generator
 message_count: 60
-exported_at: 2026-04-06T04:11:48.228Z
+exported_at: 2026-05-25T06:46:40.112Z
 ---
 
 # Исправление ошибок в docs generator

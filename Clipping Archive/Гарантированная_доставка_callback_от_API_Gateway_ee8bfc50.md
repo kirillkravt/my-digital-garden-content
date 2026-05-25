@@ -2,7 +2,7 @@
 chat_id: ee8bfc50-0fed-42e0-b72d-847e4624e7bd
 title: Гарантированная доставка callback от API Gateway
 message_count: 4
-exported_at: 2026-04-06T04:21:17.065Z
+exported_at: 2026-05-25T05:40:44.066Z
 ---
 
 # Гарантированная доставка callback от API Gateway

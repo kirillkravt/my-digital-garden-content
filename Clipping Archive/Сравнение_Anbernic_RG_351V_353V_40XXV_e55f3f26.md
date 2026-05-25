@@ -2,7 +2,7 @@
 chat_id: e55f3f26-4d17-4a29-861b-9ed3ef8e046a
 title: Сравнение Anbernic RG 351V, 353V, 40XXV
 message_count: 4
-exported_at: 2026-04-06T04:19:07.188Z
+exported_at: 2026-05-25T05:55:57.032Z
 ---
 
 # Сравнение Anbernic RG 351V, 353V, 40XXV

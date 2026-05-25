@@ -2,7 +2,7 @@
 chat_id: 4d09b25b-a262-4f06-9d46-90b085ac12c7
 title: Генерация классов в Coder Agent
 message_count: 124
-exported_at: 2026-05-24T13:43:21.508Z
+exported_at: 2026-05-25T07:14:56.817Z
 ---
 
 # Генерация классов в Coder Agent
@@ -227,8 +227,6 @@ cat ai-farm/agents/batuta/coder_agent.py | grep -A 20 "def generate"
 - `generate_code()` есть, но он генерирует только функции и скрипты  
 - Отсутствует `generate_class()`  
 - `command_analyzer.py` не различает `create_class`
-
-
 
 ---
 

@@ -2,7 +2,7 @@
 chat_id: 212dae7a-5ba8-44e6-80f8-c46572bf08a1
 title: Сравнение AIAIAI TMA-2 и Beyerdynamic DT770
 message_count: 12
-exported_at: 2026-04-06T04:20:16.670Z
+exported_at: 2026-05-25T05:47:27.782Z
 ---
 
 # Сравнение AIAIAI TMA-2 и Beyerdynamic DT770

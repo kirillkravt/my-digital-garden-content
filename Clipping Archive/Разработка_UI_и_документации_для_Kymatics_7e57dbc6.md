@@ -2,7 +2,7 @@
 chat_id: 7e57dbc6-5f7c-44f3-b990-fb173bae4d6d
 title: Разработка UI и документации для Kymatics
 message_count: 210
-exported_at: 2026-05-24T13:43:18.431Z
+exported_at: 2026-05-25T07:15:17.956Z
 ---
 
 # Разработка UI и документации для Kymatics
@@ -3463,8 +3463,7 @@ kirillkravcov@MacBook-Air tactical-command-v3 % curl -X POST http://localhost:80
     "created_at": "'$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ")'"
   }'
 {"detail":[{"type":"datetime_parsing","loc":["body","created_at"],"msg":"Input should be a valid datetime, invalid timezone sign","input":"2026-04-18T06:51:11.3NZ","ctx":{"error":"invalid timezone sign"}}]}%                                                               
-kirillkravcov@MacBook-Air tactical-command-v3 % 
-
+kirillkravcov@MacBook-Air tactical-command-v3 %
 
 ---
 
@@ -6201,7 +6200,6 @@ cat > /Users/kirillkravcov/UniversalCreativeHub/tactical-command-v3/mocks/comman
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #30363D;
-           
 
 ---
 
@@ -14531,7 +14529,7 @@ EOF
 │  TODAY           │  Native AI terminal ready       │  │ Ready │ All │ Create│
 │  ┌────────────┐  │                                 │  ├─────────────────┤   │
 │  │ create     │  │  ┌─────────────────────────┐    │  │ Test CodeCraft  │   │
-│  │ class User │  │  │ create class User       │   
+│  │ class User │  │  │ create class User       │
 
 ---
 

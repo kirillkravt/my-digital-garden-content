@@ -2,7 +2,7 @@
 chat_id: e02c7556-0b09-433d-bb66-4766fd0ed7b4
 title: Создание Strudel бандла для UCH
 message_count: 66
-exported_at: 2026-04-06T04:15:38.353Z
+exported_at: 2026-05-25T06:21:01.763Z
 ---
 
 # Создание Strudel бандла для UCH
@@ -2105,8 +2105,6 @@ cat > /Users/kirillkravcov/UniversalCreativeHub/public/test-uch-compatibility.ht
     <button onclick="testFullWorkflow()">3. Test Full UCH Workflow</button>
     
     <div id="output"></div>
-    
-
 
 ---
 

@@ -2,7 +2,7 @@
 chat_id: 92a39d0a-eaca-45b1-b8be-5c22bd35351f
 title: BADocument-GUI-Final.ps1
 message_count: 44
-exported_at: 2026-04-06T04:13:40.174Z
+exported_at: 2026-05-25T06:33:59.938Z
 ---
 
 # BADocument-GUI-Final.ps1
@@ -770,7 +770,6 @@ function Load-CSVConfigFixed {
     } catch {
         Write-Log "❌ Ошибка загрузки CSV: $($_.Exception.Message)"
         return @()
-   
 
 ---
 
@@ -3259,7 +3258,6 @@ function Load-CSVConfig {
         $isFirstLine = $true
         
         foreach ($line in $lines) {
-           
 
 ---
 

@@ -2,7 +2,7 @@
 chat_id: 9af8d599-1a87-47db-a85f-59625ba72373
 title: Создание эндпоинта promote process to component
 message_count: 350
-exported_at: 2026-05-24T13:41:49.145Z
+exported_at: 2026-05-25T07:24:53.529Z
 ---
 
 # Создание эндпоинта promote process to component
@@ -2283,7 +2283,6 @@ ${subtasksText}
     });
     
     if (!saveResponse.ok) {
-     
 
 ---
 
@@ -3587,7 +3586,7 @@ kirillkravcov@Mac batuta % sed -n '490,530p' /Users/kirillkravcov/UniversalCreat
     if (!currentProcessId) {
       addTerminalLog('[FAIL] Please save the process first');
       alert('Save the process first');
-kirillkravcov@Mac batuta % 
+kirillkravcov@Mac batuta %
 
 ---
 
@@ -3649,7 +3648,6 @@ const loadProcess = async (processId: string) => {
   } catch (error) {
     console.error('Failed to load process:', error);
     addTerminalLog(`[FAIL] Failed to load: ${error}`);
-
 
 ---
 

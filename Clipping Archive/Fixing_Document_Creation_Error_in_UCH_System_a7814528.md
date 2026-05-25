@@ -2,7 +2,7 @@
 chat_id: a7814528-4194-44f7-a731-de4819978738
 title: Fixing Document Creation Error in UCH System
 message_count: 28
-exported_at: 2026-04-06T04:14:01.392Z
+exported_at: 2026-05-25T06:31:53.258Z
 ---
 
 # Fixing Document Creation Error in UCH System
@@ -480,7 +480,6 @@ create_real_document() {
             # Получаем имя родителя из файла
             parent_name=$(get_document_name "$parent_file" "$parent_id")
             echo "📝 Имя родителя: $parent_name"
-
 
 ---
 

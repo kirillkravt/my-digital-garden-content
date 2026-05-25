@@ -2,7 +2,7 @@
 chat_id: c3177145-9ca2-47b6-bdda-d1e53ebecbe4
 title: Процесс подключения API через Keycloak
 message_count: 4
-exported_at: 2026-04-06T04:22:05.408Z
+exported_at: 2026-05-25T05:35:27.712Z
 ---
 
 # Процесс подключения API через Keycloak

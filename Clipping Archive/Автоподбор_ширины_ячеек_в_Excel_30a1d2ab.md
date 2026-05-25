@@ -2,7 +2,7 @@
 chat_id: 30a1d2ab-ecdc-4f3f-91df-532f2dd2c95d
 title: Автоподбор ширины ячеек в Excel
 message_count: 4
-exported_at: 2026-04-06T04:19:55.516Z
+exported_at: 2026-05-25T05:50:58.729Z
 ---
 
 # Автоподбор ширины ячеек в Excel

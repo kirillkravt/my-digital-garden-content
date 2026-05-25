@@ -2,7 +2,7 @@
 chat_id: 3fe3b089-9bc9-4b8f-ac6d-77c58e5a3223
 title: Telegram proxy VPS setup
 message_count: 26
-exported_at: 2026-04-06T04:09:04.081Z
+exported_at: 2026-05-25T07:05:20.073Z
 ---
 
 # Telegram proxy VPS setup
@@ -659,7 +659,7 @@ docker run -d \
 
 Ссылки-одного-клика, как в Telegram, для Instagram не существует, потому что у Instagram нет встроенной поддержки прокси в самом приложении.
 
-Хотите, можете сразу добавить пароль и я помогу проверить, что прокси работает?This response is AI-generated, for reference only.
+Хотите, можете сразу добавить пароль и я помогу проверить, что прокси работает?Этот ответ сгенерирован AI, только для справки.
 
 ---
 

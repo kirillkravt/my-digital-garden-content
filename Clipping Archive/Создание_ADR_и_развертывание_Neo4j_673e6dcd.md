@@ -2,7 +2,7 @@
 chat_id: 673e6dcd-2f25-490d-bd4a-a6fa6148a39e
 title: Создание ADR и развертывание Neo4j
 message_count: 130
-exported_at: 2026-04-06T04:11:14.855Z
+exported_at: 2026-05-25T06:50:11.304Z
 ---
 
 # Создание ADR и развертывание Neo4j
@@ -3448,7 +3448,7 @@ cat > ~/.node-red/graph_flow.json << 'EOF'
         "type": "function",
         "name": "Форматировать статистику",
         "func": "const stats = msg.payload;\n\nlet text = `📊 **Статистика графа знаний**\\n\\n`;\ntext += `**Всего узлов:** ${stats.nodes_count}\\n`;\ntext += `**Всего связей:** ${stats.relationships_count}\\n\\n`;\n\ntext += `**Узлы по типам:**\\n`;\nfor (const [type, count] of Object.entries(stats.nodes_by_type)) {\n    text += `- ${type}: ${count}\\n`;\n}\n\ntext += `\\n**Топ людей:**\\n`;\nstats.top_persons.slice(0,5).forEach(p => {\n    text += `- ${p.name}: ${p.mentions} упоминаний\\n`;\n});\n\ntext += `\\n**Топ технологий:**\\n`;\nstats.top_technologies.slice(0,5).forEach(t => {\n    text += `- ${t.name}: ${t.mentions} упоминаний\\n`;\n});\n\nmsg.payload = text;\nreturn msg;",
-        "outputs": 
+        "outputs":
 
 ---
 

@@ -2,7 +2,7 @@
 chat_id: 11509392-8470-4f33-ae3a-bcfd6764805a
 title: Script for File Renaming and Analysis
 message_count: 94
-exported_at: 2026-04-06T04:14:04.421Z
+exported_at: 2026-05-25T06:31:32.133Z
 ---
 
 # Script for File Renaming and Analysis
@@ -3422,7 +3422,6 @@ case "$COMMAND" in
                 echo "   Искал:"
                 echo "   - $PROJECT_ROOT/$SCRIPT"
                 echo "   - $SCRIPT"
-
 
 ---
 

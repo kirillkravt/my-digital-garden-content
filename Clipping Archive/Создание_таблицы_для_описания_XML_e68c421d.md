@@ -2,7 +2,7 @@
 chat_id: e68c421d-c880-49b8-864c-4d7e8d3ab0a3
 title: Создание таблицы для описания XML
 message_count: 44
-exported_at: 2026-04-06T04:21:38.224Z
+exported_at: 2026-05-25T05:36:30.985Z
 ---
 
 # Создание таблицы для описания XML

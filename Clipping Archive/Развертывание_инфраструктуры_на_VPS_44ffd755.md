@@ -2,7 +2,7 @@
 chat_id: 44ffd755-5467-490c-bc2b-d4d0a87244ef
 title: Развертывание инфраструктуры на VPS
 message_count: 6
-exported_at: 2026-04-06T04:12:00.328Z
+exported_at: 2026-05-25T06:45:36.795Z
 ---
 
 # Развертывание инфраструктуры на VPS
@@ -778,7 +778,7 @@ sudo ufw status
 1. Настройка SQLite/MongoDB
 2. Импорт flows.json
 3. Настройка .env с реальными ключами
-4. Тестирование flowsThis response is AI-generated, for reference only.
+4. Тестирование flowsЭтот ответ сгенерирован AI, только для справки.
 
 ---
 

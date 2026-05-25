@@ -2,7 +2,7 @@
 chat_id: 433c43b5-678e-46e8-ab10-c4a326c8831e
 title: Настройка Jira и Confluence для BA
 message_count: 4
-exported_at: 2026-04-06T04:12:54.805Z
+exported_at: 2026-05-25T06:39:58.925Z
 ---
 
 # Настройка Jira и Confluence для BA

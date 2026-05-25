@@ -2,7 +2,7 @@
 chat_id: 818d96fb-a6b2-44c6-990d-ddea484c66ef
 title: Stabilizing Code Indexing Error
 message_count: 226
-exported_at: 2026-05-24T13:44:13.727Z
+exported_at: 2026-05-25T07:08:51.377Z
 ---
 
 # Stabilizing Code Indexing Error
@@ -1471,7 +1471,7 @@ zsh: command not found: #
 sed: RE error: illegal byte sequence
 sed: RE error: illegal byte sequence
 ✅ Конфиги обновлены на порт 8002
-(venv311) kirillkravcov@MacBook-Air UniversalCreativeHub % 
+(venv311) kirillkravcov@MacBook-Air UniversalCreativeHub %
 
 ---
 
@@ -4120,11 +4120,7 @@ curl -X POST http://localhost:8003/rag/search -H "Content-Type: application/json
 
 kirillkravcov@MacBook-Air tactical-command % curl -X POST http://localhost:8003/rag/search -H "Content-Type: application/json" -d '{"query": "Python", "top_k": 2}'
 {"detail":"Search failed: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject"}%  
-kirillkravcov@MacBook-Air tactical-command % 
-
-
-
-
+kirillkravcov@MacBook-Air tactical-command %
 
 ---
 
@@ -7726,7 +7722,7 @@ grep -n "8085\|3d\|graph.*3d" /Users/kirillkravcov/UniversalCreativeHub/start_al
 
 ## 👤 **Kirill**
 
- % >....                                       
+% >....                                       
 | head -10
 
 # 4. Посмотрим логи запуска 3D графа
@@ -7747,7 +7743,7 @@ zsh: command not found: #
 -rw-r--r--   1 kirillkravcov  staff   587 Apr  6 12:41 graph-api-v2.log
 -rw-r--r--   1 kirillkravcov  staff  1052 Apr  6 12:47 graph-api.log
 zsh: no matches found: start_all_services.sh?
-(venv311) kirillkravcov@MacBook-Air uch-backend % 
+(venv311) kirillkravcov@MacBook-Air uch-backend %
 
 ---
 
@@ -11309,7 +11305,7 @@ zsh: command not found: #
 /Users/kirillkravcov/UniversalCreativeHub/entity_extractor/load_chunks_to_neo4j.py
 /Users/kirillkravcov/UniversalCreativeHub/entity_extractor/load_real_chunks_to_neo4j_fixed.py
 /Users/kirillkravcov/UniversalCreativeHub/entity_extractor/load_real_chunks_to_neo4j.py
-(venv311) kirillkravcov@MacBook-Air UniversalCreativeHub % 
+(venv311) kirillkravcov@MacBook-Air UniversalCreativeHub %
 
 ---
 
@@ -12957,7 +12953,7 @@ sed -i '' '/# TECH плоскость/a\
 
 ## 👤 **Kirill**
 
-Больше узлов добавилось. Но связей с технолоогиями и down сервисами нет 
+Больше узлов добавилось. Но связей с технолоогиями и down сервисами нет
 
 ---
 

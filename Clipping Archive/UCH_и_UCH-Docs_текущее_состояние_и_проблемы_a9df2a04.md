@@ -2,7 +2,7 @@
 chat_id: a9df2a04-13d8-4107-bcfe-73ddd60cc284
 title: UCH и UCH-Docs: текущее состояние и проблемы
 message_count: 2
-exported_at: 2026-04-06T04:14:07.460Z
+exported_at: 2026-05-25T06:31:11.034Z
 ---
 
 # UCH и UCH-Docs: текущее состояние и проблемы

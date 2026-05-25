@@ -2,7 +2,7 @@
 chat_id: 7f4e1e19-5873-44df-af44-142dcfbd9f9c
 title: Трек изучения M8 Tracker: пошаговое руководство
 message_count: 2
-exported_at: 2026-04-06T04:18:18.859Z
+exported_at: 2026-05-25T06:01:58.646Z
 ---
 
 # Трек изучения M8 Tracker: пошаговое руководство
@@ -10,7 +10,6 @@ exported_at: 2026-04-06T04:18:18.859Z
 ## 👤 **Kirill**
 
 трек изучения m8 tracker
-
 
 ---
 

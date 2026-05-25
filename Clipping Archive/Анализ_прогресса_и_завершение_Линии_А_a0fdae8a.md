@@ -2,7 +2,7 @@
 chat_id: a0fdae8a-1ed9-43c7-9eda-9742f0430d0b
 title: Анализ прогресса и завершение Линии А
 message_count: 122
-exported_at: 2026-04-06T04:16:57.097Z
+exported_at: 2026-05-25T06:11:52.773Z
 ---
 
 # Анализ прогресса и завершение Линии А
@@ -3034,7 +3034,6 @@ grep -i "error\|exception\|traceback" /tmp/watchdog.log || echo "✅ В лога
    ```
 
 3. **Запустить проверку структуры vault**:
-
 
 ---
 

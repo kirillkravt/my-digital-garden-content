@@ -2,7 +2,7 @@
 chat_id: a55def03-ac3f-4dd3-bb5c-68fdf528eceb
 title: PlantUML node minimum size settings
 message_count: 8
-exported_at: 2026-05-24T13:43:03.047Z
+exported_at: 2026-05-25T07:17:03.768Z
 ---
 
 # PlantUML node minimum size settings

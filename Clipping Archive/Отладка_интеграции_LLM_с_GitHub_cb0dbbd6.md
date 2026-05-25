@@ -2,7 +2,7 @@
 chat_id: cb0dbbd6-f089-4e8b-b867-b392ba80f325
 title: Отладка интеграции LLM с GitHub
 message_count: 98
-exported_at: 2026-04-06T04:11:51.249Z
+exported_at: 2026-05-25T06:44:54.562Z
 ---
 
 # Отладка интеграции LLM с GitHub

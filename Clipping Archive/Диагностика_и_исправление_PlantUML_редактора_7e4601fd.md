@@ -2,7 +2,7 @@
 chat_id: 7e4601fd-55fd-459e-98e8-30e017677d48
 title: Диагностика и исправление PlantUML редактора
 message_count: 262
-exported_at: 2026-04-06T04:10:07.831Z
+exported_at: 2026-05-25T06:57:56.350Z
 ---
 
 # Диагностика и исправление PlantUML редактора

@@ -2,7 +2,7 @@
 chat_id: 4bfed07b-f180-4c09-806a-a5728ebecbc5
 title: Создание API компонентов и БД
 message_count: 246
-exported_at: 2026-05-24T13:42:07.638Z
+exported_at: 2026-05-25T07:23:03.253Z
 ---
 
 # Создание API компонентов и БД
@@ -859,7 +859,6 @@ const searchDrafts = async () => {
     setIsSearching(false);
   }
 };
-
 
 ---
 
@@ -12044,7 +12043,6 @@ upgrade-insecure-requests
 1
 user-agent
 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 YaBrowser/26.3.0.0 Safari/537.36
-
 
 ---
 

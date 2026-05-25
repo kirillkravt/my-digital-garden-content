@@ -2,7 +2,7 @@
 chat_id: 7d52866e-7d25-4292-b551-3b589ca674a3
 title: Аудит DOM DeepSeek и исправление UserScript
 message_count: 94
-exported_at: 2026-04-06T04:11:23.973Z
+exported_at: 2026-05-25T06:49:07.939Z
 ---
 
 # Аудит DOM DeepSeek и исправление UserScript

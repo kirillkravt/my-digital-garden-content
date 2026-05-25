@@ -2,7 +2,7 @@
 chat_id: 37fb763b-3193-442f-a4ca-79cf3771e3b4
 title: Решение проблемы с синтезаторами через CDN
 message_count: 114
-exported_at: 2026-04-06T04:15:11.085Z
+exported_at: 2026-05-25T06:24:11.703Z
 ---
 
 # Решение проблемы с синтезаторами через CDN
@@ -443,7 +443,6 @@ cat > test-strudel-minimal.html << 'EOF'
         let currentRepl = null;
         
         async function createRepl() {
-
 
 ---
 

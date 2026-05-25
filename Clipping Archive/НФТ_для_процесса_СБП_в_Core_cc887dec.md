@@ -2,7 +2,7 @@
 chat_id: cc887dec-de5c-40a2-bdc7-5ec1b618abb5
 title: НФТ для процесса СБП в Core
 message_count: 8
-exported_at: 2026-04-06T04:21:01.981Z
+exported_at: 2026-05-25T05:42:29.521Z
 ---
 
 # НФТ для процесса СБП в Core

@@ -2,7 +2,7 @@
 chat_id: 356e7065-aab7-491a-a514-a07de445df0d
 title: Query-параметры, тело и заголовки API
 message_count: 2
-exported_at: 2026-04-06T04:19:04.169Z
+exported_at: 2026-05-25T05:56:18.118Z
 ---
 
 # Query-параметры, тело и заголовки API

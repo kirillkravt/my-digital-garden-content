@@ -2,7 +2,7 @@
 chat_id: a0cf72c5-22a5-4d90-bba3-f17c07063cdc
 title: Стабилизация Coder Agent и UI
 message_count: 238
-exported_at: 2026-05-24T13:43:24.578Z
+exported_at: 2026-05-25T07:14:35.659Z
 ---
 
 # Стабилизация Coder Agent и UI
@@ -5055,7 +5055,6 @@ async def process_command(request: dict):
         "description": command,
         "status": "auto_execute",  # Новый статус — без подтверждения
         "created_at": datetime.now().isoformat(),
-
 
 ---
 
@@ -12171,8 +12170,6 @@ class CommandAnalyzer:
         func_match = re.search(r'функцию\s+(\w+)', command)
         if file_match and func_match:
             return {"file": file_match.group(1), "function": func_match.group(1), "type": "function"}
-        
-       
 
 ---
 

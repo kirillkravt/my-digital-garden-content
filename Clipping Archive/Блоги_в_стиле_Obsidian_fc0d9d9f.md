@@ -2,7 +2,7 @@
 chat_id: fc0d9d9f-c031-4fdf-ad90-e35d9939c41f
 title: Блоги в стиле Obsidian
 message_count: 4
-exported_at: 2026-04-06T04:09:19.306Z
+exported_at: 2026-05-25T07:03:34.392Z
 ---
 
 # Блоги в стиле Obsidian

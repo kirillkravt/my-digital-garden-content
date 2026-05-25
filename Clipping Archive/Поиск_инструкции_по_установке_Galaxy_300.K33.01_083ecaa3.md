@@ -2,7 +2,7 @@
 chat_id: 083ecaa3-6ceb-49e1-a321-d7c4f4436628
 title: Поиск инструкции по установке Galaxy 300.K33.01
 message_count: 2
-exported_at: 2026-04-06T04:22:11.456Z
+exported_at: 2026-05-25T05:34:24.434Z
 ---
 
 # Поиск инструкции по установке Galaxy 300.K33.01

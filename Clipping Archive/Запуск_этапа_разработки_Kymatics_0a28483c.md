@@ -1,11 +1,2209 @@
 ---
 chat_id: 0a28483c-c576-478a-94f6-61134c1c5ada
 title: Запуск этапа разработки Kymatics
-message_count: 186
-exported_at: 2026-05-24T13:41:33.733Z
+message_count: 194
+exported_at: 2026-05-25T07:26:39.271Z
 ---
 
 # Запуск этапа разработки Kymatics
+
+## 👤 **Kirill**
+
+СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMATICS (ЭТАП 94 - СТАРТ)
+
+🎯 КОНТЕКСТ
+✅ Успешно завершен Этап 93. Выполнены задачи:
+
+93.1 ✅ Multi-agent в BPMN — 4 агента (architect, coder, integrator, analyzer) интегрированы в Process Designer
+93.2 ✅ Persistent Memory — API `/memory/*` с файловым хранилищем, поиск по релевантности
+93.3 ⏸️ Telegram Bot — перенесен на следующий этап
+93.4 ✅ Skill Marketplace — публикация, установка, теги, статистика
+93.5 ✅ Self-healing процессы — анализ ошибок LLM, стратегии восстановления
+93.6 ✅ BPMN → Executable Code — генерация Python/TypeScript кода из BPMN
+
+💰 БЮДЖЕТ ЭТАПА 93: 0 ₽
+💰 БЮДЖЕТ ЭТАПА 94 (ПЛАНОВЫЙ): 2000 ₽ (только реальные траты на платные API)
+
+⚙️ ТЕКУЩЕЕ СОСТОЯНИЕ СИСТЕМЫ (АУДИТ 23.05.2026)
+
+✅ Бэкенд:
+- 50+ API эндпоинтов (включая новые: agents, memory, marketplace, healing, codegen)
+- ChromaDB запущен (порт 8000) — используется для RAG и векторного поиска
+- Neo4j НЕ ЗАПУЩЕН (код готов, нужен запуск)
+- Файловая память работает как временное решение
+- Process Designer + WebSocket execution работают
+
+⚠️ Разрывы в пайплайне (критические для MVP):
+1. ❌ Исполнение → Память: результаты не сохраняются автоматически
+2. ❌ Память → Дизайнер: нет подсказок из памяти при создании процессов
+3. ⚠️ Только manual trigger для процессов (schedule/webhook позже)
+4. ⚠️ Компоненты нельзя перетащить в дизайнер (только узлы из палитры)
+
+📁 КЛЮЧЕВЫЕ ФАЙЛЫ
+
+Бэкенд: ai-farm/agents/batuta/
+- memory_service.py (файловая версия)
+- neo4j_sync.py, neo4j_client.py, tools/tool_graph.py — граф
+- api_memory.py, api_marketplace.py, api_self_healing.py, api_codegen.py
+- process_manager.py, process_executor.py
+
+Фронтенд: tactical-command-v3/src/
+- features/process-designer/ — Process Designer
+- features/components/ComponentsPage.tsx — Components Library
+- features/ai/AIChatSidebar.tsx — AI чат
+- pages/TerminalPage.tsx — главная страница
+
+🏛️ ЦЕЛЕВОЕ ВИДЕНИЕ 2.2
+Kymatics — единая платформа для создания и выполнения BPMN-процессов с AI-агентами.
+
+Ключевые принципы:
+- Agentic First — агенты не болтают, они делают
+- Governance by Design — HITL не опция, а стандарт
+- Local-First — данные не покидают ваш сервер
+- Open Ecosystem — marketplace skills, community
+
+Уникальное преимущество: BPMN + AI Agents + Memory (единственные на рынке)
+
+📋 ЗАДАЧИ ЭТАПА 94 (10 дней до тестируемого MVP)
+
+P0 (КРИТИЧЕСКИЕ) — СВЯЗНОСТЬ И СТАБИЛЬНОСТЬ
+
+Задача 94.1: Memory Layer — запуск Neo4j и объединение с ChromaDB
+(@🚀 Хранитель стабильности + @🧠 Специалист по знаниям)
+
+Цель: Создать единый memory слой уровня лидеров индустрии.
+
+Действия:
+- Запустить Neo4j через Docker (порты 7474, 7687)
+- Создать единый MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф)
+- Добавить temporal reasoning (valid_from/valid_to) — как у Zep
+- Перенести файловую память на ChromaDB (векторный поиск)
+
+Критерии готовности:
+- Neo4j запущен и интегрирован с существующими инструментами (`tool_graph.py`, `neo4j_sync.py`)
+- MemoryService поддерживает семантический поиск (ChromaDB) + графовые запросы (Neo4j)
+- Автосохранение результатов выполнения в память (исправлен разрыв №1)
+
+Задача 94.2: Пайплайн — связность и валидация
+(@🚀 Хранитель стабильности + @🎨 Дизайнер интерфейсов)
+
+Цель: Устранить разрывы между компонентами.
+
+Действия:
+- Добавить автосохранение результатов выполнения в память
+- Добавить подсказки из памяти при создании процесса (исправлен разрыв №2)
+- Добавить drag & drop из Components Library в Process Designer
+- Добавить полную валидацию процессов (связи, обязательные поля, циклы)
+- Добавить async execution с отслеживанием статусов
+
+Критерии готовности:
+- После выполнения процесса результат автоматически сохраняется в память
+- При создании процесса появляются подсказки из истории проекта
+- Компонент можно перетащить из Library прямо в дизайнер
+- Процесс нельзя сохранить/запустить с ошибками
+- Execution имеет статусы: pending → running → completed/failed
+
+Задача 94.3: Фронтенд — дизайн-система и чистота
+(@🎨 Дизайнер интерфейсов)
+
+Цель: Привести фронтенд к тестируемому состоянию.
+
+Действия:
+- Вынести все inline styles в CSS файлы
+- Разработать дизайн-систему (цвета, типографика, отступы, компоненты)
+- Создать библиотеку переиспользуемых UI компонентов (Button, Modal, Input, Select)
+- Исправить 67 технических долгов (TODO/FIXME/any)
+
+Критерии готовности:
+- Нет inline styles (все в CSS/модулях)
+- Дизайн-система документирована (storybook или отдельная страница)
+- UI компоненты переиспользуются во всем приложении
+- Нет предупреждений TypeScript
+
+P1 (ВЫСОКИЙ ПРИОРИТЕТ)
+
+Задача 94.4: Подготовка к выходу на рынок
+(@🚀 Хранитель стабильности)
+
+Цель: Создать минимальный пакет для демонстрации.
+
+Действия:
+- Написать демо-скрипт для видео (2-3 минуты)
+- Создать Docker Compose для быстрого старта
+- Подготовить landing page (базовая: описание, скриншоты, CTA)
+- Подготовить 3-5 примеров готовых процессов (templates)
+
+Критерии готовности:
+- Демо-скрипт готов к записи
+- `docker-compose up` запускает всю платформу
+- Landing page доступна локально
+- Примеры процессов можно импортировать одним кликом
+
+Задача 94.5: Self-healing — интеграция с памятью
+(@🧠 Специалист по знаниям)
+
+Цель: Использовать успешные кейсы из памяти для автоматического исправления.
+
+Действия:
+- Извлекать успешные паттерны из памяти
+- Предлагать их как исправления при ошибках
+- Сохранять успешные исправления обратно в память
+
+Критерии готовности:
+- При ошибке процесса LLM получает контекст из похожих успешных выполнений
+- Self-healing предлагает решения на основе истории проекта
+
+P2 (СРЕДНИЙ ПРИОРИТЕТ) — при наличии времени
+
+Задача 94.6: Performance optimization — кэширование, индексы, профайлинг
+
+Задача 94.7: Документация API (Swagger/OpenAPI)
+
+💰 БЮДЖЕТ ЭТАПА 94
+Лимит: 2000 ₽ (только реальные траты на платные API/сервисы)
+
+Задача	Бюджет
+94.1 Memory Layer	0 ₽ (локально)
+94.2 Пайплайн	0 ₽ (локально)
+94.3 Фронтенд	0 ₽ (локально)
+94.4 Go-to-market	0 ₽ (локально)
+94.5 Self-healing	0 ₽ (локальный ollama)
+94.6 Performance	0 ₽ (локально)
+94.7 Документация	0 ₽ (локально)
+
+⚠️ При достижении лимита 2000 ₽ — остановка и согласование.
+
+🚀 ПОРЯДОК ВЫПОЛНЕНИЯ (ЭТАП 94)
+
+Шаг	Задача	Ответственный	Длительность
+1	94.1 Memory Layer (Neo4j + ChromaDB)	@🚀 + @🧠	4 ч
+2	94.2 Пайплайн — связность и валидация	@🚀 + @🎨	4 ч
+3	94.3 Фронтенд — дизайн-система	@🎨	4 ч
+4	94.4 Go-to-market подготовка	@🚀	3 ч
+5	94.5 Self-healing + память	@🧠	3 ч
+6	94.6-94.7 Performance + docs	@🚀 + @🧠	время
+
+📅 План на 10 дней:
+
+Неделя 1 (P0):
+- День 1: 94.1 Memory Layer
+- День 2: 94.1 + начало 94.2
+- День 3: 94.2 Пайплайн
+- День 4: 94.2 + начало 94.3
+- День 5: 94.3 Фронтенд
+
+Неделя 2 (P1):
+- День 6: 94.3 + 94.4
+- День 7: 94.4 + 94.5
+- День 8: 94.5 + интеграционное тестирование
+- День 9: Фикс багов + доработки
+- День 10: Финальное тестирование + демо
+
+⚠️ ПРАВИЛА РАБОТЫ
+- ОДНА ЗАДАЧА ЗА РАЗ — не смешиваем
+- КОНТРОЛЬ БЮДЖЕТА — следим за расходами
+- ПОСЛЕ КАЖДОГО ИЗМЕНЕНИЯ — ТЕСТ
+- КОММИТИТЬ ПОСЛЕ КАЖДОЙ ЗАДАЧИ
+- ПРИ ДОСТИЖЕНИИ ЛИМИТА — остановка и согласование
+
+✅ СТАРТ ВЫПОЛНЕНИЯ (ЭТАП 94)
+
+@🚀 Хранитель стабильности — начинайте с Задачи 94.1 (Memory Layer). Первый шаг: запуск Neo4j через Docker.
+
+@🧠 Специалист по знаниям — подготовьте код для объединения ChromaDB и Neo4j.
+
+@🎨 Дизайнер интерфейсов — проведите аудит фронтенда и начните проектирование дизайн-системы.
+
+Жду подтверждения готовности к старту.
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично. **План принят, распределение ролей подтверждено.**
+
+Система переходит в режим активной разработки Этапа 94. Бюджет под контролем (2000₽ только на внешние API, локальный стек — бесплатно).
+
+**Директива на ближайшие 4 часа:**
+
+1.  **@🚀 Хранитель стабильности:** Запуск Neo4j. После запуска — проверить интеграцию с `neo4j_sync.py`. Результат запуска (логи, порты) — в этот канал.
+2.  **@🧠 Специалист по знаниям:** Разработать класс `UnifiedMemoryService` (обертка над ChromaDB + Neo4j). Учитывать интерфейсы из `memory_service.py`. Temporal reasoning — добавить поля `valid_from`/`valid_to` в схемы.
+3.  **@🎨 Дизайнер интерфейсов:** Аудит фронтенда: сдать отчет по 67 техдолгам (список файлов с наибольшим количеством TODO/FIXME). Определить базовые токены дизайн-системы (цвета: primary/gray/error, spacing: 4/8/16/24, шрифты).
+
+**Правило:** Работаем строго в последовательности: Memory Layer → Пайплайн → Фронтенд. Никакого "параллельного" фронтенда, пока не стабилизируется бэкенд.
+
+**Текущий статус:** `ЭТАП_94 = СТАРТ`.
+
+Исполнители, подтвердите получение задач и приступайте. Жду логи запуска Neo4j в течение 15 минут.
+
+---
+
+## 👤 **Kirill**
+
+Действуем следующим образом:
+По одному действию!
+Ты пишешь команды для терминала или инструкции
+Я выполняю команду в терминале или инструкцию
+Тест
+Только потом идем дальше
+
+---
+
+## 🤖 **DeepSeek**
+
+Принято. Работаем строго по схеме: **Команда → Исполнение → Тест → Следующий шаг.**
+
+---
+
+## Шаг 1 из 94.1 (Memory Layer — запуск Neo4j)
+
+**Действие:** Запуск Neo4j через Docker с сохранением данных на хост-машине.
+
+**Команда для терминала:**
+
+```bash
+docker run -d \
+  --name neo4j-kymatics \
+  -p 7474:7474 -p 7687:7687 \
+  -e NEO4J_AUTH=neo4j/kymatics2026 \
+  -e NEO4J_PLUGINS='["apoc"]' \
+  -v ~/neo4j-kymatics/data:/data \
+  -v ~/neo4j-kymatics/logs:/logs \
+  neo4j:5.26-enterprise
+```
+
+⚠️ Если нет лицензии Enterprise — замените на `neo4j:5.26-
+
+---
+
+## 👤 **Kirill**
+
+Нужно делать на реальном проекте, а не вымышленном. Ты даешь команды, я выполняю и возвращаю результат.
+
+---
+
+## 🤖 **DeepSeek**
+
+Хорошо. Работаем с реальным проектом.
+
+**Первая команда:**
+
+```bash
+docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+Покажи, что вернул терминал.
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Neo4j не запущен. Контейнера с именем `neo4j` нет.
+
+**Следующая команда:**
+
+Проверим, есть ли какие-либо контейнеры Neo4j (может, другое имя):
+
+```bash
+docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Нет ни одного контейнера Neo4j. Запускаем с нуля.
+
+**Команда:**
+
+```bash
+docker run -d \
+  --name neo4j-kymatics \
+  -p 7474:7474 -p 7687:7687 \
+  -e NEO4J_AUTH=neo4j/kymatics2026 \
+  -e NEO4J_PLUGINS='["apoc"]' \
+  -v ~/neo4j-kymatics/data:/data \
+  -v ~/neo4j-kymatics/logs:/logs \
+  neo4j:5.26
+```
+
+Запусти эту команду и покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+ищи внимательней есть и docker и orbstack 
+/Users/kirillkravcov/UniversalCreativeHub
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял. У тебя Orbstack (альтернатива Docker Desktop). Проверим иначе.
+
+**Команда:**
+
+```bash
+docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
+```
+
+А также посмотрим, что вообще запущено:
+
+```bash
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
+No neo4j containers found
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+NAMES     IMAGE     STATUS    PORTS
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял. Вообще нет запущенных контейнеров. Запускаем Neo4j.
+
+**Команда:**
+
+```bash
+docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
+```
+
+Выполни и покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+может просто docker не запущен?
+
+---
+
+## 🤖 **DeepSeek**
+
+Точно. Проверим статус Docker/Orbstack.
+
+**Команда:**
+
+```bash
+docker info 2>&1 | head -5
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
+Unable to find image 'neo4j:5.26' locally
+5.26: Pulling from library/neo4j
+cda3d70ae7d7: Pull complete 
+4709e9496477: Pull complete 
+c4697836ee82: Pull complete 
+3cb252419ff9: Pull complete 
+4f4fb700ef54: Pull complete 
+Digest: sha256:0b5d3ab6ec1b866890dbfb53bf4fe1cf039f9e03c96165599a403005b7e7bcc3
+Status: Downloaded newer image for neo4j:5.26
+a5116df7d4a72b02a74ede3eb1193acbbac1a11b739279faa40dc93432eb39fd
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker info 2>&1 | head -5
+Client:
+ Version:    28.5.2
+ Context:    orbstack
+ Debug Mode: false
+ Plugins:
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично! Neo4j скачался и запустился. Контейнер `neo4j-kymatics` создан (ID: `a5116df7d4a7`).
+
+**Теперь проверим, что контейнер работает:**
+
+```bash
+docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+NAMES            STATUS          PORTS
+neo4j-kymatics   Up 16 seconds   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ **Neo4j успешно запущен и работает!**
+
+STATUS: `Up 16 seconds`  
+Порты: `7474` (HTTP), `7687` (Bolt) — доступны.
+
+---
+
+**Тест подключения к Neo4j (через curl):**
+
+```bash
+curl -I -u neo4j:kymatics2026 http://localhost:7474
+```
+
+Покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+curl -I -u neo4j:kymatics2026 http://localhost:7474
+
+---
+
+## 🤖 **DeepSeek**
+
+Выполни эту команду в терминале и покажи вывод.
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % curl -I -u neo4j:kymatics2026 http://localhost:7474
+HTTP/1.1 200 OK
+Date: Sat, 23 May 2026 19:03:24 GMT
+Access-Control-Allow-Origin: *
+Content-Type: application/json
+Vary: Accept
+Content-Length: 251
+
+(.venv) kirillkravcov@Mac tactical-command-v3 %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ **Neo4j доступен, аутентификация работает.** (HTTP 200 OK)
+
+---
+
+**Шаг 94.1 продолжение: проверим существующие файлы проекта.**
+
+```bash
+cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
+```
+
+Покажи вывод — нужно убедиться, что `neo4j_client.py` и `neo4j_sync.py` на месте.
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac tactical-command-v3 % cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
+total 1120
+drwxr-xr-x  91 kirillkravcov  staff   2912 May 23 17:18 .
+drwxr-xr-x  14 kirillkravcov  staff    448 May 21 11:14 ..
+-rw-r--r--   1 kirillkravcov  staff    229 May 21 08:34 .env
+drwxr-xr-x   6 kirillkravcov  staff    192 May 16 14:31 .pytest_cache
+-rwxr-xr-x   1 kirillkravcov  staff    929 Apr  6 12:05 add_embedding_endpoint.py
+-rw-r--r--   1 kirillkravcov  staff   2357 Apr 23 19:58 add_history_logging.py
+-rw-r--r--   1 kirillkravcov  staff   1115 Apr 15 07:53 add_load_tasks.py
+drwxr-xr-x   3 kirillkravcov  staff     96 May 15 21:59 ai-farm
+-rw-r--r--   1 kirillkravcov  staff   4881 May 23 13:35 api_agents.py
+-rw-r--r--   1 kirillkravcov  staff   1152 May 23 17:18 api_codegen.py
+-rw-r--r--   1 kirillkravcov  staff   2056 Apr 21 08:41 api_commands.py
+-rw-r--r--   1 kirillkravcov  staff  18228 May 23 12:38 api_components.py
+-rw-r--r--   1 kirillkravcov  staff   7258 May 23 13:21 api_components_lifecycle.py
+-rw-r--r--   1 kirillkravcov  staff   1212 May 21 16:51 api_execute.py
+-rw-r--r--   1 kirillkravcov  staff   7671 May 23 17:13 api_marketplace.py
+-rw-r--r--   1 kirillkravcov  staff   2923 May 23 14:41 api_memory.py
+-rw-r--r--   1 kirillkravcov  staff  17216 May 22 11:03 api_processes.py
+-rw-r--r--   1 kirillkravcov  staff   4864 May 15 21:52 api_projects.py
+-rw-r--r--   1 kirillkravcov  staff   5820 May 22 14:36 api_safe_execute.py
+-rw-r--r--   1 kirillkravcov  staff   1399 May 23 17:15 api_self_healing.py
+-rw-r--r--   1 kirillkravcov  staff   1634 May 12 21:24 api_skills.py
+-rw-r--r--   1 kirillkravcov  staff   8776 May 12 21:24 api_templates.py
+drwxr-xr-x   3 kirillkravcov  staff     96 May 15 18:23 api_v1
+-rw-r--r--   1 kirillkravcov  staff   8100 May 19 18:11 architect_agent.py
+-rw-r--r--   1 kirillkravcov  staff   8509 Apr 20 08:01 architect_agent.py.broken
+drwxr-xr-x  25 kirillkravcov  staff    800 May 15 21:39 backups
+drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 channels
+drwxr-xr-x   2 kirillkravcov  staff     64 May 23 14:47 chroma_data
+-rw-r--r--   1 kirillkravcov  staff   5818 May 23 17:18 code_generator.py
+-rw-r--r--   1 kirillkravcov  staff  18207 May 23 13:21 coder_agent.py
+-rw-r--r--   1 kirillkravcov  staff  11063 Apr 17 22:43 command_analyzer.py
+-rw-r--r--   1 kirillkravcov  staff   1357 Apr 21 09:09 command_executor_agent.py
+-rw-r--r--   1 kirillkravcov  staff   1403 May 21 18:13 command_safety.py
+-rw-r--r--   1 kirillkravcov  staff   7983 May 21 08:51 components_db.py
+-rw-r--r--   1 kirillkravcov  staff   8071 May 21 08:51 components_db.py.backup
+-rw-r--r--   1 kirillkravcov  staff   1495 May 18 11:49 components_schemas.py
+-rw-r--r--   1 kirillkravcov  staff   1674 May 15 18:39 config.py
+drwxr-xr-x  13 kirillkravcov  staff    416 May 17 08:52 core
+-rw-r--r--   1 kirillkravcov  staff   1650 May 18 08:55 db_unified.py
+-rw-r--r--   1 kirillkravcov  staff   4781 May 15 22:01 drafts_manager.py
+-rw-r--r--   1 kirillkravcov  staff   5023 May 22 10:59 executor_registry.py
+drwxr-xr-x   7 kirillkravcov  staff    224 May 15 18:20 executors
+-rw-r--r--   1 kirillkravcov  staff   2044 May 19 18:11 fixer_agent.py
+-rw-r--r--   1 kirillkravcov  staff   4711 May 18 09:48 git_skills.py
+-rw-r--r--   1 kirillkravcov  staff   3234 Apr 12 18:34 history_integration.py
+-rw-r--r--   1 kirillkravcov  staff   7394 Apr 20 08:02 integrator_agent.py
+-rw-r--r--   1 kirillkravcov  staff   3136 Apr 16 16:57 knowledge_pool.py
+-rw-r--r--   1 kirillkravcov  staff   5398 Apr 16 16:44 knowledge_pool_chroma_v1.py
+-rw-r--r--   1 kirillkravcov  staff   5031 Apr 16 16:58 knowledge_pool_faiss.py
+-rw-r--r--   1 kirillkravcov  staff   5282 Apr 16 16:41 knowledge_pool_v2.py
+-rw-r--r--   1 kirillkravcov  staff   4182 May 11 10:29 layout_engine.py
+drwxr-xr-x   9 kirillkravcov  staff    288 Apr 17 18:06 logs
+-rwxr-xr-x   1 kirillkravcov  staff  36455 May 23 17:18 main.py
+drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 memory
+drwxr-xr-x   3 kirillkravcov  staff     96 May 23 14:58 memory_files
+-rw-r--r--   1 kirillkravcov  staff   5295 May 23 14:57 memory_service.py
+-rw-r--r--   1 kirillkravcov  staff   1466 Apr 16 13:47 neo4j_client.py
+-rw-r--r--   1 kirillkravcov  staff    803 Apr 16 13:49 neo4j_sync.py
+drwxr-xr-x  19 kirillkravcov  staff    608 May  3 17:49 nodes
+-rw-r--r--   1 kirillkravcov  staff   3171 May  9 10:37 observability.py
+-rw-r--r--   1 kirillkravcov  staff   1072 Apr 15 07:51 patch_startup.py
+-rw-r--r--   1 kirillkravcov  staff  18540 May 19 18:11 process_designer_agent.py
+-rw-r--r--   1 kirillkravcov  staff   9651 May 12 09:07 process_executor.py
+-rw-r--r--   1 kirillkravcov  staff  17351 May 22 11:13 process_manager.py
+-rw-r--r--   1 kirillkravcov  staff   5981 May 19 08:48 process_models.py
+-rw-r--r--   1 kirillkravcov  staff   3636 Apr 28 18:41 process_validator.py
+-rw-r--r--   1 kirillkravcov  staff      0 May 23 13:14 processes.db
+-rw-r--r--   1 kirillkravcov  staff  13287 Apr 16 19:08 project_inspector.py
+drwxr-xr-x   3 kirillkravcov  staff     96 Apr 12 13:09 prompts
+-rw-r--r--   1 kirillkravcov  staff   1155 Apr 17 19:06 quick_validator.py
+-rw-r--r--   1 kirillkravcov  staff   3553 May 19 18:11 requirement_analyzer.py
+-rwxr-xr-x   1 kirillkravcov  staff     94 Mar  6 13:06 requirements.txt
+drwxr-xr-x  18 kirillkravcov  staff    576 May 19 18:11 scheduler
+-rw-r--r--   1 kirillkravcov  staff   4218 May 23 17:15 self_healing.py
+-rw-r--r--   1 kirillkravcov  staff   6551 Apr 28 18:30 skill_agent.py
+-rw-r--r--   1 kirillkravcov  staff  18222 May 18 09:54 skills_registry.py
+-rw-r--r--   1 kirillkravcov  staff   3753 Apr 16 19:21 smart_explorer.py
+-rw-r--r--   1 kirillkravcov  staff   5450 May 19 18:11 task_decomposer.py
+-rw-r--r--   1 kirillkravcov  staff      0 May 18 09:48 task_history.db
+-rw-r--r--   1 kirillkravcov  staff   5060 Apr 15 07:52 task_history.py
+-rw-r--r--   1 kirillkravcov  staff      0 Apr 17 16:37 task_processor.log
+-rw-r--r--   1 kirillkravcov  staff  12663 May 12 21:11 template_resolver.py
+-rw-r--r--   1 kirillkravcov  staff   2182 Apr 23 18:15 test_executor.py
+-rw-r--r--   1 kirillkravcov  staff    486 Apr 19 15:51 test_opik.py
+-rw-r--r--   1 kirillkravcov  staff    793 Apr 23 18:09 test_try_catch.py
+-rw-r--r--   1 kirillkravcov  staff   1818 Apr 23 19:56 test_websocket.py
+-rw-r--r--   1 kirillkravcov  staff   1064 Apr 23 20:09 test_ws.py
+drwxr-xr-x   9 kirillkravcov  staff    288 May 19 18:16 tools
+-rw-r--r--   1 kirillkravcov  staff    574 Apr 23 19:58 update_executor.py
+-rw-r--r--   1 kirillkravcov  staff   2264 Apr 20 07:59 validator_agent.py
+-rw-r--r--   1 kirillkravcov  staff   2121 May  4 15:11 websocket_logger.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично. Файлы на месте:
+- `neo4j_client.py` (1466 байт)
+- `neo4j_sync.py` (803 байта)
+- `memory_service.py` (5295 байт) — файловая версия
+
+---
+
+**Шаг 94.1: проверим содержимое `neo4j_client.py` — правильно ли настроено подключение.**
+
+```bash
+cat ai-farm/agents/batuta/neo4j_client.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_client.py
+import httpx
+from typing import Dict, Any
+
+NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
+NEO4J_AUTH = ("neo4j", "password")
+
+async def create_task_node(task_id: str, title: str, description: str, status: str = "pending"):
+    """Создать узел Task в Neo4j"""
+    query = f"""
+    MERGE (t:Task {{id: $task_id}})
+    SET t.title = $title,
+        t.description = $description,
+        t.status = $status,
+        t.updated_at = datetime()
+    RETURN t
+    """
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            NEO4J_URL,
+            auth=NEO4J_AUTH,
+            json={"statements": [{"statement": query, "parameters": {
+                "task_id": task_id,
+                "title": title,
+                "description": description,
+                "status": status
+            }}]}
+        )
+        return response.json()
+
+async def update_task_status(task_id: str, status: str):
+    """Обновить статус задачи в Neo4j"""
+    query = """
+    MATCH (t:Task {id: $task_id})
+    SET t.status = $status, t.updated_at = datetime()
+    RETURN t
+    """
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            NEO4J_URL,
+            auth=NEO4J_AUTH,
+            json={"statements": [{"statement": query, "parameters": {
+                "task_id": task_id,
+                "status": status
+            }}]}
+        )
+        return response.json()
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу проблему: в `neo4j_client.py` используется пароль `password`, но мы запустили Neo4j с паролем `kymatics2026`.
+
+**Исправляем:**
+
+```bash
+sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
+```
+
+Проверим исправление:
+
+```bash
+grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
+NEO4J_AUTH = ("neo4j", "kymatics2026")
+            auth=NEO4J_AUTH,
+            auth=NEO4J_AUTH,
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ Пароль исправлен.
+
+---
+
+**Теперь проверим, что Neo4j принимает запросы от клиента (простой тест через Python):**
+
+```bash
+cd /Users/kirillkravcov/UniversalCreativeHub && python -c "
+import asyncio
+import httpx
+
+async def test():
+    url = 'http://localhost:7474/db/neo4j/tx/commit'
+    auth = ('neo4j', 'kymatics2026')
+    query = 'RETURN 1 as test'
+    
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
+        print(resp.status_code)
+        print(resp.json())
+
+asyncio.run(test())
+"
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                       
+    auth = ('neo4j', 'kymatics2026')
+    query = 'RETURN 1 as test'
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
+        print(resp.status_code)
+        print(resp.json())
+
+asyncio.run(test())
+"
+200
+{'results': [{'columns': ['test'], 'data': [{'row': [1], 'meta': [None]}]}], 'errors': [], 'lastBookmarks': ['FB:kcwQzD5o5GTkTuG+mUUuHaZyxAOQ']}
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ **Neo4j работает, аутентификация корректна, запрос возвращает результат.**
+
+---
+
+**Шаг 94.1: проверим `neo4j_sync.py`:**
+
+```bash
+cat ai-farm/agents/batuta/neo4j_sync.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_sync.py
+import requests
+
+NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
+NEO4J_AUTH = ("neo4j", "password")
+
+def create_task_node_sync(task_id: str, title: str, description: str, status: str = "pending"):
+    """Создать узел Task в Neo4j (синхронная версия)"""
+    query = f"""
+    MERGE (t:Task {{id: $task_id}})
+    SET t.title = $title,
+        t.description = $description,
+        t.status = $status,
+        t.updated_at = datetime()
+    RETURN t
+    """
+    response = requests.post(
+        NEO4J_URL,
+        auth=NEO4J_AUTH,
+        json={"statements": [{"statement": query, "parameters": {
+            "task_id": task_id,
+            "title": title,
+            "description": description,
+            "status": status
+        }}]}
+    )
+    return response.json()
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу: `neo4j_sync.py` тоже использует старый пароль `password`.
+
+**Исправляем:**
+
+```bash
+sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
+```
+
+Проверим:
+
+```bash
+grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
+(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
+NEO4J_AUTH = ("neo4j", "kymatics2026")
+        auth=NEO4J_AUTH,
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+✅ Neo4j клиенты исправлены.
+
+---
+
+**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**
+
+```bash
+head -80 ai-farm/agents/batuta/memory_service.py
+```
+
+---
+
+## 👤 **Kirill**
+
+(.venv) kirillkravcov@Mac UniversalCreativeHub % head -80 ai-farm/agents/batuta/memory_service.py
+"""
+Persistent Memory Service - файловая версия (быстрая и стабильная)
+"""
+import json
+import os
+import uuid
+from datetime import datetime
+from typing import List, Dict, Any, Optional
+from pathlib import Path
+
+class MemoryService:
+    """Сервис для долговременной памяти агентов (файловая версия)"""
+    
+    def __init__(self, persist_dir: str = None):
+        if persist_dir is None:
+            persist_dir = os.path.join(os.path.dirname(__file__), "memory_files")
+        
+        self.persist_dir = Path(persist_dir)
+        self.persist_dir.mkdir(parents=True, exist_ok=True)
+        print(f"MemoryService initialized at {self.persist_dir}")
+    
+    def _get_memory_file(self, project_id: str) -> Path:
+        """Получить путь к файлу памяти проекта"""
+        safe_name = "".join(c for c in project_id if c.isalnum() or c in "._-")
+        return self.persist_dir / f"{safe_name}.json"
+    
+    def _load_memories(self, project_id: str) -> List[Dict]:
+        """Загрузить все памяти проекта"""
+        file_path = self._get_memory_file(project_id)
+        if file_path.exists():
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except:
+                return []
+        return []
+    
+    def _save_memories(self, project_id: str, memories: List[Dict]):
+        """Сохранить памяти проекта"""
+        file_path = self._get_memory_file(project_id)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(memories, f, indent=2, ensure_ascii=False, default=str)
+    
+    def add_memory(self, project_id: str, memory: str, metadata: Dict[str, Any] = None) -> str:
+        """Добавить запись в память проекта"""
+        memories = self._load_memories(project_id)
+        
+        memory_id = str(uuid.uuid4())
+        meta = metadata or {}
+        meta["timestamp"] = datetime.now().isoformat()
+        meta["project_id"] = project_id
+        
+        memories.append({
+            "id": memory_id,
+            "memory": memory,
+            "metadata": meta,
+            "created_at": datetime.now().isoformat()
+        })
+        
+        self._save_memories(project_id, memories)
+        return memory_id
+    
+    def search_memory(self, project_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """Поиск по памяти проекта (простой текстовый поиск)"""
+        memories = self._load_memories(project_id)
+        
+        query_lower = query.lower()
+        query_words = query_lower.split()
+        
+        scored = []
+        for mem in memories:
+            memory_lower = mem["memory"].lower()
+            # Считаем количество совпадений слов
+            score = 0
+            for word in query_words:
+                if word in memory_lower:
+                    score += 1
+            
+            if query_words:
+                score = score / len(query_words)
+(.venv) kirillkravcov@Mac UniversalCreativeHub %
+
+---
+
+## 🤖 **DeepSeek**
+
+Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.
+
+**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**
+
+Сначала проверим, запущен ли ChromaDB:
+
+```bash
+curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
+```
+
+---
+## 👤 **Kirill**
+
+Смотри вот так сохранился текущий чат. Первое сообщение это систменый промпт а в сохраненном почему-то другой порядок
+
+---
+
+## 🤖 **DeepSeek**
+
+Вижу проблему. В сохраненном файле порядок сообщений **нарушен** — системный промпт (который должен быть самым первым) оказался **в конце** файла, а первое сообщение от пользователя `"все заработало..."` стоит на первом месте.
+
+## Причина
+
+В скрипте `formatChat()` сообщения сортируются по мере их поступления из IndexedDB, но:
+1. **Системный промпт** (role = 'SYSTEM') — не обрабатывается отдельно, он может иметь более поздний timestamp
+2. **Порядок сообщений** в IndexedDB может быть не хронологическим (особенно если чат подгружался частями)
+
+## Решение — добавить сортировку по времени
+
+В функции `formatChat()` нужно **сортировать сообщения по timestamp** перед форматированием:
+
+```javascript
+// Добавь эту функцию в скрипт
+function sortMessagesByTime(messages) {
+    return messages.sort((a, b) => {
+        const timeA = a.created_at || a.timestamp || 0;
+        const timeB = b.created_at || b.timestamp || 0;
+        return timeA - timeB;
+    });
+}
+
+// В formatChat() перед циклом добавь:
+messages = sortMessagesByTime(messages);
+```
+
+---
+
+## Обновленная функция `formatChat()`
+
+```javascript
+function formatChat(chatId, title, messages) {
+    // СОРТИРУЕМ ПО ВРЕМЕНИ
+    const sortedMessages = [...messages].sort((a, b) => {
+        const timeA = a.created_at || a.timestamp || 0;
+        const timeB = b.created_at || b.timestamp || 0;
+        return timeA - timeB;
+    });
+    
+    let content = `---\n`;
+    content += `chat_id: ${chatId}\n`;
+    content += `title: ${title}\n`;
+    content += `message_count: ${sortedMessages.length}\n`;
+    content += `exported_at: ${new Date().toISOString()}\n`;
+    content += `---\n\n`;
+    content += `# ${title}\n\n`;
+
+    for (const msg of sortedMessages) {
+        let role = '';
+        if (msg.role === 'SYSTEM') role = '⚙️ **System**';
+        else if (msg.role === 'USER') role = '👤 **Kirill**';
+        else role = '🤖 **DeepSeek**';
+        
+        const text = getMessageText(msg);
+        if (text) {
+            content += `## ${role}\n\n${text}\n\n---\n\n`;
+        }
+    }
+    return content;
+}
+```
+
+---
+
+## Также нужно добавить поле `created_at` при сохранении
+
+В функции `saveToAPI`, перед отправкой, убедись, что у каждого сообщения есть `created_at`:
+
+```javascript
+// Если в сообщении нет created_at, используем timestamp из metadata или текущее время
+messages.forEach(msg => {
+    if (!msg.created_at && msg.timestamp) {
+        msg.created_at = msg.timestamp;
+    } else if (!msg.created_at) {
+        msg.created_at = Date.now();
+    }
+});
+```
+
+---
+
+## Полный исправленный фрагмент
+
+Вставь это в свой скрипт (замени существующие функции `formatChat` и добавь `sortMessagesByTime`):
+
+```javascript
+function sortMessagesByTime(messages) {
+    return [...messages].sort((a, b) => {
+        const timeA = a.created_at || a.timestamp || 0;
+        const timeB = b.created_at || b.timestamp || 0;
+        return timeA - timeB;
+    });
+}
+
+function formatChat(chatId, title, messages) {
+    const sortedMessages = sortMessagesByTime(messages);
+    
+    let content = `---\n`;
+    content += `chat_id: ${chatId}\n`;
+    content += `title: ${title}\n`;
+    content += `message_count: ${sortedMessages.length}\n`;
+    content += `exported_at: ${new Date().toISOString()}\n`;
+    content += `---\n\n`;
+    content += `# ${title}\n\n`;
+
+    for (const msg of sortedMessages) {
+        let role = '';
+        if (msg.role === 'SYSTEM') role = '⚙️ **System**';
+        else if (msg.role === 'USER') role = '👤 **Kirill**';
+        else role = '🤖 **DeepSeek**';
+        
+        const text = getMessageText(msg);
+        if (text) {
+            content += `## ${role}\n\n${text}\n\n---\n\n`;
+        }
+    }
+    return content;
+}
+```
+
+После этого пересохрани проблемные чаты — порядок должен стать правильным.
+
+---
+
+## 👤 **Kirill**
+
+Сделай полностью обновленный файл
+
+---
+
+## 🤖 **DeepSeek**
+
+Вот **полностью обновленный скрипт** v13.2 с исправленным порядком сообщений:
+
+```javascript
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v13.2 (Fixed Message Order)
+// @namespace    Violentmonkey Scripts
+// @version      13.2
+// @description  Save FULL DeepSeek chats - fixed chronological order, SYSTEM message first
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v13.2 (Fixed Message Order) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false,
+        delayBetweenChats: 2000,
+        maxLoadWaitMs: 15000,
+        stabilityChecks: 3
+    };
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Получить ВСЕ сообщения чата из IndexedDB
+    async function getChatMessagesFromIndexedDB(chatId) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.get(chatId);
+                getAll.onsuccess = () => {
+                    const record = getAll.result;
+                    db.close();
+                    if (record && record.data?.chat_messages) {
+                        resolve(record.data.chat_messages);
+                    } else {
+                        resolve([]);
+                    }
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // Извлечь текст из сообщения
+    function getMessageText(msg) {
+        if (msg.fragments && msg.fragments.length > 0) {
+            return msg.fragments.map(f => f.content || f.text || '').join('');
+        }
+        if (msg.content) return msg.content;
+        if (msg.text) return msg.text;
+        return '';
+    }
+
+    // Сортировка сообщений по времени (хронологический порядок)
+    function sortMessagesByTime(messages) {
+        return [...messages].sort((a, b) => {
+            const timeA = a.created_at || a.timestamp || a.update_time || 0;
+            const timeB = b.created_at || b.timestamp || b.update_time || 0;
+            
+            // Если оба времени 0, пытаемся определить порядок по ролям (SYSTEM должен быть первым)
+            if (timeA === 0 && timeB === 0) {
+                if (a.role === 'SYSTEM') return -1;
+                if (b.role === 'SYSTEM') return 1;
+            }
+            return timeA - timeB;
+        });
+    }
+
+    // Форматировать чат в Markdown (с правильным порядком)
+    function formatChat(chatId, title, messages) {
+        // Сортируем сообщения по времени
+        const sortedMessages = sortMessagesByTime(messages);
+        
+        let content = `---\n`;
+        content += `chat_id: ${chatId}\n`;
+        content += `title: ${title}\n`;
+        content += `message_count: ${sortedMessages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${title}\n\n`;
+
+        for (const msg of sortedMessages) {
+            let role = '';
+            if (msg.role === 'SYSTEM') {
+                role = '⚙️ **System**';
+            } else if (msg.role === 'USER') {
+                role = '👤 **Kirill**';
+            } else {
+                role = '🤖 **DeepSeek**';
+            }
+            
+            const text = getMessageText(msg);
+            if (text && text.trim()) {
+                content += `## ${role}\n\n${text.trim()}\n\n---\n\n`;
+            }
+        }
+        return content;
+    }
+
+    // Ожидание полной загрузки сообщений чата
+    async function waitForChatToLoad(chatId, timeoutMs = CONFIG.maxLoadWaitMs) {
+        console.log(`  ⏳ Ожидание загрузки сообщений чата...`);
+        
+        let lastCount = 0;
+        let stableChecks = 0;
+        const startTime = Date.now();
+        
+        while (Date.now() - startTime < timeoutMs) {
+            const messages = await getChatMessagesFromIndexedDB(chatId);
+            const currentCount = messages.length;
+            
+            if (currentCount > 0) {
+                if (currentCount === lastCount) {
+                    stableChecks++;
+                    console.log(`    📊 Стабильно: ${currentCount} сообщений (${stableChecks}/${CONFIG.stabilityChecks})`);
+                    
+                    if (stableChecks >= CONFIG.stabilityChecks) {
+                        console.log(`  ✅ Чат загружен: ${currentCount} сообщений`);
+                        return messages;
+                    }
+                } else {
+                    stableChecks = 0;
+                    console.log(`    📥 Загружено ${currentCount} сообщений...`);
+                }
+                lastCount = currentCount;
+            }
+            
+            await sleep(1000);
+        }
+        
+        const finalMessages = await getChatMessagesFromIndexedDB(chatId);
+        console.warn(`  ⚠️ Таймаут! Загружено ${finalMessages.length} сообщений`);
+        return finalMessages;
+    }
+
+    // Проверка целостности сообщений
+    function validateMessages(messages, chatTitle) {
+        if (!messages || messages.length === 0) {
+            console.warn(`  ⚠️ Нет сообщений для проверки`);
+            return false;
+        }
+        
+        // Проверяем наличие SYSTEM сообщения в начале
+        const hasSystemFirst = messages[0]?.role === 'SYSTEM';
+        if (!hasSystemFirst) {
+            console.warn(`  ⚠️ Первое сообщение не SYSTEM (${messages[0]?.role}). Порядок может быть нарушен.`);
+        }
+        
+        // Проверяем пустые сообщения
+        const emptyMessages = messages.filter(msg => !getMessageText(msg) || getMessageText(msg).trim() === '');
+        if (emptyMessages.length > 0) {
+            console.warn(`  ⚠️ Найдено ${emptyMessages.length} пустых сообщений`);
+        }
+        
+        const isValid = emptyMessages.length === 0;
+        console.log(`  ${isValid ? '✅' : '⚠️'} Валидация: ${messages.length} сообщений`);
+        return isValid;
+    }
+
+    // Отправить в Clipping API
+    async function saveToAPI(chatId, title, messages) {
+        let safeTitle = title || 'Untitled';
+        safeTitle = safeTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')
+            .replace(/[\s]+/g, '_')
+            .substring(0, 50);
+
+        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
+            const firstMsg = messages.find(m => m.role === 'USER');
+            if (firstMsg) {
+                let firstLine = getMessageText(firstMsg).split('\n')[0].substring(0, 40);
+                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
+            }
+        }
+
+        if (!safeTitle || safeTitle.length === 0) {
+            safeTitle = chatId.substring(0, 8);
+        }
+
+        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
+        const content = formatChat(chatId, title || safeTitle, messages);
+
+        console.log(`  📄 Файл: ${filename} (${messages.length} сообщений)`);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chatId,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    // Найти все чаты с прокруткой
+    async function findAllChatsWithScroll() {
+        const sidebar = document.querySelector('.ds-virtual-list');
+        if (!sidebar) {
+            console.log('❌ Боковая панель не найдена');
+            return [];
+        }
+
+        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
+
+        let lastCount = 0;
+        let scrolls = 0;
+
+        while (scrolls < 50) {
+            sidebar.scrollTop = sidebar.scrollHeight;
+            await sleep(1500);
+
+            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
+            if (chats.length === lastCount) break;
+            lastCount = chats.length;
+            scrolls++;
+            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
+        }
+
+        const allChats = [];
+        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
+            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
+            if (match) {
+                allChats.push({
+                    id: match[1],
+                    title: a.textContent?.trim() || 'Untitled'
+                });
+            }
+        });
+
+        console.log(`✅ Найдено ${allChats.length} чатов`);
+        return allChats;
+    }
+
+    // Сохранить все чаты
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        const chats = await findAllChatsWithScroll();
+        if (chats.length === 0) {
+            console.log('❌ Чаты не найдены');
+            CONFIG.isProcessing = false;
+            return;
+        }
+
+        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
+
+        let savedCount = 0;
+        let failedCount = 0;
+        let incompleteCount = 0;
+
+        for (let i = 0; i < chats.length; i++) {
+            const chat = chats[i];
+            console.log(`\n[${i+1}/${chats.length}] ${chat.title}`);
+
+            try {
+                const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
+                if (link) {
+                    link.click();
+                    
+                    const messages = await waitForChatToLoad(chat.id);
+                    
+                    if (messages.length > 0) {
+                        const isValid = validateMessages(messages, chat.title);
+                        
+                        if (!isValid) {
+                            incompleteCount++;
+                        }
+                        
+                        await saveToAPI(chat.id, chat.title, messages);
+                        savedCount++;
+                        console.log(`  ✅ Сохранен (${messages.length} сообщений)`);
+                    } else {
+                        console.log(`  ❌ Нет сообщений`);
+                        failedCount++;
+                    }
+                } else {
+                    console.log(`  ❌ Ссылка не найдена`);
+                    failedCount++;
+                }
+            } catch (err) {
+                console.error(`  ❌ Ошибка: ${err.message}`);
+                failedCount++;
+            }
+            
+            await sleep(CONFIG.delayBetweenChats);
+        }
+
+        console.log('\n' + '='.repeat(50));
+        console.log(`📊 ИТОГО: Сохранено: ${savedCount}, Неполных: ${incompleteCount}, Ошибок: ${failedCount}`);
+        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
+        CONFIG.isProcessing = false;
+    }
+
+    // Добавить кнопку
+    const btn = document.createElement('button');
+    btn.textContent = '📚 Save ALL Chats (v13.2 ORDER FIX)';
+    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);`;
+    btn.onclick = saveAllChats;
+    
+    setTimeout(() => {
+        if (document.body) {
+            document.body.appendChild(btn);
+        }
+    }, 2000);
+})();
+```
+
+## Что изменилось в v13.2:
+
+| Изменение | Описание |
+|-----------|----------|
+| **`sortMessagesByTime()`** | Новая функция — сортирует сообщения по `created_at`/`timestamp`/`update_time` |
+| **SYSTEM первым** | При отсутствии времени, SYSTEM сообщение ставится первым |
+| **Улучшенный `formatChat()`** | Использует сортировку перед форматированием |
+| **Валидация порядка** | Проверяет, что первое сообщение — SYSTEM |
+| **Логи** | Показывает количество сообщений в файле |
+
+## Установка:
+
+1. Скопируй весь код выше
+2. В Violentmonkey → Создать новый скрипт
+3. Вставить код
+4. Сохранить (Ctrl+S)
+5. Обновить страницу DeepSeek
+6. Нажать кнопку **"Save ALL Chats (v13.2 ORDER FIX)"**
+
+Теперь SYSTEM сообщение будет **первым** в каждом сохраненном файле, как в оригинальном чате.
+
+---
+
+## 👤 **Kirill**
+
+все заработало. Только скрипт требует доработки. Некоторые чаты может не успевали прогрузится и поэтому не полностью некоторые чаты сохраняются и не сначала. А как проверить все ли сообщения в чате сохраняются?
+
+---
+
+## 🤖 **DeepSeek**
+
+Отлично, что сервер заработал! Теперь по вашему вопросу о целостности сохранения чатов.
+
+## Проблема: неполная загрузка чатов перед сохранением
+
+Скрипт `DeepSeek Chat Saver` сохраняет чаты **до того, как DOM полностью загрузит все сообщения** (особенно длинные истории с ленивой загрузкой).
+
+---
+
+## Решение: добавить проверки целостности
+
+### 1. **Быстрая проверка — сравнение количества**
+
+Добавьте в скрипт перед сохранением:
+
+```javascript
+// Подсчет видимых сообщений в DOM
+function getLoadedMessageCount() {
+    return document.querySelectorAll('[data-message-id], .message-item, .chat-message').length;
+}
+
+// Ожидание стабилизации (новые сообщения не подгружаются 2 секунды)
+async function waitForAllMessages(timeoutMs = 10000) {
+    let lastCount = 0;
+    let stableCount = 0;
+    const startTime = Date.now();
+    
+    while (Date.now() - startTime < timeoutMs) {
+        const currentCount = getLoadedMessageCount();
+        
+        if (currentCount === lastCount) {
+            stableCount++;
+            if (stableCount >= 3) { // 3 проверки подряд без изменений
+                console.log(`✅ Стабилизация: ${currentCount} сообщений`);
+                return currentCount;
+            }
+        } else {
+            stableCount = 0;
+            console.log(`📥 Загружено ${currentCount} сообщений...`);
+        }
+        
+        lastCount = currentCount;
+        await new Promise(r => setTimeout(r, 1000));
+    }
+    
+    console.warn(`⚠️ Таймаут: загружено ${lastCount} сообщений`);
+    return lastCount;
+}
+
+// Использование перед сохранением
+await waitForAllMessages();
+```
+
+### 2. **Проверка целостности после сохранения**
+
+Сравните сохраненный файл с DOM:
+
+```javascript
+async function verifySavedChat(savedContent, chatId) {
+    // Получаем все сообщения из DOM
+    const messagesFromDOM = Array.from(document.querySelectorAll('[data-message-id]')).map(el => ({
+        id: el.dataset.messageId,
+        text: el.innerText.trim(),
+        role: el.classList.contains('user') ? 'user' : 'assistant'
+    }));
+    
+    // Парсим сохраненный файл (ищем сообщения по маркерам)
+    const savedMessages = extractMessagesFromMarkdown(savedContent);
+    
+    if (savedMessages.length !== messagesFromDOM.length) {
+        console.error(`❌ Несоответствие: DOM=${messagesFromDOM.length}, Saved=${savedMessages.length}`);
+        return false;
+    }
+    
+    console.log(`✅ Все ${savedMessages.length} сообщений сохранены`);
+    return true;
+}
+```
+
+### 3. **Автоматическая прокрутка для загрузки истории**
+
+DeepSeek, как и многие чаты, подгружает сообщения при скролле вверх:
+
+```javascript
+async function loadAllMessagesByScrolling() {
+    const scrollContainer = document.querySelector('.chat-scroll-container, .message-list') || document.body;
+    let previousHeight = 0;
+    let attempts = 0;
+    const maxAttempts = 20;
+    
+    while (attempts < maxAttempts) {
+        // Скроллим вверх
+        scrollContainer.scrollTop = 0;
+        await new Promise(r => setTimeout(r, 1500));
+        
+        const currentHeight = scrollContainer.scrollHeight;
+        if (currentHeight === previousHeight) {
+            console.log(`✅ Достигнут верх: ${currentHeight}px`);
+            break;
+        }
+        
+        previousHeight = currentHeight;
+        attempts++;
+        console.log(`📜 Прокрутка ${attempts}: высота ${currentHeight}px`);
+    }
+    
+    // Скроллим обратно вниз
+    scrollContainer.scrollTop = scrollContainer.scrollHeight;
+}
+```
+
+---
+
+## Полный пайплайн для скрипта
+
+```javascript
+// Главная функция сохранения с проверками
+async function safeSaveChat(chatId) {
+    console.log(`🔍 Начинаем загрузку чата ${chatId}...`);
+    
+    // 1. Загружаем все сообщения (скролл)
+    await loadAllMessagesByScrolling();
+    
+    // 2. Ждем стабилизации
+    const messageCount = await waitForAllMessages(15000);
+    
+    if (messageCount === 0) {
+        console.error(`❌ Не найдено сообщений в чате ${chatId}`);
+        return;
+    }
+    
+    // 3. Сохраняем
+    console.log(`💾 Сохраняем ${messageCount} сообщений...`);
+    await saveChat(chatId); // Ваша существующая функция
+    
+    // 4. Проверяем
+    await verifyAfterSave(chatId, messageCount);
+}
+
+// Запуск для текущего чата
+safeSaveChat(currentChatId);
+```
+
+---
+
+## Как проверить существующие сохранения?
+
+Если вы уже сохранили чаты и хотите проверить, какие из них неполные:
+
+```bash
+cd /Users/kirillkravcov/obsidian/my-digital-garden-content/Clippings
+
+# Проверить самые маленькие файлы (возможно, неполные)
+ls -laS *.md | head -20
+
+# Проверить файлы с подозрительно малым количеством строк (менее 10)
+for f in *.md; do 
+    lines=$(wc -l < "$f")
+    if [ $lines -lt 10 ]; then
+        echo "⚠️ $f: $lines строк"
+    fi
+done
+```
+
+---
+
+**Какой подход предпочтительнее?**
+1. Модифицировать существующий скрипт?
+2. Написать отдельный валидатор для уже сохраненных файлов?
+
+---
+
+## 👤 **Kirill**
+
+Посмотри внимательно скрипт и модифицируй только без потери функциональности!
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v13.0 (Full Chat from IndexedDB)
+// @namespace    Violentmonkey Scripts
+// @version      13.0
+// @description  Save FULL DeepSeek chats - finds 293 chats, extracts ALL messages from IndexedDB
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v13.0 (Full Chat from IndexedDB) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false,
+        delayBetweenChats: 2000
+    };
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Получить ВСЕ сообщения чата из IndexedDB
+    async function getChatMessagesFromIndexedDB(chatId) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.get(chatId);
+                getAll.onsuccess = () => {
+                    const record = getAll.result;
+                    db.close();
+                    if (record && record.data?.chat_messages) {
+                        resolve(record.data.chat_messages);
+                    } else {
+                        resolve([]);
+                    }
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // Извлечь текст из сообщения
+    function getMessageText(msg) {
+        if (msg.fragments && msg.fragments.length > 0) {
+            return msg.fragments.map(f => f.content || f.text || '').join('');
+        }
+        if (msg.content) return msg.content;
+        if (msg.text) return msg.text;
+        return '';
+    }
+
+    // Форматировать чат в Markdown
+    function formatChat(chatId, title, messages) {
+        let content = `---\n`;
+        content += `chat_id: ${chatId}\n`;
+        content += `title: ${title}\n`;
+        content += `message_count: ${messages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${title}\n\n`;
+
+        for (const msg of messages) {
+            const role = msg.role === 'USER' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
+            const text = getMessageText(msg);
+            if (text) {
+                content += `## ${role}\n\n${text}\n\n---\n\n`;
+            }
+        }
+        return content;
+    }
+
+        // Отправить в Clipping API
+    async function saveToAPI(chatId, title, messages) {
+        // Очищаем title от недопустимых символов для имени файла
+        let safeTitle = title || 'Untitled';
+        safeTitle = safeTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')  // Удаляем запрещенные символы
+            .replace(/[\s]+/g, '_')                  // Пробелы в _
+            .substring(0, 50);                       // Ограничиваем длину
+
+        // Если title пустой или стал пустым после очистки
+        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
+            // Используем первые 50 символов первого сообщения как заголовок
+            const firstMsg = messages.find(m => m.role === 'USER');
+            if (firstMsg) {
+                let firstLine = getMessageText(firstMsg).split('\n')[0].substring(0, 40);
+                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
+            }
+        }
+
+        // Если все еще пусто - используем ID
+        if (!safeTitle || safeTitle.length === 0) {
+            safeTitle = chatId.substring(0, 8);
+        }
+
+        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
+        const content = formatChat(chatId, title || safeTitle, messages);
+
+        console.log(`  📄 Файл: ${filename}`);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chatId,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+        // Найти все чаты с прокруткой
+    async function findAllChatsWithScroll() {
+        // Находим контейнер с чатами
+        const sidebar = document.querySelector('.ds-virtual-list');
+        if (!sidebar) {
+            console.log('❌ Боковая панель не найдена');
+            return [];
+        }
+
+        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
+
+        let lastCount = 0;
+        let scrolls = 0;
+
+        while (scrolls < 50) {
+            sidebar.scrollTop = sidebar.scrollHeight;
+            await sleep(1500);
+
+            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
+            if (chats.length === lastCount) break;
+            lastCount = chats.length;
+            scrolls++;
+            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
+        }
+
+        const allChats = [];
+        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
+            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
+            if (match) {
+                allChats.push({
+                    id: match[1],
+                    title: a.textContent?.trim() || 'Untitled'
+                });
+            }
+        });
+
+        console.log(`✅ Найдено ${allChats.length} чатов`);
+        return allChats;
+    }
+
+    // Сохранить все чаты
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        const chats = await findAllChatsWithScroll();
+        if (chats.length === 0) {
+            console.log('❌ Чаты не найдены');
+            CONFIG.isProcessing = false;
+            return;
+        }
+
+        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
+
+        for (let i = 0; i < chats.length; i++) {
+            const chat = chats[i];
+            console.log(`[${i+1}/${chats.length}] ${chat.title}`);
+
+            // Открываем чат
+            const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
+            if (link) {
+                link.click();
+                await sleep(2500);
+
+                // Читаем сообщения из IndexedDB
+                const messages = await getChatMessagesFromIndexedDB(chat.id);
+                if (messages.length > 0) {
+                    await saveToAPI(chat.id, chat.title, messages);
+                    console.log(`  ✅ ${messages.length} сообщений`);
+                } else {
+                    console.log(`  ⚠️ Нет сообщений`);
+                }
+            }
+            await sleep(500);
+        }
+
+        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
+        CONFIG.isProcessing = false;
+    }
+
+    // Добавить кнопку
+    const btn = document.createElement('button');
+    btn.textContent = '📚 Save ALL Chats (v13 FULL)';
+    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;`;
+    btn.onclick = saveAllChats;
+    setTimeout(() => document.body.appendChild(btn), 2000);
+})();// ==UserScript==
+// @name        New script deepseek.com
+// @namespace   Violentmonkey Scripts
+// @match       https://chat.deepseek.com/a/chat/s/ae9e519a-f3ba-45d3-a9d7-1cfec51175ba*
+// @icon        https://fe-static.deepseek.com/chat/favicon.svg
+// @grant       none
+// @version     1.0
+// @author      -
+// @description 05.04.2026, 21:53:16
+// ==/UserScript==
+
+---
+
+## 🤖 **DeepSeek**
+
+Внимательно изучил скрипт. Проблема: скрипт читает из IndexedDB **уже загруженные сообщения**, но не ждет полной загрузки чата перед извлечением.
+
+Модифицирую **без потери функциональности**, добавив ожидание загрузки и проверки целостности:
+
+```javascript
+// ==UserScript==
+// @name         DeepSeek Chat Saver - UCH Integration v13.1 (Full Chat with Load Wait)
+// @namespace    Violentmonkey Scripts
+// @version      13.1
+// @description  Save FULL DeepSeek chats - waits for complete load, validates all messages
+// @author       Kirill
+// @match        https://chat.deepseek.com/*
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    console.log('%c=== DeepSeek UCH Saver v13.1 (with Load Wait & Validation) ===', 'background: #00ff00; color: black; font-size: 14px;');
+
+    const CONFIG = {
+        apiUrl: 'http://localhost:8011/api/clippings/save',
+        isProcessing: false,
+        delayBetweenChats: 2000,
+        maxLoadWaitMs: 15000,      // Максимум ждем загрузки чата
+        stabilityChecks: 3         // Количество проверок стабильности сообщений
+    };
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // Получить ВСЕ сообщения чата из IndexedDB
+    async function getChatMessagesFromIndexedDB(chatId) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('deepseek-chat');
+            request.onsuccess = () => {
+                const db = request.result;
+                const tx = db.transaction(['history-message'], 'readonly');
+                const store = tx.objectStore('history-message');
+                const getAll = store.get(chatId);
+                getAll.onsuccess = () => {
+                    const record = getAll.result;
+                    db.close();
+                    if (record && record.data?.chat_messages) {
+                        resolve(record.data.chat_messages);
+                    } else {
+                        resolve([]);
+                    }
+                };
+                getAll.onerror = () => reject(getAll.error);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // Извлечь текст из сообщения
+    function getMessageText(msg) {
+        if (msg.fragments && msg.fragments.length > 0) {
+            return msg.fragments.map(f => f.content || f.text || '').join('');
+        }
+        if (msg.content) return msg.content;
+        if (msg.text) return msg.text;
+        return '';
+    }
+
+    // Форматировать чат в Markdown
+    function formatChat(chatId, title, messages) {
+        let content = `---\n`;
+        content += `chat_id: ${chatId}\n`;
+        content += `title: ${title}\n`;
+        content += `message_count: ${messages.length}\n`;
+        content += `exported_at: ${new Date().toISOString()}\n`;
+        content += `---\n\n`;
+        content += `# ${title}\n\n`;
+
+        for (const msg of messages) {
+            const role = msg.role === 'USER' ? '👤 **Kirill**' : '🤖 **DeepSeek**';
+            const text = getMessageText(msg);
+            if (text) {
+                content += `## ${role}\n\n${text}\n\n---\n\n`;
+            }
+        }
+        return content;
+    }
+
+    // Ожидание полной загрузки сообщений чата
+    async function waitForChatToLoad(chatId, timeoutMs = CONFIG.maxLoadWaitMs) {
+        console.log(`  ⏳ Ожидание загрузки сообщений чата...`);
+        
+        let lastCount = 0;
+        let stableChecks = 0;
+        const startTime = Date.now();
+        
+        while (Date.now() - startTime < timeoutMs) {
+            const messages = await getChatMessagesFromIndexedDB(chatId);
+            const currentCount = messages.length;
+            
+            if (currentCount > 0) {
+                if (currentCount === lastCount) {
+                    stableChecks++;
+                    console.log(`    📊 Стабильно: ${currentCount} сообщений (${stableChecks}/${CONFIG.stabilityChecks})`);
+                    
+                    if (stableChecks >= CONFIG.stabilityChecks) {
+                        console.log(`  ✅ Чат загружен: ${currentCount} сообщений`);
+                        return messages;
+                    }
+                } else {
+                    stableChecks = 0;
+                    console.log(`    📥 Загружено ${currentCount} сообщений...`);
+                }
+                lastCount = currentCount;
+            }
+            
+            await sleep(1000);
+        }
+        
+        // Таймаут - возвращаем то, что успели загрузить
+        const finalMessages = await getChatMessagesFromIndexedDB(chatId);
+        console.warn(`  ⚠️ Таймаут! Загружено ${finalMessages.length} сообщений (могло быть неполным)`);
+        return finalMessages;
+    }
+
+    // Проверка целостности сообщений
+    function validateMessages(messages, chatTitle) {
+        if (!messages || messages.length === 0) {
+            console.warn(`  ⚠️ Нет сообщений для проверки`);
+            return false;
+        }
+        
+        // Проверяем, что первое сообщение от USER (обычно так)
+        const firstMsgRole = messages[0]?.role;
+        if (firstMsgRole !== 'USER') {
+            console.warn(`  ⚠️ Первое сообщение не от USER: ${firstMsgRole}. Возможно, чат обрезан.`);
+        }
+        
+        // Проверяем наличие пустых сообщений
+        const emptyMessages = messages.filter(msg => !getMessageText(msg) || getMessageText(msg).trim() === '');
+        if (emptyMessages.length > 0) {
+            console.warn(`  ⚠️ Найдено ${emptyMessages.length} пустых сообщений`);
+        }
+        
+        // Проверяем чередование ролей
+        let prevRole = null;
+        let badSequence = false;
+        for (const msg of messages) {
+            if (prevRole && msg.role === prevRole) {
+                console.warn(`  ⚠️ Нарушено чередование: ${prevRole} → ${msg.role}`);
+                badSequence = true;
+                break;
+            }
+            prevRole = msg.role;
+        }
+        
+        const isValid = !badSequence && emptyMessages.length === 0;
+        console.log(`  ${isValid ? '✅' : '⚠️'} Валидация: ${messages.length} сообщений, ${isValid ? 'OK' : 'есть проблемы'}`);
+        return isValid;
+    }
+
+    // Отправить в Clipping API
+    async function saveToAPI(chatId, title, messages) {
+        // Очищаем title от недопустимых символов для имени файла
+        let safeTitle = title || 'Untitled';
+        safeTitle = safeTitle
+            .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')  // Удаляем запрещенные символы
+            .replace(/[\s]+/g, '_')                  // Пробелы в _
+            .substring(0, 50);                       // Ограничиваем длину
+
+        // Если title пустой или стал пустым после очистки
+        if (!safeTitle || safeTitle.length === 0 || safeTitle === 'Untitled') {
+            // Используем первые 50 символов первого сообщения как заголовок
+            const firstMsg = messages.find(m => m.role === 'USER');
+            if (firstMsg) {
+                let firstLine = getMessageText(firstMsg).split('\n')[0].substring(0, 40);
+                safeTitle = firstLine.replace(/[<>:"/\\|?*\x00-\x1F]/g, '').replace(/[\s]+/g, '_');
+            }
+        }
+
+        // Если все еще пусто - используем ID
+        if (!safeTitle || safeTitle.length === 0) {
+            safeTitle = chatId.substring(0, 8);
+        }
+
+        const filename = `${safeTitle}_${chatId.substring(0, 8)}.md`;
+        const content = formatChat(chatId, title || safeTitle, messages);
+
+        console.log(`  📄 Файл: ${filename}`);
+
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: CONFIG.apiUrl,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({
+                    filename: filename,
+                    content: content,
+                    chat_id: chatId,
+                    version: 1,
+                    source_url: `https://chat.deepseek.com/a/chat/s/${chatId}`
+                }),
+                onload: (response) => {
+                    if (response.status === 200) resolve(true);
+                    else reject(new Error(`HTTP ${response.status}`));
+                },
+                onerror: reject
+            });
+        });
+    }
+
+    // Найти все чаты с прокруткой
+    async function findAllChatsWithScroll() {
+        // Находим контейнер с чатами
+        const sidebar = document.querySelector('.ds-virtual-list');
+        if (!sidebar) {
+            console.log('❌ Боковая панель не найдена');
+            return [];
+        }
+
+        console.log('🔄 Прокручиваем боковую панель для загрузки всех чатов...');
+
+        let lastCount = 0;
+        let scrolls = 0;
+
+        while (scrolls < 50) {
+            sidebar.scrollTop = sidebar.scrollHeight;
+            await sleep(1500);
+
+            const chats = document.querySelectorAll('a[href*="/a/chat/s/"]');
+            if (chats.length === lastCount) break;
+            lastCount = chats.length;
+            scrolls++;
+            console.log(`  Прокрутка ${scrolls}: найдено ${chats.length} чатов`);
+        }
+
+        const allChats = [];
+        document.querySelectorAll('a[href*="/a/chat/s/"]').forEach(a => {
+            const match = a.href.match(/\/a\/chat\/s\/([a-f0-9-]+)/);
+            if (match) {
+                allChats.push({
+                    id: match[1],
+                    title: a.textContent?.trim() || 'Untitled'
+                });
+            }
+        });
+
+        console.log(`✅ Найдено ${allChats.length} чатов`);
+        return allChats;
+    }
+
+    // Сохранить все чаты
+    async function saveAllChats() {
+        if (CONFIG.isProcessing) return;
+        CONFIG.isProcessing = true;
+
+        const chats = await findAllChatsWithScroll();
+        if (chats.length === 0) {
+            console.log('❌ Чаты не найдены');
+            CONFIG.isProcessing = false;
+            return;
+        }
+
+        console.log(`📊 Начинаем сохранение ${chats.length} чатов...`);
+
+        let savedCount = 0;
+        let failedCount = 0;
+        let incompleteCount = 0;
+
+        for (let i = 0; i < chats.length; i++) {
+            const chat = chats[i];
+            console.log(`\n[${i+1}/${chats.length}] ${chat.title}`);
+
+            try {
+                // Открываем чат
+                const link = document.querySelector(`a[href*="/a/chat/s/${chat.id}"]`);
+                if (link) {
+                    link.click();
+                    
+                    // Ждем полной загрузки сообщений
+                    const messages = await waitForChatToLoad(chat.id);
+                    
+                    if (messages.length > 0) {
+                        // Валидируем сообщения
+                        const isValid = validateMessages(messages, chat.title);
+                        
+                        if (!isValid) {
+                            incompleteCount++;
+                            console.log(`  ⚠️ Чат может быть неполным, но сохраняем...`);
+                        }
+                        
+                        await saveToAPI(chat.id, chat.title, messages);
+                        savedCount++;
+                        console.log(`  ✅ ${messages.length} сообщений, сохранен`);
+                    } else {
+                        console.log(`  ❌ Нет сообщений`);
+                        failedCount++;
+                    }
+                } else {
+                    console.log(`  ❌ Ссылка не найдена`);
+                    failedCount++;
+                }
+            } catch (err) {
+                console.error(`  ❌ Ошибка: ${err.message}`);
+                failedCount++;
+            }
+            
+            await sleep(CONFIG.delayBetweenChats);
+        }
+
+        console.log('\n' + '='.repeat(50));
+        console.log(`📊 ИТОГО: Сохранено: ${savedCount}, Неполных: ${incompleteCount}, Ошибок: ${failedCount}`);
+        console.log('✅ ВСЕ ЧАТЫ СОХРАНЕНЫ!');
+        CONFIG.isProcessing = false;
+    }
+
+    // Добавить кнопку
+    const btn = document.createElement('button');
+    btn.textContent = '📚 Save ALL Chats (v13.1 FULL with wait)';
+    btn.style.cssText = `position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);`;
+    btn.onclick = saveAllChats;
+    
+    setTimeout(() => {
+        if (document.body) {
+            document.body.appendChild(btn);
+        }
+    }, 2000);
+})();
+```
+
+## Что изменилось (v13.1):
+
+| Функция | Что добавил |
+|---------|-------------|
+| **`waitForChatToLoad()`** | Ждет полной загрузки сообщений из IndexedDB, проверяет стабильность |
+| **`validateMessages()`** | Проверяет: первое сообщение от USER, нет пустых, чередование ролей |
+| **Статистика в конце** | Показывает сколько сохранено, неполных и ошибочных |
+| **Увеличенная задержка** | 2 секунды между чатами для надежности |
+| **Логирование** | Детальный вывод о загрузке и валидации |
+
+## Как использовать:
+
+1. Замени старый скрипт на этот (v13.1)
+2. Открой DeepSeek чат
+3. Нажми кнопку **"Save ALL Chats"**
+4. Смотри логи — теперь видно, сколько сообщений в каждом чате и были ли проблемы
+
+Скрипт **сохранит даже неполные чаты**, но предупредит о проблемах в логах.
+
+---
 
 ## 👤 **Kirill**
 
@@ -3179,956 +5377,6 @@ docker run -d --name chroma-kymatics -p 8001:8000 chromadb/chroma:latest
 
 ```bash
 sleep 3 && curl -s http://localhost:8001/api/v1/heartbeat
-```
-
----
-
-## 👤 **Kirill**
-
-СИСТЕМНЫЙ ПРОМПТ: ЦЕНТР УПРАВЛЕНИЯ ПРОЕКТАМИ KYMATICS (ЭТАП 94 - СТАРТ)
-
-🎯 КОНТЕКСТ
-✅ Успешно завершен Этап 93. Выполнены задачи:
-
-93.1 ✅ Multi-agent в BPMN — 4 агента (architect, coder, integrator, analyzer) интегрированы в Process Designer
-93.2 ✅ Persistent Memory — API `/memory/*` с файловым хранилищем, поиск по релевантности
-93.3 ⏸️ Telegram Bot — перенесен на следующий этап
-93.4 ✅ Skill Marketplace — публикация, установка, теги, статистика
-93.5 ✅ Self-healing процессы — анализ ошибок LLM, стратегии восстановления
-93.6 ✅ BPMN → Executable Code — генерация Python/TypeScript кода из BPMN
-
-💰 БЮДЖЕТ ЭТАПА 93: 0 ₽
-💰 БЮДЖЕТ ЭТАПА 94 (ПЛАНОВЫЙ): 2000 ₽ (только реальные траты на платные API)
-
-⚙️ ТЕКУЩЕЕ СОСТОЯНИЕ СИСТЕМЫ (АУДИТ 23.05.2026)
-
-✅ Бэкенд:
-- 50+ API эндпоинтов (включая новые: agents, memory, marketplace, healing, codegen)
-- ChromaDB запущен (порт 8000) — используется для RAG и векторного поиска
-- Neo4j НЕ ЗАПУЩЕН (код готов, нужен запуск)
-- Файловая память работает как временное решение
-- Process Designer + WebSocket execution работают
-
-⚠️ Разрывы в пайплайне (критические для MVP):
-1. ❌ Исполнение → Память: результаты не сохраняются автоматически
-2. ❌ Память → Дизайнер: нет подсказок из памяти при создании процессов
-3. ⚠️ Только manual trigger для процессов (schedule/webhook позже)
-4. ⚠️ Компоненты нельзя перетащить в дизайнер (только узлы из палитры)
-
-📁 КЛЮЧЕВЫЕ ФАЙЛЫ
-
-Бэкенд: ai-farm/agents/batuta/
-- memory_service.py (файловая версия)
-- neo4j_sync.py, neo4j_client.py, tools/tool_graph.py — граф
-- api_memory.py, api_marketplace.py, api_self_healing.py, api_codegen.py
-- process_manager.py, process_executor.py
-
-Фронтенд: tactical-command-v3/src/
-- features/process-designer/ — Process Designer
-- features/components/ComponentsPage.tsx — Components Library
-- features/ai/AIChatSidebar.tsx — AI чат
-- pages/TerminalPage.tsx — главная страница
-
-🏛️ ЦЕЛЕВОЕ ВИДЕНИЕ 2.2
-Kymatics — единая платформа для создания и выполнения BPMN-процессов с AI-агентами.
-
-Ключевые принципы:
-- Agentic First — агенты не болтают, они делают
-- Governance by Design — HITL не опция, а стандарт
-- Local-First — данные не покидают ваш сервер
-- Open Ecosystem — marketplace skills, community
-
-Уникальное преимущество: BPMN + AI Agents + Memory (единственные на рынке)
-
-📋 ЗАДАЧИ ЭТАПА 94 (10 дней до тестируемого MVP)
-
-P0 (КРИТИЧЕСКИЕ) — СВЯЗНОСТЬ И СТАБИЛЬНОСТЬ
-
-Задача 94.1: Memory Layer — запуск Neo4j и объединение с ChromaDB
-(@🚀 Хранитель стабильности + @🧠 Специалист по знаниям)
-
-Цель: Создать единый memory слой уровня лидеров индустрии.
-
-Действия:
-- Запустить Neo4j через Docker (порты 7474, 7687)
-- Создать единый MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф)
-- Добавить temporal reasoning (valid_from/valid_to) — как у Zep
-- Перенести файловую память на ChromaDB (векторный поиск)
-
-Критерии готовности:
-- Neo4j запущен и интегрирован с существующими инструментами (`tool_graph.py`, `neo4j_sync.py`)
-- MemoryService поддерживает семантический поиск (ChromaDB) + графовые запросы (Neo4j)
-- Автосохранение результатов выполнения в память (исправлен разрыв №1)
-
-Задача 94.2: Пайплайн — связность и валидация
-(@🚀 Хранитель стабильности + @🎨 Дизайнер интерфейсов)
-
-Цель: Устранить разрывы между компонентами.
-
-Действия:
-- Добавить автосохранение результатов выполнения в память
-- Добавить подсказки из памяти при создании процесса (исправлен разрыв №2)
-- Добавить drag & drop из Components Library в Process Designer
-- Добавить полную валидацию процессов (связи, обязательные поля, циклы)
-- Добавить async execution с отслеживанием статусов
-
-Критерии готовности:
-- После выполнения процесса результат автоматически сохраняется в память
-- При создании процесса появляются подсказки из истории проекта
-- Компонент можно перетащить из Library прямо в дизайнер
-- Процесс нельзя сохранить/запустить с ошибками
-- Execution имеет статусы: pending → running → completed/failed
-
-Задача 94.3: Фронтенд — дизайн-система и чистота
-(@🎨 Дизайнер интерфейсов)
-
-Цель: Привести фронтенд к тестируемому состоянию.
-
-Действия:
-- Вынести все inline styles в CSS файлы
-- Разработать дизайн-систему (цвета, типографика, отступы, компоненты)
-- Создать библиотеку переиспользуемых UI компонентов (Button, Modal, Input, Select)
-- Исправить 67 технических долгов (TODO/FIXME/any)
-
-Критерии готовности:
-- Нет inline styles (все в CSS/модулях)
-- Дизайн-система документирована (storybook или отдельная страница)
-- UI компоненты переиспользуются во всем приложении
-- Нет предупреждений TypeScript
-
-P1 (ВЫСОКИЙ ПРИОРИТЕТ)
-
-Задача 94.4: Подготовка к выходу на рынок
-(@🚀 Хранитель стабильности)
-
-Цель: Создать минимальный пакет для демонстрации.
-
-Действия:
-- Написать демо-скрипт для видео (2-3 минуты)
-- Создать Docker Compose для быстрого старта
-- Подготовить landing page (базовая: описание, скриншоты, CTA)
-- Подготовить 3-5 примеров готовых процессов (templates)
-
-Критерии готовности:
-- Демо-скрипт готов к записи
-- `docker-compose up` запускает всю платформу
-- Landing page доступна локально
-- Примеры процессов можно импортировать одним кликом
-
-Задача 94.5: Self-healing — интеграция с памятью
-(@🧠 Специалист по знаниям)
-
-Цель: Использовать успешные кейсы из памяти для автоматического исправления.
-
-Действия:
-- Извлекать успешные паттерны из памяти
-- Предлагать их как исправления при ошибках
-- Сохранять успешные исправления обратно в память
-
-Критерии готовности:
-- При ошибке процесса LLM получает контекст из похожих успешных выполнений
-- Self-healing предлагает решения на основе истории проекта
-
-P2 (СРЕДНИЙ ПРИОРИТЕТ) — при наличии времени
-
-Задача 94.6: Performance optimization — кэширование, индексы, профайлинг
-
-Задача 94.7: Документация API (Swagger/OpenAPI)
-
-💰 БЮДЖЕТ ЭТАПА 94
-Лимит: 2000 ₽ (только реальные траты на платные API/сервисы)
-
-Задача	Бюджет
-94.1 Memory Layer	0 ₽ (локально)
-94.2 Пайплайн	0 ₽ (локально)
-94.3 Фронтенд	0 ₽ (локально)
-94.4 Go-to-market	0 ₽ (локально)
-94.5 Self-healing	0 ₽ (локальный ollama)
-94.6 Performance	0 ₽ (локально)
-94.7 Документация	0 ₽ (локально)
-
-⚠️ При достижении лимита 2000 ₽ — остановка и согласование.
-
-🚀 ПОРЯДОК ВЫПОЛНЕНИЯ (ЭТАП 94)
-
-Шаг	Задача	Ответственный	Длительность
-1	94.1 Memory Layer (Neo4j + ChromaDB)	@🚀 + @🧠	4 ч
-2	94.2 Пайплайн — связность и валидация	@🚀 + @🎨	4 ч
-3	94.3 Фронтенд — дизайн-система	@🎨	4 ч
-4	94.4 Go-to-market подготовка	@🚀	3 ч
-5	94.5 Self-healing + память	@🧠	3 ч
-6	94.6-94.7 Performance + docs	@🚀 + @🧠	время
-
-📅 План на 10 дней:
-
-Неделя 1 (P0):
-- День 1: 94.1 Memory Layer
-- День 2: 94.1 + начало 94.2
-- День 3: 94.2 Пайплайн
-- День 4: 94.2 + начало 94.3
-- День 5: 94.3 Фронтенд
-
-Неделя 2 (P1):
-- День 6: 94.3 + 94.4
-- День 7: 94.4 + 94.5
-- День 8: 94.5 + интеграционное тестирование
-- День 9: Фикс багов + доработки
-- День 10: Финальное тестирование + демо
-
-⚠️ ПРАВИЛА РАБОТЫ
-- ОДНА ЗАДАЧА ЗА РАЗ — не смешиваем
-- КОНТРОЛЬ БЮДЖЕТА — следим за расходами
-- ПОСЛЕ КАЖДОГО ИЗМЕНЕНИЯ — ТЕСТ
-- КОММИТИТЬ ПОСЛЕ КАЖДОЙ ЗАДАЧИ
-- ПРИ ДОСТИЖЕНИИ ЛИМИТА — остановка и согласование
-
-✅ СТАРТ ВЫПОЛНЕНИЯ (ЭТАП 94)
-
-@🚀 Хранитель стабильности — начинайте с Задачи 94.1 (Memory Layer). Первый шаг: запуск Neo4j через Docker.
-
-@🧠 Специалист по знаниям — подготовьте код для объединения ChromaDB и Neo4j.
-
-@🎨 Дизайнер интерфейсов — проведите аудит фронтенда и начните проектирование дизайн-системы.
-
-Жду подтверждения готовности к старту.
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично. **План принят, распределение ролей подтверждено.**
-
-Система переходит в режим активной разработки Этапа 94. Бюджет под контролем (2000₽ только на внешние API, локальный стек — бесплатно).
-
-**Директива на ближайшие 4 часа:**
-
-1.  **@🚀 Хранитель стабильности:** Запуск Neo4j. После запуска — проверить интеграцию с `neo4j_sync.py`. Результат запуска (логи, порты) — в этот канал.
-2.  **@🧠 Специалист по знаниям:** Разработать класс `UnifiedMemoryService` (обертка над ChromaDB + Neo4j). Учитывать интерфейсы из `memory_service.py`. Temporal reasoning — добавить поля `valid_from`/`valid_to` в схемы.
-3.  **@🎨 Дизайнер интерфейсов:** Аудит фронтенда: сдать отчет по 67 техдолгам (список файлов с наибольшим количеством TODO/FIXME). Определить базовые токены дизайн-системы (цвета: primary/gray/error, spacing: 4/8/16/24, шрифты).
-
-**Правило:** Работаем строго в последовательности: Memory Layer → Пайплайн → Фронтенд. Никакого "параллельного" фронтенда, пока не стабилизируется бэкенд.
-
-**Текущий статус:** `ЭТАП_94 = СТАРТ`.
-
-Исполнители, подтвердите получение задач и приступайте. Жду логи запуска Neo4j в течение 15 минут.
-
----
-
-## 👤 **Kirill**
-
-Действуем следующим образом:
-По одному действию!
-Ты пишешь команды для терминала или инструкции
-Я выполняю команду в терминале или инструкцию
-Тест
-Только потом идем дальше
-
----
-
-## 🤖 **DeepSeek**
-
-Принято. Работаем строго по схеме: **Команда → Исполнение → Тест → Следующий шаг.**
-
----
-
-## Шаг 1 из 94.1 (Memory Layer — запуск Neo4j)
-
-**Действие:** Запуск Neo4j через Docker с сохранением данных на хост-машине.
-
-**Команда для терминала:**
-
-```bash
-docker run -d \
-  --name neo4j-kymatics \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/kymatics2026 \
-  -e NEO4J_PLUGINS='["apoc"]' \
-  -v ~/neo4j-kymatics/data:/data \
-  -v ~/neo4j-kymatics/logs:/logs \
-  neo4j:5.26-enterprise
-```
-
-⚠️ Если нет лицензии Enterprise — замените на `neo4j:5.26-
-
----
-
-## 👤 **Kirill**
-
-Нужно делать на реальном проекте, а не вымышленном. Ты даешь команды, я выполняю и возвращаю результат.
-
----
-
-## 🤖 **DeepSeek**
-
-Хорошо. Работаем с реальным проектом.
-
-**Первая команда:**
-
-```bash
-docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-```
-
-Покажи, что вернул терминал.
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Neo4j не запущен. Контейнера с именем `neo4j` нет.
-
-**Следующая команда:**
-
-Проверим, есть ли какие-либо контейнеры Neo4j (может, другое имя):
-
-```bash
-docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --filter "name=neo4j" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Нет ни одного контейнера Neo4j. Запускаем с нуля.
-
-**Команда:**
-
-```bash
-docker run -d \
-  --name neo4j-kymatics \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/kymatics2026 \
-  -e NEO4J_PLUGINS='["apoc"]' \
-  -v ~/neo4j-kymatics/data:/data \
-  -v ~/neo4j-kymatics/logs:/logs \
-  neo4j:5.26
-```
-
-Запусти эту команду и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-ищи внимательней есть и docker и orbstack 
-/Users/kirillkravcov/UniversalCreativeHub
-
----
-
-## 🤖 **DeepSeek**
-
-Понял. У тебя Orbstack (альтернатива Docker Desktop). Проверим иначе.
-
-**Команда:**
-
-```bash
-docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
-```
-
-А также посмотрим, что вообще запущено:
-
-```bash
-docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | grep -i neo4j || echo "No neo4j containers found"
-No neo4j containers found
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
-NAMES     IMAGE     STATUS    PORTS
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Понял. Вообще нет запущенных контейнеров. Запускаем Neo4j.
-
-**Команда:**
-
-```bash
-docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
-```
-
-Выполни и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-может просто docker не запущен?
-
----
-
-## 🤖 **DeepSeek**
-
-Точно. Проверим статус Docker/Orbstack.
-
-**Команда:**
-
-```bash
-docker info 2>&1 | head -5
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker run -d --name neo4j-kymatics -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/kymatics2026 -e NEO4J_PLUGINS='["apoc"]' -v ~/neo4j-kymatics/data:/data -v ~/neo4j-kymatics/logs:/logs neo4j:5.26
-Unable to find image 'neo4j:5.26' locally
-5.26: Pulling from library/neo4j
-cda3d70ae7d7: Pull complete 
-4709e9496477: Pull complete 
-c4697836ee82: Pull complete 
-3cb252419ff9: Pull complete 
-4f4fb700ef54: Pull complete 
-Digest: sha256:0b5d3ab6ec1b866890dbfb53bf4fe1cf039f9e03c96165599a403005b7e7bcc3
-Status: Downloaded newer image for neo4j:5.26
-a5116df7d4a72b02a74ede3eb1193acbbac1a11b739279faa40dc93432eb39fd
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker info 2>&1 | head -5
-Client:
- Version:    28.5.2
- Context:    orbstack
- Debug Mode: false
- Plugins:
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично! Neo4j скачался и запустился. Контейнер `neo4j-kymatics` создан (ID: `a5116df7d4a7`).
-
-**Теперь проверим, что контейнер работает:**
-
-```bash
-docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % docker ps --filter "name=neo4j-kymatics" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-NAMES            STATUS          PORTS
-neo4j-kymatics   Up 16 seconds   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
-(.venv) kirillkravcov@Mac tactical-command-v3 %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j успешно запущен и работает!**
-
-STATUS: `Up 16 seconds`  
-Порты: `7474` (HTTP), `7687` (Bolt) — доступны.
-
----
-
-**Тест подключения к Neo4j (через curl):**
-
-```bash
-curl -I -u neo4j:kymatics2026 http://localhost:7474
-```
-
-Покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-curl -I -u neo4j:kymatics2026 http://localhost:7474
-
----
-
-## 🤖 **DeepSeek**
-
-Выполни эту команду в терминале и покажи вывод.
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % curl -I -u neo4j:kymatics2026 http://localhost:7474
-HTTP/1.1 200 OK
-Date: Sat, 23 May 2026 19:03:24 GMT
-Access-Control-Allow-Origin: *
-Content-Type: application/json
-Vary: Accept
-Content-Length: 251
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % 
-
-
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j доступен, аутентификация работает.** (HTTP 200 OK)
-
----
-
-**Шаг 94.1 продолжение: проверим существующие файлы проекта.**
-
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
-```
-
-Покажи вывод — нужно убедиться, что `neo4j_client.py` и `neo4j_sync.py` на месте.
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac tactical-command-v3 % cd /Users/kirillkravcov/UniversalCreativeHub && ls -la ai-farm/agents/batuta/
-total 1120
-drwxr-xr-x  91 kirillkravcov  staff   2912 May 23 17:18 .
-drwxr-xr-x  14 kirillkravcov  staff    448 May 21 11:14 ..
--rw-r--r--   1 kirillkravcov  staff    229 May 21 08:34 .env
-drwxr-xr-x   6 kirillkravcov  staff    192 May 16 14:31 .pytest_cache
--rwxr-xr-x   1 kirillkravcov  staff    929 Apr  6 12:05 add_embedding_endpoint.py
--rw-r--r--   1 kirillkravcov  staff   2357 Apr 23 19:58 add_history_logging.py
--rw-r--r--   1 kirillkravcov  staff   1115 Apr 15 07:53 add_load_tasks.py
-drwxr-xr-x   3 kirillkravcov  staff     96 May 15 21:59 ai-farm
--rw-r--r--   1 kirillkravcov  staff   4881 May 23 13:35 api_agents.py
--rw-r--r--   1 kirillkravcov  staff   1152 May 23 17:18 api_codegen.py
--rw-r--r--   1 kirillkravcov  staff   2056 Apr 21 08:41 api_commands.py
--rw-r--r--   1 kirillkravcov  staff  18228 May 23 12:38 api_components.py
--rw-r--r--   1 kirillkravcov  staff   7258 May 23 13:21 api_components_lifecycle.py
--rw-r--r--   1 kirillkravcov  staff   1212 May 21 16:51 api_execute.py
--rw-r--r--   1 kirillkravcov  staff   7671 May 23 17:13 api_marketplace.py
--rw-r--r--   1 kirillkravcov  staff   2923 May 23 14:41 api_memory.py
--rw-r--r--   1 kirillkravcov  staff  17216 May 22 11:03 api_processes.py
--rw-r--r--   1 kirillkravcov  staff   4864 May 15 21:52 api_projects.py
--rw-r--r--   1 kirillkravcov  staff   5820 May 22 14:36 api_safe_execute.py
--rw-r--r--   1 kirillkravcov  staff   1399 May 23 17:15 api_self_healing.py
--rw-r--r--   1 kirillkravcov  staff   1634 May 12 21:24 api_skills.py
--rw-r--r--   1 kirillkravcov  staff   8776 May 12 21:24 api_templates.py
-drwxr-xr-x   3 kirillkravcov  staff     96 May 15 18:23 api_v1
--rw-r--r--   1 kirillkravcov  staff   8100 May 19 18:11 architect_agent.py
--rw-r--r--   1 kirillkravcov  staff   8509 Apr 20 08:01 architect_agent.py.broken
-drwxr-xr-x  25 kirillkravcov  staff    800 May 15 21:39 backups
-drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 channels
-drwxr-xr-x   2 kirillkravcov  staff     64 May 23 14:47 chroma_data
--rw-r--r--   1 kirillkravcov  staff   5818 May 23 17:18 code_generator.py
--rw-r--r--   1 kirillkravcov  staff  18207 May 23 13:21 coder_agent.py
--rw-r--r--   1 kirillkravcov  staff  11063 Apr 17 22:43 command_analyzer.py
--rw-r--r--   1 kirillkravcov  staff   1357 Apr 21 09:09 command_executor_agent.py
--rw-r--r--   1 kirillkravcov  staff   1403 May 21 18:13 command_safety.py
--rw-r--r--   1 kirillkravcov  staff   7983 May 21 08:51 components_db.py
--rw-r--r--   1 kirillkravcov  staff   8071 May 21 08:51 components_db.py.backup
--rw-r--r--   1 kirillkravcov  staff   1495 May 18 11:49 components_schemas.py
--rw-r--r--   1 kirillkravcov  staff   1674 May 15 18:39 config.py
-drwxr-xr-x  13 kirillkravcov  staff    416 May 17 08:52 core
--rw-r--r--   1 kirillkravcov  staff   1650 May 18 08:55 db_unified.py
--rw-r--r--   1 kirillkravcov  staff   4781 May 15 22:01 drafts_manager.py
--rw-r--r--   1 kirillkravcov  staff   5023 May 22 10:59 executor_registry.py
-drwxr-xr-x   7 kirillkravcov  staff    224 May 15 18:20 executors
--rw-r--r--   1 kirillkravcov  staff   2044 May 19 18:11 fixer_agent.py
--rw-r--r--   1 kirillkravcov  staff   4711 May 18 09:48 git_skills.py
--rw-r--r--   1 kirillkravcov  staff   3234 Apr 12 18:34 history_integration.py
--rw-r--r--   1 kirillkravcov  staff   7394 Apr 20 08:02 integrator_agent.py
--rw-r--r--   1 kirillkravcov  staff   3136 Apr 16 16:57 knowledge_pool.py
--rw-r--r--   1 kirillkravcov  staff   5398 Apr 16 16:44 knowledge_pool_chroma_v1.py
--rw-r--r--   1 kirillkravcov  staff   5031 Apr 16 16:58 knowledge_pool_faiss.py
--rw-r--r--   1 kirillkravcov  staff   5282 Apr 16 16:41 knowledge_pool_v2.py
--rw-r--r--   1 kirillkravcov  staff   4182 May 11 10:29 layout_engine.py
-drwxr-xr-x   9 kirillkravcov  staff    288 Apr 17 18:06 logs
--rwxr-xr-x   1 kirillkravcov  staff  36455 May 23 17:18 main.py
-drwxr-xr-x   2 kirillkravcov  staff     64 Mar  6 11:04 memory
-drwxr-xr-x   3 kirillkravcov  staff     96 May 23 14:58 memory_files
--rw-r--r--   1 kirillkravcov  staff   5295 May 23 14:57 memory_service.py
--rw-r--r--   1 kirillkravcov  staff   1466 Apr 16 13:47 neo4j_client.py
--rw-r--r--   1 kirillkravcov  staff    803 Apr 16 13:49 neo4j_sync.py
-drwxr-xr-x  19 kirillkravcov  staff    608 May  3 17:49 nodes
--rw-r--r--   1 kirillkravcov  staff   3171 May  9 10:37 observability.py
--rw-r--r--   1 kirillkravcov  staff   1072 Apr 15 07:51 patch_startup.py
--rw-r--r--   1 kirillkravcov  staff  18540 May 19 18:11 process_designer_agent.py
--rw-r--r--   1 kirillkravcov  staff   9651 May 12 09:07 process_executor.py
--rw-r--r--   1 kirillkravcov  staff  17351 May 22 11:13 process_manager.py
--rw-r--r--   1 kirillkravcov  staff   5981 May 19 08:48 process_models.py
--rw-r--r--   1 kirillkravcov  staff   3636 Apr 28 18:41 process_validator.py
--rw-r--r--   1 kirillkravcov  staff      0 May 23 13:14 processes.db
--rw-r--r--   1 kirillkravcov  staff  13287 Apr 16 19:08 project_inspector.py
-drwxr-xr-x   3 kirillkravcov  staff     96 Apr 12 13:09 prompts
--rw-r--r--   1 kirillkravcov  staff   1155 Apr 17 19:06 quick_validator.py
--rw-r--r--   1 kirillkravcov  staff   3553 May 19 18:11 requirement_analyzer.py
--rwxr-xr-x   1 kirillkravcov  staff     94 Mar  6 13:06 requirements.txt
-drwxr-xr-x  18 kirillkravcov  staff    576 May 19 18:11 scheduler
--rw-r--r--   1 kirillkravcov  staff   4218 May 23 17:15 self_healing.py
--rw-r--r--   1 kirillkravcov  staff   6551 Apr 28 18:30 skill_agent.py
--rw-r--r--   1 kirillkravcov  staff  18222 May 18 09:54 skills_registry.py
--rw-r--r--   1 kirillkravcov  staff   3753 Apr 16 19:21 smart_explorer.py
--rw-r--r--   1 kirillkravcov  staff   5450 May 19 18:11 task_decomposer.py
--rw-r--r--   1 kirillkravcov  staff      0 May 18 09:48 task_history.db
--rw-r--r--   1 kirillkravcov  staff   5060 Apr 15 07:52 task_history.py
--rw-r--r--   1 kirillkravcov  staff      0 Apr 17 16:37 task_processor.log
--rw-r--r--   1 kirillkravcov  staff  12663 May 12 21:11 template_resolver.py
--rw-r--r--   1 kirillkravcov  staff   2182 Apr 23 18:15 test_executor.py
--rw-r--r--   1 kirillkravcov  staff    486 Apr 19 15:51 test_opik.py
--rw-r--r--   1 kirillkravcov  staff    793 Apr 23 18:09 test_try_catch.py
--rw-r--r--   1 kirillkravcov  staff   1818 Apr 23 19:56 test_websocket.py
--rw-r--r--   1 kirillkravcov  staff   1064 Apr 23 20:09 test_ws.py
-drwxr-xr-x   9 kirillkravcov  staff    288 May 19 18:16 tools
--rw-r--r--   1 kirillkravcov  staff    574 Apr 23 19:58 update_executor.py
--rw-r--r--   1 kirillkravcov  staff   2264 Apr 20 07:59 validator_agent.py
--rw-r--r--   1 kirillkravcov  staff   2121 May  4 15:11 websocket_logger.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Отлично. Файлы на месте:
-- `neo4j_client.py` (1466 байт)
-- `neo4j_sync.py` (803 байта)
-- `memory_service.py` (5295 байт) — файловая версия
-
----
-
-**Шаг 94.1: проверим содержимое `neo4j_client.py` — правильно ли настроено подключение.**
-
-```bash
-cat ai-farm/agents/batuta/neo4j_client.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_client.py
-import httpx
-from typing import Dict, Any
-
-NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
-NEO4J_AUTH = ("neo4j", "password")
-
-async def create_task_node(task_id: str, title: str, description: str, status: str = "pending"):
-    """Создать узел Task в Neo4j"""
-    query = f"""
-    MERGE (t:Task {{id: $task_id}})
-    SET t.title = $title,
-        t.description = $description,
-        t.status = $status,
-        t.updated_at = datetime()
-    RETURN t
-    """
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            NEO4J_URL,
-            auth=NEO4J_AUTH,
-            json={"statements": [{"statement": query, "parameters": {
-                "task_id": task_id,
-                "title": title,
-                "description": description,
-                "status": status
-            }}]}
-        )
-        return response.json()
-
-async def update_task_status(task_id: str, status: str):
-    """Обновить статус задачи в Neo4j"""
-    query = """
-    MATCH (t:Task {id: $task_id})
-    SET t.status = $status, t.updated_at = datetime()
-    RETURN t
-    """
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            NEO4J_URL,
-            auth=NEO4J_AUTH,
-            json={"statements": [{"statement": query, "parameters": {
-                "task_id": task_id,
-                "status": status
-            }}]}
-        )
-        return response.json()
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Вижу проблему: в `neo4j_client.py` используется пароль `password`, но мы запустили Neo4j с паролем `kymatics2026`.
-
-**Исправляем:**
-
-```bash
-sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
-```
-
-Проверим исправление:
-
-```bash
-grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_client.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_client.py
-NEO4J_AUTH = ("neo4j", "kymatics2026")
-            auth=NEO4J_AUTH,
-            auth=NEO4J_AUTH,
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ Пароль исправлен.
-
----
-
-**Теперь проверим, что Neo4j принимает запросы от клиента (простой тест через Python):**
-
-```bash
-cd /Users/kirillkravcov/UniversalCreativeHub && python -c "
-import asyncio
-import httpx
-
-async def test():
-    url = 'http://localhost:7474/db/neo4j/tx/commit'
-    auth = ('neo4j', 'kymatics2026')
-    query = 'RETURN 1 as test'
-    
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
-        print(resp.status_code)
-        print(resp.json())
-
-asyncio.run(test())
-"
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % >....                       
-    auth = ('neo4j', 'kymatics2026')
-    query = 'RETURN 1 as test'
-
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(url, auth=auth, json={'statements': [{'statement': query}]})
-        print(resp.status_code)
-        print(resp.json())
-
-asyncio.run(test())
-"
-200
-{'results': [{'columns': ['test'], 'data': [{'row': [1], 'meta': [None]}]}], 'errors': [], 'lastBookmarks': ['FB:kcwQzD5o5GTkTuG+mUUuHaZyxAOQ']}
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ **Neo4j работает, аутентификация корректна, запрос возвращает результат.**
-
----
-
-**Шаг 94.1: проверим `neo4j_sync.py`:**
-
-```bash
-cat ai-farm/agents/batuta/neo4j_sync.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % cat ai-farm/agents/batuta/neo4j_sync.py
-import requests
-
-NEO4J_URL = "http://localhost:7474/db/neo4j/tx/commit"
-NEO4J_AUTH = ("neo4j", "password")
-
-def create_task_node_sync(task_id: str, title: str, description: str, status: str = "pending"):
-    """Создать узел Task в Neo4j (синхронная версия)"""
-    query = f"""
-    MERGE (t:Task {{id: $task_id}})
-    SET t.title = $title,
-        t.description = $description,
-        t.status = $status,
-        t.updated_at = datetime()
-    RETURN t
-    """
-    response = requests.post(
-        NEO4J_URL,
-        auth=NEO4J_AUTH,
-        json={"statements": [{"statement": query, "parameters": {
-            "task_id": task_id,
-            "title": title,
-            "description": description,
-            "status": status
-        }}]}
-    )
-    return response.json()
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Вижу: `neo4j_sync.py` тоже использует старый пароль `password`.
-
-**Исправляем:**
-
-```bash
-sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
-```
-
-Проверим:
-
-```bash
-grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % sed -i '' 's/password/kymatics2026/g' ai-farm/agents/batuta/neo4j_sync.py
-(.venv) kirillkravcov@Mac UniversalCreativeHub % grep "NEO4J_AUTH" ai-farm/agents/batuta/neo4j_sync.py
-NEO4J_AUTH = ("neo4j", "kymatics2026")
-        auth=NEO4J_AUTH,
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-✅ Neo4j клиенты исправлены.
-
----
-
-**Шаг 94.1: теперь проверим `memory_service.py` — какая там текущая реализация:**
-
-```bash
-head -80 ai-farm/agents/batuta/memory_service.py
-```
-
----
-
-## 👤 **Kirill**
-
-(.venv) kirillkravcov@Mac UniversalCreativeHub % head -80 ai-farm/agents/batuta/memory_service.py
-"""
-Persistent Memory Service - файловая версия (быстрая и стабильная)
-"""
-import json
-import os
-import uuid
-from datetime import datetime
-from typing import List, Dict, Any, Optional
-from pathlib import Path
-
-class MemoryService:
-    """Сервис для долговременной памяти агентов (файловая версия)"""
-    
-    def __init__(self, persist_dir: str = None):
-        if persist_dir is None:
-            persist_dir = os.path.join(os.path.dirname(__file__), "memory_files")
-        
-        self.persist_dir = Path(persist_dir)
-        self.persist_dir.mkdir(parents=True, exist_ok=True)
-        print(f"MemoryService initialized at {self.persist_dir}")
-    
-    def _get_memory_file(self, project_id: str) -> Path:
-        """Получить путь к файлу памяти проекта"""
-        safe_name = "".join(c for c in project_id if c.isalnum() or c in "._-")
-        return self.persist_dir / f"{safe_name}.json"
-    
-    def _load_memories(self, project_id: str) -> List[Dict]:
-        """Загрузить все памяти проекта"""
-        file_path = self._get_memory_file(project_id)
-        if file_path.exists():
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except:
-                return []
-        return []
-    
-    def _save_memories(self, project_id: str, memories: List[Dict]):
-        """Сохранить памяти проекта"""
-        file_path = self._get_memory_file(project_id)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(memories, f, indent=2, ensure_ascii=False, default=str)
-    
-    def add_memory(self, project_id: str, memory: str, metadata: Dict[str, Any] = None) -> str:
-        """Добавить запись в память проекта"""
-        memories = self._load_memories(project_id)
-        
-        memory_id = str(uuid.uuid4())
-        meta = metadata or {}
-        meta["timestamp"] = datetime.now().isoformat()
-        meta["project_id"] = project_id
-        
-        memories.append({
-            "id": memory_id,
-            "memory": memory,
-            "metadata": meta,
-            "created_at": datetime.now().isoformat()
-        })
-        
-        self._save_memories(project_id, memories)
-        return memory_id
-    
-    def search_memory(self, project_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """Поиск по памяти проекта (простой текстовый поиск)"""
-        memories = self._load_memories(project_id)
-        
-        query_lower = query.lower()
-        query_words = query_lower.split()
-        
-        scored = []
-        for mem in memories:
-            memory_lower = mem["memory"].lower()
-            # Считаем количество совпадений слов
-            score = 0
-            for word in query_words:
-                if word in memory_lower:
-                    score += 1
-            
-            if query_words:
-                score = score / len(query_words)
-(.venv) kirillkravcov@Mac UniversalCreativeHub %
-
----
-
-## 🤖 **DeepSeek**
-
-Понял. Сейчас `memory_service.py` — файловая версия (JSON), без ChromaDB и Neo4j.
-
-**Шаг 94.1: создадим унифицированный MemoryService, объединяющий ChromaDB (вектора) и Neo4j (граф).**
-
-Сначала проверим, запущен ли ChromaDB:
-
-```bash
-curl -s http://localhost:8000/api/v1/heartbeat 2>&1 || echo "ChromaDB not running"
 ```
 
 ---

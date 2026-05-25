@@ -2,7 +2,7 @@
 chat_id: c1cea2e2-b7d4-4aed-943a-65485d595c65
 title: Миграция и исправление документации UCH-DOCS
 message_count: 2
-exported_at: 2026-04-06T04:14:22.623Z
+exported_at: 2026-05-25T06:29:37.496Z
 ---
 
 # Миграция и исправление документации UCH-DOCS
@@ -15,7 +15,7 @@ exported_at: 2026-04-06T04:14:22.623Z
 
 ## 🤖 **DeepSeek**
 
-Length limit reached. DeepSeek can only read the first 64%.## 📊 **ИТОГИ АНАЛИЗА МИГРАЦИИ UCH-DOCS**
+Достигнут предел длины. DeepSeek может прочитать только первые 64%.## 📊 **ИТОГИ АНАЛИЗА МИГРАЦИИ UCH-DOCS**
 
 ### ✅ **ДОСТИГНУТЫЕ РЕЗУЛЬТАТЫ:**
 

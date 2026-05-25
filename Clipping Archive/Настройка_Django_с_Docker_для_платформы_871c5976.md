@@ -2,7 +2,7 @@
 chat_id: 871c5976-35da-499a-ac28-51c8983b77c1
 title: Настройка Django с Docker для платформы
 message_count: 56
-exported_at: 2026-04-06T04:17:36.520Z
+exported_at: 2026-05-25T06:06:54.158Z
 ---
 
 # Настройка Django с Docker для платформы
