@@ -39,3 +39,14 @@ Kymatics — это AI-native open-source платформа для создан
 - `user.name=Kirill Kravcov` ✓
     
 - `user.email=kirillkravt@gmail.com` ✓
+
+
+
+|                  |                  |                  |                                    |                    |
+| ---------------- | ---------------- | ---------------- | ---------------------------------- | ------------------ |
+|                  |                  |                  | I - Instrument (для перехода из P) |                    |
+|                  |                  | S - Scale view   | P - instrument pool                |                    |
+| P - Project view | P - Project view | G - Groove view  | M - inst Mods view                 | M - inst Mods view |
+| S - Song view    | C - Chain view   | P - Phrase       | I - Instrument                     | T - Table          |
+| V - Mixer view   | V - Mixer view   | V - Mixer view   | V - Mixer view                     | V - Mixer view     |
+| X - Effects view | X - Effects view | X - Effects view | X - Effects view                   | X - Effects view   |
