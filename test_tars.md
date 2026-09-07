@@ -50,3 +50,6 @@ Kymatics — это AI-native open-source платформа для создан
 | S - Song view    | C - Chain view   | P - Phrase       | I - Instrument                     | T - Table          |
 | V - Mixer view   | V - Mixer view   | V - Mixer view   | V - Mixer view                     | V - Mixer view     |
 | X - Effects view | X - Effects view | X - Effects view | X - Effects view                   | X - Effects view   |
+
+Чтобы добавить новую папку с инструментами .m8i в базу:
+python scripts/add_instrument_source.py /path/to/new/instruments
