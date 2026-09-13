@@ -53,3 +53,20 @@ Kymatics — это AI-native open-source платформа для создан
 
 Чтобы добавить новую папку с инструментами .m8i в базу:
 python scripts/add_instrument_source.py /path/to/new/instruments
+
+
+## m8 panorama git
+# Управление автокоммитом
+./scripts/autocommit.sh status      # проверить
+./scripts/autocommit.sh stop        # остановить
+./scripts/autocommit.sh start       # запустить снова
+
+# Посмотреть лог
+tail -f logs/autocommit.log
+
+# Ручной коммит (если нужно срочно)
+git add -A && git commit -m "manual: ..."
+
+# Откат к последнему автокоммиту
+git log --oneline -10           # найти хеш
+git reset --hard <hash>          # откатиться
