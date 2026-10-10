@@ -69,3 +69,12 @@ git add -A && git commit -m "manual: ..."
 # Откат к последнему автокоммиту
 git log --oneline -10           # найти хеш
 git reset --hard <hash>          # откатиться
+
+
+
+Запуск ui m8 panorama
+
+cd ~/m8-panorama
+source ~/midigpt_env/bin/activate
+export PYTHONPATH=backend/app/services/als/generator/v4_subsequence
+nohup uvicorn realize.server:app --port 8000 > /tmp/m8srv.log 2>&1 &
